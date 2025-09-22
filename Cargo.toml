@@ -17,11 +17,11 @@ clap = { version = "4.5", features = ["derive"] }
 crossterm = { version = "0.29" }
 dirs = { version = "6.0", optional = true }
 iced = { version = "0.13", optional = true, features = ["image"] }
-iced_term = { version = "0.5", optional = true }
+iced_term = { version = "0.6", optional = true }
 indexmap = { version = "2.10", features = ["rayon", "serde"] }
 keyvalues-serde = { version = "0.2", optional = true }
 open = { version = "5.3", optional = true }
-phf = { version = "0.12", features = ["macros"], optional = true }
+phf = { version = "0.13", features = ["macros"], optional = true }
 qbsdiff = "1.4"
 rayon = { version = "1.10" }
 regex = "1.11"
@@ -35,7 +35,7 @@ thiserror = { version = "2.0", optional = true }
 tokio = { version = "1.47", features = ["full"], optional = true }
 tracing = { version = "0.1", optional = true }
 tracing-subscriber = { version = "0.3", features = ["env-filter", "tracing-log"], optional = true }
-windows-registry = { version = "0.5", optional = true }
+windows-registry = { version = "0.6", optional = true }
 zstd = "0.13"
 
 [target.'cfg(windows)'.dependencies]
@@ -55,9 +55,6 @@ winresource = "0.1"
 
 [target.'cfg(target_os = "macos")'.build-dependencies]
 cargo-packager = "0.11"
-
-[patch.crates-io]
-iced_term = { git = "https://github.com/Harzu/iced_term", rev = "a93fcbd59fbee3d2e781470a6024ce935068dd31" }
 
 [package.metadata.packager]
 product-name = "GModPatchTool"

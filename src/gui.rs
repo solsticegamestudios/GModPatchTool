@@ -71,7 +71,7 @@ impl App {
 		(
 			Self {
 				title: String::from("GModPatchTool"),
-				term: iced_term::Terminal::new(term_id, term_settings),
+				term: iced_term::Terminal::new(term_id, term_settings).expect("Failed to create the new terminal instance"),
 			},
 			Task::none(),
 		)
@@ -82,41 +82,23 @@ impl App {
 	}
 
 	fn subscription(&self) -> Subscription<Event> {
-		let term_subscription = iced_term::Subscription::new(self.term.id);
-		let term_event_stream = term_subscription.event_stream();
-		Subscription::run_with_id(self.term.id, term_event_stream).map(Event::Terminal)
+		Subscription::run_with_id(self.term.id, self.term.subscription()).map(Event::Terminal)
 	}
 
 	fn update(&mut self, event: Event) -> Task<Event> {
 		match event {
-			Event::Terminal(iced_term::Event::CommandReceived(_, cmd)) => {
-				let is_init_task = matches!(cmd, iced_term::Command::InitBackend(_));
-
-				let task = match self.term.update(cmd) {
+			Event::Terminal(iced_term::Event::BackendCall(_, cmd)) => {
+				match self.term.handle(iced_term::Command::ProxyToBackend(cmd)) {
 					iced_term::actions::Action::Shutdown => {
-						window::get_latest().and_then(window::close)
+						return window::get_latest().and_then(window::close)
 					}
 					iced_term::actions::Action::ChangeTitle(title) => {
 						self.title = title;
-						Task::none()
 					}
-					_ => Task::none(),
+					_ => {},
 				};
 
-				// BUG/HACK: Address race condition with InitBackend/ProcessBackendCommand(Resize) and layout_width/num_cols limiting the terminal size
-				// TODO: Report to iced_term
-				if is_init_task {
-					task.chain(Task::done(Event::Terminal(iced_term::Event::CommandReceived(
-						self.term.id,
-						iced_term::Command::ChangeFont(iced_term::settings::FontSettings {
-							size: 14.0,
-							font_type: Font::MONOSPACE,
-							..Default::default()
-						}),
-					))))
-				} else {
-					task
-				}
+				Task::none()
 			}
 		}
 	}
