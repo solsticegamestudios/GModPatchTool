@@ -1131,19 +1131,24 @@ where
 	if let Some(webstorage_start_match) = webstorage_start_match {
 		let webstorage_open_bracket = webstorage_start_match.end();
 
+		let mut next_char_escaped = false;
 		let mut open_bracket_count: usize = 1;
 		let mut webstorage_close_bracket_offset: Option<usize> = None;
-		for (offset, char) in (0_usize..).zip(steam_user_localconfig_str[webstorage_open_bracket..].chars()) {
-			if char == '{' {
-				open_bracket_count += 1;
-			} else if char == '}' {
-				open_bracket_count -= 1;
+		for (offset, byte) in (0_usize..).zip(steam_user_localconfig_str[webstorage_open_bracket..].bytes()) {
+			if !next_char_escaped {
+				if byte == b'{' {
+					open_bracket_count += 1;
+				} else if byte == b'}' {
+					open_bracket_count -= 1;
+				}
+
+				if open_bracket_count == 0 {
+					webstorage_close_bracket_offset = Some(offset);
+					break;
+				}
 			}
 
-			if open_bracket_count == 0 {
-				webstorage_close_bracket_offset = Some(offset);
-				break;
-			}
+			next_char_escaped = byte == b'\\';
 		}
 
 		if let Some(webstorage_close_bracket_offset) = webstorage_close_bracket_offset {
