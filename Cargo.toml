@@ -1,6 +1,6 @@
 [package]
 name = "gmodpatchtool"
-version = "20250810.0.0"
+version = "20250921.0.0"
 authors = ["Solstice Game Studios <contact@solsticegamestudios.com>"]
 license = "GPL-3.0-only"
 edition = "2024"
