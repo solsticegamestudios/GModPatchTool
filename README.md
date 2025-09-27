@@ -4,7 +4,7 @@
 
 ***GModPatchTool** does what Facepunch [don't](https://github.com/Facepunch/gmod-html/pull/5)!*
 
-**Created by Solstice Game Studios (www.solsticegamestudios.com)**
+**Created by Solstice Game Studios (solsticegamestudios.com)**
 
 # 🛠️ Patches We Apply
 ### All Platforms
@@ -40,7 +40,7 @@
 # ❓ Players: How to Install / Use
 Download the **[Latest Release](https://github.com/solsticegamestudios/GModPatchTool/releases)** and run the application.
 
-Need a more in-depth guide? Take a look at https://www.solsticegamestudios.com/fixmedia/
+Need a more in-depth guide? Take a look at https://solsticegamestudios.com/fixmedia/
 
 # 👩‍💻 Developers: How to Use / Detect
 Direct players to follow the Players' instructions above. This patch is CLIENTSIDE only!
@@ -59,11 +59,11 @@ Direct players to follow the Players' instructions above. This patch is CLIENTSI
 **If you want to go more in-depth:** Check out [our fork of gmod-html](https://github.com/solsticegamestudios/gmod-html) and [our CEF build scripts](cef_build).
 
 # 📢 Need Help / Contact Us
-* Read the FAQ: https://www.solsticegamestudios.com/fixmedia/faq/
-* Discord: https://www.solsticegamestudios.com/discord/
+* Read the FAQ: https://solsticegamestudios.com/fixmedia/faq/
+* Discord: https://solsticegamestudios.com/discord/
 * Email: contact@solsticegamestudios.com
 
 # 💖 Help Support Us
 This project is open source and provided free of charge for the Garry's Mod community.
 
-**If you like what we're doing here, consider [throwing a few dollars our way](https://www.solsticegamestudios.com/donate/)!** Our work is 100% funded by users of the tool!
+**If you like what we're doing here, consider [throwing a few dollars our way](https://solsticegamestudios.com/donate/)!** Our work is 100% funded by users of the tool!

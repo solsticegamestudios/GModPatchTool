@@ -1,14 +1,14 @@
 --[[
 	GModPatchTool (formerly GModCEFCodecFix) detection code example
 
-	Copyright 2024-2025, Solstice Game Studios (www.solsticegamestudios.com)
+	Copyright 2024-2025, Solstice Game Studios (solsticegamestudios.com)
 	LICENSE: GNU General Public License v3.0
 
 	Purpose: Detects if GModPatchTool's CEF patches have been applied successfully on a GMod client.
 
 	Contact:
 		Repository: https://github.com/solsticegamestudios/GModPatchTool/
-		Discord: https://www.solsticegamestudios.com/discord/
+		Discord: https://solsticegamestudios.com/discord/
 		Email: contact@solsticegamestudios.com
 ]]
 

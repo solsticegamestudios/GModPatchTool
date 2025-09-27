@@ -1,13 +1,13 @@
 // Version and Manifest files
 const TEXT_SERVER_ROOTS: [&str; 2] = [
 	"https://raw.githubusercontent.com/solsticegamestudios/GModPatchTool/refs/heads/files/",
-	"https://www.solsticegamestudios.com/gmodpatchtool/"
+	"https://solsticegamestudios.com/gmodpatchtool/"
 ];
 
 // Patch files
 const BINARY_SERVER_ROOTS: [&str; 2] = [
 	"https://media.githubusercontent.com/media/solsticegamestudios/GModPatchTool/refs/heads/files/",
-	"https://www.solsticegamestudios.com/gmodpatchtool/" // TODO: Webhook that triggers git pull and clears the cache on Cloudflare
+	"https://solsticegamestudios.com/gmodpatchtool/" // TODO: Webhook that triggers git pull and clears the cache on Cloudflare
 ];
 
 //const GMOD_STEAM_APPID: u64 = 4000;
@@ -1491,7 +1491,7 @@ where
 	}
 
 	terminal_write(writer, "\n💖 Did you find this tool useful? Please consider donating a few dollars to help support it:", true, if writer_is_interactive { Some("magenta") } else { None });
-	terminal_write(writer, "\thttps://www.solsticegamestudios.com/donate/", true, None);
+	terminal_write(writer, "\thttps://solsticegamestudios.com/donate/", true, None);
 
 	Ok(())
 }
