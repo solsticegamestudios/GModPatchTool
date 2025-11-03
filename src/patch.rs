@@ -27,6 +27,7 @@ use steamid::SteamId;
 use sysinfo::System;
 use std::fs::File;
 use std::io;
+use bytes::Bytes;
 use reqwest::Response;
 use tokio::time::Instant;
 use tokio::task::JoinSet;
@@ -70,6 +71,10 @@ struct Args {
 	/// Force redownload all patch files from scratch and clear the GModPatchTool cache directory on exit
 	#[arg(long)]
 	disable_cache: bool,
+
+	/// Apply patches even if Garry's Mod is currently running (may cause issues!)
+	#[arg(long)]
+	ignore_gmod_running: bool,
 
 	/// Allow running the tool as root/admin (NOT RECOMMENDED!!!)
 	#[arg(long)]
@@ -319,13 +324,12 @@ where
 	}
 }
 
-async fn get_http_response<W>(writer: fn() -> W, writer_is_interactive: bool, servers: &[&str], filename: &str) -> Option<Response>
+async fn get_http_response<W>(writer: fn() -> W, writer_is_interactive: bool, servers: &[&str], filename: &str, mut server_id: u8, mut try_count: u8) -> Option<Response>
 where
 	W: std::io::Write + 'static
 {
-	let mut server_id: u8 = 0;
-	let mut try_count: u8 = 0;
 	let mut response = None;
+
 	while (server_id as usize) < servers.len() {
 		let url = servers[server_id as usize].to_string() + filename;
 
@@ -369,6 +373,124 @@ where
 	}
 
 	response
+}
+
+// Make sure we have response data that *works*
+// Otherwise we'll get "error decoding response body" or something later, where we don't have retry logic
+// TODO: These could probably be DRY'd up...
+async fn get_http_response_bytes<W>(writer: fn() -> W, writer_is_interactive: bool, servers: &[&str], filename: &str) -> Option<Bytes>
+where
+	W: std::io::Write + 'static
+{
+	let mut server_id: u8 = 0;
+	let mut try_count: u8 = 0;
+	let mut response_bytes = None;
+
+	while (server_id as usize) < servers.len() {
+		let response = get_http_response(writer, writer_is_interactive, servers, filename, server_id, try_count).await;
+
+		if let Some(response) = response {
+			let response_bytes_raw = response.bytes().await;
+
+			match response_bytes_raw {
+				// TODO: Check if Bytes is empty as well
+				Ok(response_bytes_raw) => {
+					response_bytes = Some(response_bytes_raw);
+					break;
+				},
+				Err(error) => {
+					terminal_write(writer, format!("\nHTTP Bytes Error: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
+					response_bytes = None;
+					try_count += 1;
+
+					// Try each server 3 times
+					if try_count >= 3 {
+						server_id += 1;
+						try_count = 0;
+					}
+				}
+			}
+		}
+	}
+
+	response_bytes
+}
+
+async fn get_http_response_text<W>(writer: fn() -> W, writer_is_interactive: bool, servers: &[&str], filename: &str) -> Option<String>
+where
+	W: std::io::Write + 'static
+{
+	let mut server_id: u8 = 0;
+	let mut try_count: u8 = 0;
+	let mut response_text = None;
+
+	while (server_id as usize) < servers.len() {
+		let response = get_http_response(writer, writer_is_interactive, servers, filename, server_id, try_count).await;
+
+		if let Some(response) = response {
+			let response_text_raw = response.text().await;
+
+			match response_text_raw {
+				// TODO: Check if Text is empty as well
+				Ok(response_text_raw) => {
+					response_text = Some(response_text_raw);
+					break;
+				},
+				Err(error) => {
+					terminal_write(writer, format!("\nHTTP Text Error: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
+					response_text = None;
+					try_count += 1;
+
+					// Try each server 3 times
+					if try_count >= 3 {
+						server_id += 1;
+						try_count = 0;
+					}
+				}
+			}
+		}
+	}
+
+	response_text
+}
+
+async fn get_http_response_json<W, T>(writer: fn() -> W, writer_is_interactive: bool, servers: &[&str], filename: &str) -> Option<T>
+where
+	W: std::io::Write + 'static,
+	T: serde::de::DeserializeOwned
+{
+	let mut server_id: u8 = 0;
+	let mut try_count: u8 = 0;
+	let mut response_json = None;
+
+	while (server_id as usize) < servers.len() {
+		let response = get_http_response(writer, writer_is_interactive, servers, filename, server_id, try_count).await;
+
+		if let Some(response) = response {
+			let response_json_raw = response.json::<T>().await;
+
+			match response_json_raw {
+				// TODO: Check if JSON is empty as well
+				Ok(response_json_raw) => {
+					response_json = Some(response_json_raw);
+					break;
+				},
+				Err(error) => {
+					terminal_write(writer, format!("\nHTTP JSON Error: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
+					response_json = None;
+					try_count += 1;
+
+					// Try each server 3 times
+					if try_count >= 3 {
+						server_id += 1;
+						try_count = 0;
+					}
+				}
+			}
+		}
+	}
+
+	response_json
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
@@ -438,64 +560,55 @@ where
 	}
 
 	// If it's not in the cache, or there's a checksum mismatch with the version in the cache, (re-)download it
-	let response = get_http_response(writer, writer_is_interactive, &BINARY_SERVER_ROOTS, filename.as_str()).await;
-	if let Some(response) = response {
-		let bytes_raw = response.bytes().await;
+	let response_bytes = get_http_response_bytes(writer, writer_is_interactive, &BINARY_SERVER_ROOTS, filename.as_str()).await;
+	if let Some(response_bytes) = response_bytes {
+		// Create directories if needed
+		let mut cache_file_path_dir = cache_file_path.clone();
+		cache_file_path_dir.pop();
+		let cache_file_path_dir_canonical = pathbuf_to_canonical_pathbuf(cache_file_path_dir.clone(), false);
 
-		match bytes_raw {
-			Ok(bytes_raw) => {
-				// Create directories if needed
-				let mut cache_file_path_dir = cache_file_path.clone();
-				cache_file_path_dir.pop();
-				let cache_file_path_dir_canonical = pathbuf_to_canonical_pathbuf(cache_file_path_dir.clone(), false);
+		if cache_file_path_dir_canonical.is_err() {
+			let create_dir_result = tokio::fs::create_dir_all(cache_file_path_dir).await;
 
-				if cache_file_path_dir_canonical.is_err() {
-					let create_dir_result = tokio::fs::create_dir_all(cache_file_path_dir).await;
+			if let Err(error) = create_dir_result {
+				terminal_write(writer, format!("\tFailed to Download: {filename} | Step 1: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
+				return Err(());
+			}
+		}
 
-					if let Err(error) = create_dir_result {
-						terminal_write(writer, format!("\tFailed to Download: {filename} | Step 2: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
-						return Err(());
-					}
-				}
+		// Decompress Zstandard files
+		let mut bytes: Vec<u8> = if filename.ends_with(".zst") { Vec::new() } else { response_bytes.to_vec() };
+		if filename.ends_with(".zst") {
+			terminal_write(writer, format!("\tDecompressing: {filename} ...").as_str(), true, None);
 
-				// Decompress Zstandard files
-				let mut bytes: Vec<u8> = if filename.ends_with(".zst") { Vec::new() } else { bytes_raw.to_vec() };
-				if filename.ends_with(".zst") {
-					terminal_write(writer, format!("\tDecompressing: {filename} ...").as_str(), true, None);
+			let decompress_result = zstd::stream::copy_decode(&response_bytes[..], &mut bytes);
+			if let Err(error) = decompress_result {
+				terminal_write(writer, format!("\tFailed to Decompress: {filename} | {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
+				return Err(());
+			}
 
-					let decompress_result = zstd::stream::copy_decode(&bytes_raw[..], &mut bytes);
-					if let Err(error) = decompress_result {
-						terminal_write(writer, format!("\tFailed to Decompress: {filename} | {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
-						return Err(());
-					}
+			terminal_write(writer, format!("\tDecompressed: {filename}").as_str(), true, None);
+		}
 
-					terminal_write(writer, format!("\tDecompressed: {filename}").as_str(), true, None);
-				}
+		let write_result = tokio::fs::write(cache_file_path.clone(), bytes).await;
+		if let Err(error) = write_result {
+			terminal_write(writer, format!("\tFailed to Download: {filename} | Step 2: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
+			return Err(());
+		}
 
-				let write_result = tokio::fs::write(cache_file_path.clone(), bytes).await;
-				if let Err(error) = write_result {
-					terminal_write(writer, format!("\tFailed to Download: {filename} | Step 2: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
-					return Err(());
-				}
-
-				let file_hash_result = get_file_hash(&cache_file_path);
-				match file_hash_result {
-					Ok(file_hash) => {
-						if file_hash == target_hash {
-							let size_mib = bytes_raw.len() as f64 / 0x100000 as f64;
-							terminal_write(writer, format!("\tDownloaded [{size_mib:.2} MiB]: {filename}").as_str(), true, None);
-							return Ok(());
-						} else {
-							terminal_write(writer, format!("\tFailed to Download: {filename} | Step 4: Checksum mismatch").as_str(), true, if writer_is_interactive { Some("red") } else { None });
-						}
-					},
-					Err(error) => {
-						terminal_write(writer, format!("\tFailed to Download: {filename} | Step 3: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
-					}
+		let file_hash_result = get_file_hash(&cache_file_path);
+		match file_hash_result {
+			Ok(file_hash) => {
+				if file_hash == target_hash {
+					let size_mib = response_bytes.len() as f64 / 0x100000 as f64;
+					terminal_write(writer, format!("\tDownloaded [{size_mib:.2} MiB]: {filename}").as_str(), true, None);
+					return Ok(());
+				} else {
+					terminal_write(writer, format!("\tFailed to Download: {filename} | Step 4: Checksum mismatch").as_str(), true, if writer_is_interactive { Some("red") } else { None });
 				}
 			},
 			Err(error) => {
-				terminal_write(writer, format!("\tFailed to Download: {filename} | Step 1: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
+				terminal_write(writer, format!("\tFailed to Download: {filename} | Step 3: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
 			}
 		}
 	}
@@ -686,8 +799,11 @@ where
 	let now = Instant::now();
 	let sys = System::new_all();
 
+	// Figure out where our cache should go based on OS
+	let os_cache_dir = if let Some(dirs_cache_dir) = dirs::cache_dir() { dirs_cache_dir } else { std::env::temp_dir() };
+
 	// Abort if another instance is already running
-	let pid_path = extend_pathbuf_and_return(std::env::current_exe().unwrap().parent().unwrap().to_path_buf(), &["gmodpatchtool.pid"]);
+	let pid_path = extend_pathbuf_and_return(os_cache_dir.clone(), &["gmodpatchtool.pid"]);
 	let running_instance_pid = tokio::fs::read_to_string(&pid_path).await;
 	if let Ok(pid) = running_instance_pid {
 		if let Ok(pid) = pid.parse::<usize>() {
@@ -709,15 +825,14 @@ where
 	// Get remote version
 	terminal_write(writer, "Getting remote version...", true, None);
 
-	let remote_version_response = get_http_response(writer, writer_is_interactive, &TEXT_SERVER_ROOTS, "version.txt").await;
+	let remote_version = get_http_response_text(writer, writer_is_interactive, &TEXT_SERVER_ROOTS, "version.txt").await;
 
-	if remote_version_response.is_none() {
+	if remote_version.is_none() {
 		return Err(AlmightyError::Generic("Couldn't get remote version. Please check your internet connection!".to_string()));
 	}
 
-	let remote_version_response = remote_version_response.unwrap();
-	let remote_version: u32 = remote_version_response.text()
-	.await?
+	let remote_version = remote_version.unwrap();
+	let remote_version: u32 = remote_version
 	.trim()
 	.parse()?;
 
@@ -770,7 +885,7 @@ where
 	}
 
 	// Abort if GMod is currently running
-	if sys.processes_by_exact_name("gmod.exe".as_ref()).next().is_some() || sys.processes_by_exact_name("gmod".as_ref()).next().is_some() {
+	if !args.ignore_gmod_running && sys.processes_by_exact_name("gmod.exe".as_ref()).next().is_some() || sys.processes_by_exact_name("gmod".as_ref()).next().is_some() {
 		return Err(AlmightyError::Generic("Garry's Mod is currently running. Please close it before running this tool.".to_string()));
 	}
 
@@ -1192,16 +1307,14 @@ where
 	// Get remote manifest
 	terminal_write(writer, "Getting remote manifest...", true, None);
 
-	let remote_manifest_response = get_http_response(writer, writer_is_interactive, &TEXT_SERVER_ROOTS, "manifest.json").await;
+	let remote_manifest = get_http_response_json::<_, Manifest>(writer, writer_is_interactive, &TEXT_SERVER_ROOTS, "manifest.json").await;
 
-	if remote_manifest_response.is_none() {
+	if remote_manifest.is_none() {
 		terminal_write(writer, "", true, None); // Newline
 		return Err(AlmightyError::Generic("Couldn't get remote manifest. Please check your internet connection!".to_string()));
 	}
 
-	let remote_manifest_response = remote_manifest_response.unwrap();
-	let remote_manifest = remote_manifest_response.json::<Manifest>()
-	.await?;
+	let remote_manifest = remote_manifest.unwrap();
 
 	terminal_write(writer, "GModPatchTool Manifest Loaded!\n", true, None);
 
@@ -1272,9 +1385,6 @@ where
 
 	let pending_files_len = pending_files.len();
 	if pending_files_len > 0 {
-		// Figure out where our cache should go based on OS
-		let os_cache_dir = if let Some(dirs_cache_dir) = dirs::cache_dir() { dirs_cache_dir } else { std::env::temp_dir() };
-
 		// Delete old GModCEFCodecFix cache directory
 		#[cfg(windows)]
 		let old_cache_dir = pathbuf_to_canonical_pathbuf(extend_pathbuf_and_return(os_cache_dir.clone(), &["Temp", "GModCEFCodecFix"]), false);
@@ -1496,13 +1606,11 @@ where
 	Ok(())
 }
 
-fn terminal_exit_handler() {
-	println!("\nPress Enter to exit...");
-	std::io::stdin().read_line(&mut String::new()).unwrap();
-
-	// Delete PID lockfile
-	let pid_path = extend_pathbuf_and_return(std::env::current_exe().unwrap().parent().unwrap().to_path_buf(), &["gmodpatchtool.pid"]);
+fn delete_pid_lockfile() {
+	let os_cache_dir = if let Some(dirs_cache_dir) = dirs::cache_dir() { dirs_cache_dir } else { std::env::temp_dir() };
+	let pid_path = extend_pathbuf_and_return(os_cache_dir.clone(), &["gmodpatchtool.pid"]);
 	let running_instance_pid = std::fs::read_to_string(&pid_path);
+
 	if let Ok(pid) = running_instance_pid {
 		if let Ok(pid) = pid.parse::<u32>() {
 			if pid == std::process::id() {
@@ -1513,6 +1621,12 @@ fn terminal_exit_handler() {
 			}
 		}
 	}
+}
+
+fn terminal_exit_handler() {
+	println!("\nPress Enter to exit...");
+	std::io::stdin().read_line(&mut String::new()).unwrap();
+	delete_pid_lockfile();
 }
 
 fn main_script<W>(writer: fn() -> W, writer_is_interactive: bool, args: Args) -> Result<(), AlmightyError>
@@ -1633,5 +1747,7 @@ pub fn main() {
 
 	if is_terminal && !skip_exit_prompt {
 		terminal_exit_handler();
+	} else {
+		delete_pid_lockfile();
 	}
 }
