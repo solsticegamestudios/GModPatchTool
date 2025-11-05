@@ -264,8 +264,8 @@
 			"bin/linux64/html_chromium_client.so": {
 				"executable": "true",
 				"fixed": "1f500b9142c166b0fa5bcd0a8046d31fa65b2483ddca7d4411c6dd393ae2ba44",
-				"original": "41650e7fc5f391d19aef5cb7954c0108c6887ed0f9a7f056174a3dd3710150e4",
-				"patch": "e5fbd619a2a1e02272e555555898a424e6b5ade80f0dc28e570e89276aa557d9"
+				"original": "8dca85e9ab8c20f8d06dcf7df69f449a29be3cb7d04e7a5a6fbdaf0e26f0ccff",
+				"patch": "154f7300c0304ad669041ac85bb087516d484a938e73c14d0b194fdb5adba342"
 			},
 			"bin/linux64/icudtl.dat": {
 				"fixed": "7fc8f453677bb4624bb200e78080289e5ef5f4ca818e082980f98f60e8c83f32",
@@ -608,13 +608,13 @@
 			},
 			"garrysmod/html/css/menu/Menu.css": {
 				"fixed": "f495b8befad6d819bd50278fe2c8fa291685b8a1ed9d0ba9f2da59847f259723",
-				"original": "e8336023ea9e27720eb2c6dc3964393da74724bf0e29852a423202b1689e6f7f",
-				"patch": "7059ed17c8ee55110f804c386f5a4e6682d630636d0aab9b58ae2667245791da"
+				"original": "a1be54f984745d7e2e037ed52dac4558f67eb7733170a2dedc70a348c60870a2",
+				"patch": "b5dfd63bca6b1fef442ae2ce57f941a3ff0bc628c0210fb7c45ac70ad148cdd1"
 			},
 			"garrysmod/html/css/menu/NewGame.css": {
 				"fixed": "fd3d0700a94075ca79b3631cba98fbbdc9cd44a6825370e2ab0a4a7c740e39e9",
-				"original": "5ed429d558a5da537212269f13c0fd4aa1b9f690720ea6ddd3daeb51d6e6863d",
-				"patch": "b8868110ea1df250c86fd5bcf2cc86d9f52ec759615f41b0d6f75a7e575deb85"
+				"original": "d203841e77769cf129de6694c445efc56a5015118e619a119757bc5dcce66251",
+				"patch": "db5acc36712c86de4c8a66b4e397f57c07864ee7095ab73bfa1d5b463078f56d"
 			},
 			"garrysmod/html/css/menu/Servers.css": {
 				"fixed": "5a688a9338cc2ec4506d90fa470a383cf4c855a64416e244716b67c9ad7537d4",
@@ -623,8 +623,8 @@
 			},
 			"garrysmod/html/js/menu/control.Menu.js": {
 				"fixed": "0c085ef41c5fcae848960c9f60ea711116dff40139f16890ebc2b59c252ae651",
-				"original": "560027fa79e2350f01f2d056779e1004c7a13bdd0a3c42b12db73a56c6bc3987",
-				"patch": "c3be177698f25d036869d7ce46a45743390b42dc36fe3418043d8fd957ea8c40"
+				"original": "9019def50fef5ba1b96dc82e5777417f3c69f2e3536f73d67679235d5e994cb4",
+				"patch": "6c37143af10a53e9876041559745e7fdffdb0414135f4342a5aae55dcb2a3fca"
 			},
 			"garrysmod/html/menu.html": {
 				"fixed": "a3864abe7a4780221421a2cf3d40be0d34dadadb1bb3f3ed35d80f38d6a093e1",
