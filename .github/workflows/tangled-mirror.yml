@@ -35,7 +35,8 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           sudo ssh-keyscan -t rsa tangled.sh >> ~/.ssh/known_hosts
-          sudo chmod -R 600 ~/.ssh
+          sudo chmod 700 ~/.ssh
+          sudo chmod 644 ~/.ssh/known_hosts
           sudo chown -R runner:runner ~/.ssh
 
       - name: Push Repo to Mirror
