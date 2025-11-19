@@ -10,16 +10,27 @@ concurrency:
 
 jobs:
   tangled-mirror:
-    runs-on: self-hosted
+    runs-on: ubuntu-slim
     env:
       TANGLED_REPO_URL: git@tangled.sh:solsticegamestudios.com/GModPatchTool
-      TANGLED_SSH_KEY_PATH: ${{ secrets.TANGLED_SSH_KEY_PATH }}
+      TANGLED_SSH_KEY: ${{ secrets.TANGLED_SSH_KEY }}
     steps:
+      - name: Install Git
+        run: |
+          sudo apt install git git-lfs -y
+          git lfs install
+
       - name: Checkout Repo
         run: git clone --mirror ${{ github.repositoryUrl }}
+
+      - name: Decode SSH key
+        run: echo $TANGLED_SSH_KEY | base64 --decode "$RUNNER_TEMP/ssh.key"
 
       - name: Push Repo to Mirror
         run: |
           eval `ssh-agent`
-          ssh-add "$TANGLED_SSH_KEY_PATH"
+          ssh-add "$RUNNER_TEMP/ssh.key"
           git push --all --force --mirror $TANGLED_REPO_URL
+
+      - name: Cleanup
+        run: rm "$RUNNER_TEMP/ssh.key"
