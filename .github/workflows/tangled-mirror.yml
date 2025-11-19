@@ -23,6 +23,9 @@ jobs:
       - name: Checkout Repo
         run: git clone --mirror ${{ github.repositoryUrl }}
 
+      - name: Add Tangled Remote
+        run: git remote add tangled $TANGLED_REPO_URL
+
       - name: Decode SSH key
         run: echo $TANGLED_SSH_KEY | base64 --decode "$RUNNER_TEMP/ssh.key"
 
@@ -30,7 +33,7 @@ jobs:
         run: |
           eval `ssh-agent`
           ssh-add "$RUNNER_TEMP/ssh.key"
-          git push --all --force --mirror $TANGLED_REPO_URL
+          git push --mirror --force tangled
 
       - name: Cleanup
         run: rm "$RUNNER_TEMP/ssh.key"
