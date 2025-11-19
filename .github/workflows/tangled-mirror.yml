@@ -31,9 +31,14 @@ jobs:
           echo $TANGLED_SSH_KEY | base64 --decode > "$RUNNER_TEMP/ssh.key"
           chmod 600 "$RUNNER_TEMP/ssh.key"
 
+      - name: Setup SSH known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -t rsa tangled.sh >> ~/.ssh/known_hosts
+          chmod -R 600 ~/.ssh
+
       - name: Push Repo to Mirror
         run: |
-          ssh-keyscan -t rsa tangled.sh >> ~/.ssh/known_hosts
           eval `ssh-agent`
           ssh-add "$RUNNER_TEMP/ssh.key"
           git push --mirror --force tangled
