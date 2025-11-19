@@ -27,9 +27,7 @@ jobs:
         run: git remote add tangled $TANGLED_REPO_URL
 
       - name: Decode SSH key
-        run: |
-          mkdir -p "$RUNNER_TEMP"
-          echo $TANGLED_SSH_KEY | base64 --decode "$RUNNER_TEMP/ssh.key"
+        run: echo $TANGLED_SSH_KEY | base64 --decode > "$RUNNER_TEMP/ssh.key"
 
       - name: Push Repo to Mirror
         run: |
