@@ -33,6 +33,7 @@ jobs:
 
       - name: Push Repo to Mirror
         run: |
+          ssh-keyscan -t rsa tangled.sh >> ~/.ssh/known_hosts
           eval `ssh-agent`
           ssh-add "$RUNNER_TEMP/ssh.key"
           git push --mirror --force tangled
