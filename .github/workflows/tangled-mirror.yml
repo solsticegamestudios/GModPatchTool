@@ -1,0 +1,25 @@
+name: Mirror Repo to Tangled.org
+
+on:
+  workflow_dispatch:
+  push:
+
+concurrency:
+  group: tangled-mirror
+  cancel-in-progress: true
+
+jobs:
+  tangled-mirror:
+    runs-on: self-hosted
+    env:
+      TANGLED_REPO_URL: git@tangled.sh:solsticegamestudios.com/GModPatchTool
+      TANGLED_SSH_KEY_PATH: ${{ secrets.TANGLED_SSH_KEY_PATH }}
+    steps:
+      - name: Checkout Repo
+        run: git clone --mirror ${{ github.repositoryUrl }}
+
+      - name: Push Repo to Mirror
+        run: |
+          eval `ssh-agent`
+          ssh-add "$TANGLED_SSH_KEY_PATH"
+          git push --all --force --mirror $TANGLED_REPO_URL
