@@ -15,10 +15,10 @@ jobs:
       TANGLED_REPO_URL: git@tangled.sh:solsticegamestudios.com/GModPatchTool
       TANGLED_SSH_KEY: ${{ secrets.TANGLED_SSH_KEY }}
     steps:
-      - name: Install Git
-        run: |
-          sudo apt install git git-lfs -y
-          git lfs install
+      #- name: Install Git
+      #  run: |
+      #    sudo apt install git git-lfs -y
+      #    git lfs install
 
       - name: Checkout Repo
         run: git clone --mirror ${{ github.repositoryUrl }}
