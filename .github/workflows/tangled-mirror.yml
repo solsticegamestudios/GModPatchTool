@@ -21,7 +21,7 @@ jobs:
       #    git lfs install
 
       - name: Checkout Repo
-        run: git clone --mirror $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git
+        run: git clone --mirror $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git .
 
       - name: Add Tangled Remote
         run: git remote add tangled $TANGLED_REPO_URL
