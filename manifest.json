@@ -632,9 +632,9 @@
 				"patch": "7a84daae811028110d329892749ff497f9521673e97b5377ad9a5b9f0e9bb590"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
-				"fixed": "c92cb23dd47641df90ddaa4519185499333c8f84b4b1f26f1d1652262183c29f",
+				"fixed": "8f6240bcd5c72cdfddbdd19f02087c541ad7e02834bb794e0afa5df3cb3288af",
 				"original": "cda0733bfd349f42e57cdf11aba33a5a1ac173a6e86d1e5fe2a5a39848b4a380",
-				"patch": "cb9148149eade5c9c0c3a9e909bd4ecc0a3764101ac1348aedc026dbc89e365e"
+				"patch": "2fa5b941ec8cb3f7611cf54a0ac56d42c88769987bfa1eb7713555da82a691ae"
 			},
 			"garrysmod/resource/ClientScheme.res": {
 				"fixed": "43939f7239b81c629d68b978e85105a4fc65ebb809fb83edaf4e75e330396f4c",
@@ -1143,9 +1143,9 @@
 				"patch": "7a84daae811028110d329892749ff497f9521673e97b5377ad9a5b9f0e9bb590"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
-				"fixed": "c92cb23dd47641df90ddaa4519185499333c8f84b4b1f26f1d1652262183c29f",
+				"fixed": "8f6240bcd5c72cdfddbdd19f02087c541ad7e02834bb794e0afa5df3cb3288af",
 				"original": "cda0733bfd349f42e57cdf11aba33a5a1ac173a6e86d1e5fe2a5a39848b4a380",
-				"patch": "cb9148149eade5c9c0c3a9e909bd4ecc0a3764101ac1348aedc026dbc89e365e"
+				"patch": "2fa5b941ec8cb3f7611cf54a0ac56d42c88769987bfa1eb7713555da82a691ae"
 			},
 			"garrysmod/resource/ClientScheme.res": {
 				"fixed": "43939f7239b81c629d68b978e85105a4fc65ebb809fb83edaf4e75e330396f4c",
@@ -2841,9 +2841,9 @@
 				"patch": "7a84daae811028110d329892749ff497f9521673e97b5377ad9a5b9f0e9bb590"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
-				"fixed": "c92cb23dd47641df90ddaa4519185499333c8f84b4b1f26f1d1652262183c29f",
+				"fixed": "8f6240bcd5c72cdfddbdd19f02087c541ad7e02834bb794e0afa5df3cb3288af",
 				"original": "cda0733bfd349f42e57cdf11aba33a5a1ac173a6e86d1e5fe2a5a39848b4a380",
-				"patch": "cb9148149eade5c9c0c3a9e909bd4ecc0a3764101ac1348aedc026dbc89e365e"
+				"patch": "2fa5b941ec8cb3f7611cf54a0ac56d42c88769987bfa1eb7713555da82a691ae"
 			},
 			"garrysmod/resource/ClientScheme.res": {
 				"fixed": "43939f7239b81c629d68b978e85105a4fc65ebb809fb83edaf4e75e330396f4c",
