@@ -1803,9 +1803,9 @@
 				"patch": "7a84daae811028110d329892749ff497f9521673e97b5377ad9a5b9f0e9bb590"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
-				"fixed": "c69dde7321e203755c7481c8b9c3d45d3919be3d2fc98c638af32319511103fc",
+				"fixed": "102a8aef1b3953825b841803de80c43856372474ee4ce733b3d9bcf2c74c1ced",
 				"original": "648265f1f8a3f3065d0d92dd3575f67b82dd91e3739ee1ba587da4210ceb3ae4",
-				"patch": "2805164b8d5d79c423a69e6153ec87d8ec36b9a3c34003fa6e08fe7e358136fd"
+				"patch": "5b290dd7940eba1f2e9ccfaf78219aa1a92f01717e913c77a26dd920956cb3e0"
 			},
 			"garrysmod/resource/ClientScheme.res": {
 				"fixed": "43939f7239b81c629d68b978e85105a4fc65ebb809fb83edaf4e75e330396f4c",
