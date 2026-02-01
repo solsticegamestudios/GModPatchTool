@@ -2,7 +2,9 @@ name: Mirror Repo to Tangled.org
 
 on:
   workflow_dispatch:
-  push
+  push:
+    branches:
+      - "**"
 
 concurrency:
   group: tangled-mirror
