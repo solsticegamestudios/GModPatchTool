@@ -7,7 +7,7 @@ const TEXT_SERVER_ROOTS: [&str; 2] = [
 // Patch files
 const BINARY_SERVER_ROOTS: [&str; 2] = [
 	"https://media.githubusercontent.com/media/solsticegamestudios/GModPatchTool/refs/heads/files/",
-	"https://solsticegamestudios.com/gmodpatchtool/" // TODO: Webhook that triggers git pull and clears the cache on Cloudflare
+	"https://solsticegamestudios.com/gmodpatchtool/"
 ];
 
 //const GMOD_STEAM_APPID: u64 = 4000;
@@ -1232,8 +1232,8 @@ where
 	let steam_user_localconfig_path = extend_pathbuf_and_return(steam_path.clone(), &["userdata", steam_id.account_id().into_u32().to_string().as_str(), "config", "localconfig.vdf"]);
 	let steam_user_localconfig_str = tokio::fs::read_to_string(steam_user_localconfig_path).await;
 
-	if steam_user_localconfig_str.is_err() {
-		return Err(AlmightyError::Generic("Couldn't find Steam localconfig.vdf. Have you ever launched/signed in to Steam?".to_string()));
+	if let Err(error) = steam_user_localconfig_str {
+		return Err(AlmightyError::Generic(format!("Couldn't find/read Steam localconfig.vdf. Have you ever launched/signed in to Steam?\n\t{error}")));
 	}
 
 	// HACK: Rip out the "WebStorage" section to mitigate stack overflow issues
