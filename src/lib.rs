@@ -17,7 +17,7 @@ const ABOUT: &str = r#"   ________  ___          ______        __       __  ____
 \____/_/  /_/\____/\__,_/_/    \__,_/\__/\___/_/ /_/_/  \____/\____/_/
 GModPatchTool (formerly GModCEFCodecFix)
 
-Copyright 2020-2025, Solstice Game Studios (solsticegamestudios.com)
+Copyright 2020-2026, Solstice Game Studios (solsticegamestudios.com)
 LICENSE: GNU General Public License v3.0
 
 Purpose: Patches Garry's Mod to Update/Improve Chromium Embedded Framework (CEF) and Fix common launch/performance issues (esp. on Linux/Proton/macOS).

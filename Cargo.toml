@@ -18,8 +18,9 @@ clap = { version = "4.5", features = ["derive"] }
 crossterm = { version = "0.29" }
 dirs = { version = "6.0", optional = true }
 http = { version = "1.3", optional = true }
-iced = { version = "0.13", optional = true, features = ["image"] }
-iced_term = { version = "0.6", optional = true }
+iced = { version = "0.14", optional = true, features = ["image"] }
+iced_term = { version = "0.7", optional = true }
+image = { version = "0.25", optional = true, default-features = false }
 indexmap = { version = "2.12", features = ["rayon", "serde"] }
 keyvalues-serde = { version = "0.2", optional = true }
 open = { version = "5.3", optional = true }
@@ -27,12 +28,12 @@ phf = { version = "0.13", features = ["macros"], optional = true }
 qbsdiff = "1.4"
 rayon = { version = "1.11" }
 regex = "1.12"
-reqwest = { version = "0.12", default-features = false, features = ["http2", "rustls-tls-native-roots", "json", "gzip", "brotli", "zstd", "socks"], optional = true }
+reqwest = { version = "0.13", default-features = false, features = ["http2", "rustls", "json", "gzip", "brotli", "zstd", "socks"], optional = true }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0" }
 serde_path_to_error = { version = "0.1" }
 steamid = { version = "0.1", git = "https://github.com/JohnPeel/steamid", optional = true }
-sysinfo = { version = "0.37", optional = true }
+sysinfo = { version = "0.38", optional = true }
 thiserror = { version = "2.0", optional = true }
 tokio = { version = "1.48", features = ["full"], optional = true }
 tracing = { version = "0.1", optional = true }
@@ -48,7 +49,7 @@ win32console = "0.1"
 [features]
 default = ["patch"]
 #default = ["generate"]
-patch = ["dep:bytes", "dep:dirs", "dep:http", "dep:iced", "dep:iced_term", "dep:keyvalues-serde", "dep:open", "dep:phf", "dep:reqwest", "dep:steamid", "dep:sysinfo", "dep:thiserror", "dep:tokio", "dep:tracing", "dep:tracing-subscriber", "dep:windows-registry"]
+patch = ["dep:bytes", "dep:dirs", "dep:http", "dep:iced", "dep:iced_term", "dep:image", "dep:keyvalues-serde", "dep:open", "dep:phf", "dep:reqwest", "dep:steamid", "dep:sysinfo", "dep:thiserror", "dep:tokio", "dep:tracing", "dep:tracing-subscriber", "dep:windows-registry"]
 generate = []
 
 # Build config
