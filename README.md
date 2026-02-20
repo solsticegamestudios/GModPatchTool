@@ -2,7 +2,7 @@
 
 ![GModPatchTool](GModPatchToolLogo.png)
 
-***GModPatchTool** does what Facepunch [don't](https://github.com/Facepunch/gmod-html/pull/5)!*
+***GModPatchTool** does what Facepunch [don't](https://github.com/Facepunch/gmod-html/pull/8)!*
 
 **Created by Solstice Game Studios (solsticegamestudios.com)**
 
