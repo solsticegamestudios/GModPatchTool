@@ -632,14 +632,14 @@
 				"patch": "7a84daae811028110d329892749ff497f9521673e97b5377ad9a5b9f0e9bb590"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
-				"fixed": "a65c93a1031252042c33bdce2ece8a47e8e135330be8df2d0410385f32ae9c5b",
+				"fixed": "ada43fbe6fb29e37b794a23dce8e326c58e928a399554fb6d432c1bea4b10792",
 				"original": "5a93b090310bf38c618501307d67f0131e3be5983bb0fda52a34a1047b42ca7d",
-				"patch": "a00aeb68e8189ba94b9d32640fd76753c71591ea26e28189450ced902afab66e"
+				"patch": "667e352eb93067765a4f63ad58b1cf92fbde1ba038b081b8ef8abff5e0bcd2b2"
 			},
 			"garrysmod/resource/ClientScheme.res": {
-				"fixed": "f6a0eaee4c786e02f50a60bee2386ddaf3e4fd391b409504eb99205e7b3f46a3",
+				"fixed": "3c86d3fe1792923e06240b1fd7ec60dcc34391c660faeeedc5bf3033bf40bd82",
 				"original": "cd609f48a30ceea7b95c3c8b2a030231bc6e187606dccac58ef6d0088f72045c",
-				"patch": "d849b7f1ed7555fc26f9ed938647d5396f351b30b37dd88804601662f59dc3e6"
+				"patch": "3e76e85471d7e015587cfd3a9cc0a975fd2b6c7fb7e51c604d9ec9221274aa24"
 			},
 			"garrysmod/resource/SourceScheme.res": {
 				"fixed": "37342a7d71d0c1248d92b093c329029a8cec8a06e89fedbc98d17b2c1606e668",
@@ -1143,14 +1143,14 @@
 				"patch": "7a84daae811028110d329892749ff497f9521673e97b5377ad9a5b9f0e9bb590"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
-				"fixed": "a65c93a1031252042c33bdce2ece8a47e8e135330be8df2d0410385f32ae9c5b",
+				"fixed": "ada43fbe6fb29e37b794a23dce8e326c58e928a399554fb6d432c1bea4b10792",
 				"original": "5a93b090310bf38c618501307d67f0131e3be5983bb0fda52a34a1047b42ca7d",
-				"patch": "a00aeb68e8189ba94b9d32640fd76753c71591ea26e28189450ced902afab66e"
+				"patch": "667e352eb93067765a4f63ad58b1cf92fbde1ba038b081b8ef8abff5e0bcd2b2"
 			},
 			"garrysmod/resource/ClientScheme.res": {
-				"fixed": "f6a0eaee4c786e02f50a60bee2386ddaf3e4fd391b409504eb99205e7b3f46a3",
+				"fixed": "3c86d3fe1792923e06240b1fd7ec60dcc34391c660faeeedc5bf3033bf40bd82",
 				"original": "cd609f48a30ceea7b95c3c8b2a030231bc6e187606dccac58ef6d0088f72045c",
-				"patch": "d849b7f1ed7555fc26f9ed938647d5396f351b30b37dd88804601662f59dc3e6"
+				"patch": "3e76e85471d7e015587cfd3a9cc0a975fd2b6c7fb7e51c604d9ec9221274aa24"
 			},
 			"garrysmod/resource/SourceScheme.res": {
 				"fixed": "37342a7d71d0c1248d92b093c329029a8cec8a06e89fedbc98d17b2c1606e668",
@@ -1768,19 +1768,19 @@
 				"patch": "a6009e72cd34fd1ec3a3226d97474404d5f7cbb258e5957a5e846db96dd9e20a"
 			},
 			"garrysmod/gamemodes/sandbox/gamemode/spawnmenu/creationmenu/content/contenttypes/dupes.lua": {
-				"fixed": "5902413dc55cd525f7f404161c79223bfca473f0342738b1fd19a2543c5f7941",
+				"fixed": "9f694c42e9e1b2346c3048e82cd29a761ca1cae4f67a30dbcb47eb6475bad490",
 				"original": "d31bdd237ca1b759d94909d5177955a4bb147bd927cc57e7574c47cf25eb7ae0",
-				"patch": "60d6a059e98c8b7efd1a7db9e09047f0b99182789d173b1b1b26831f217e87cf"
+				"patch": "8bdad9f86f651f5df5262877510709e9540b9c425a107fbf1e3c565072f8754a"
 			},
 			"garrysmod/gamemodes/sandbox/gamemode/spawnmenu/creationmenu/content/contenttypes/saves.lua": {
-				"fixed": "bfcb4b27e0fcd3fb1facff30524d4ac242c1aa4d7dd0b873d72f4c577bba8e41",
+				"fixed": "a0745f9d660b7c5ea22eb444a553883c6945589a94cee0a31dd76f2d39c7a318",
 				"original": "83e027f9a06018741a1b33c82f422f9170e0138486b23167e98bb3dab4cf557e",
-				"patch": "5dcdbd2a403b82c4bed96f0615d6863fa4dc733806122de237792992ac750f60"
+				"patch": "e9f1cea5f93c40d3596568a186a45c4ec6a21ad0aff745130c9276317bf51446"
 			},
 			"garrysmod/html/css/menu/Menu.css": {
-				"fixed": "f495b8befad6d819bd50278fe2c8fa291685b8a1ed9d0ba9f2da59847f259723",
+				"fixed": "cfdfa0d204cdce2476d86698c2d250240de9b2674e06c5b82012b3fb3c56eacf",
 				"original": "1f896f70eb32bf3a253eeab8c05da6ec793c24191163fd72d9edbf4a809be62d",
-				"patch": "d1dbad8e1c8a14f3bf3ddfb8016034e023bcbda29a6c0c7b3677d82ba13fefab"
+				"patch": "48fa3167e9b15d9eb17c7a80cb155e2b8a009a1fa6818af9ccf54e6135a2d664"
 			},
 			"garrysmod/html/css/menu/NewGame.css": {
 				"fixed": "fd3d0700a94075ca79b3631cba98fbbdc9cd44a6825370e2ab0a4a7c740e39e9",
@@ -1788,14 +1788,14 @@
 				"patch": "db5acc36712c86de4c8a66b4e397f57c07864ee7095ab73bfa1d5b463078f56d"
 			},
 			"garrysmod/html/css/menu/Servers.css": {
-				"fixed": "5a688a9338cc2ec4506d90fa470a383cf4c855a64416e244716b67c9ad7537d4",
+				"fixed": "f53e1316f3c39aedfef106c31aefbf27770ca89e2a23e7b7c454d4ce5c48debf",
 				"original": "771507eb70bc951908e401a867fb74b859f58004e6a1b86e8a326c654a7a6b28",
-				"patch": "127ef0069fb40c7a681958688acd6667ff32e4b399b99525b38eb33df9f1356b"
+				"patch": "36ff7c3f28e3b2d7ccf0e9d4879aa5f6905c1a033de6bc187663a92002cdffc8"
 			},
 			"garrysmod/html/js/menu/control.Menu.js": {
-				"fixed": "0c085ef41c5fcae848960c9f60ea711116dff40139f16890ebc2b59c252ae651",
+				"fixed": "69ac727dedd64724f95c42f559a3312e8934109dbffa12ba155a2839e7fe9ab8",
 				"original": "e6e74ec9c0158f83140befe791bc3b8d918ceaf229e30be7faa563f02a2d9bc0",
-				"patch": "bc7e9da957f6f52407592e983daf01904f8238f08aabb182316175ec0bc227b0"
+				"patch": "6c37143af10a53e9876041559745e7fdffdb0414135f4342a5aae55dcb2a3fca"
 			},
 			"garrysmod/html/menu.html": {
 				"fixed": "a3864abe7a4780221421a2cf3d40be0d34dadadb1bb3f3ed35d80f38d6a093e1",
@@ -1803,14 +1803,14 @@
 				"patch": "7a84daae811028110d329892749ff497f9521673e97b5377ad9a5b9f0e9bb590"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
-				"fixed": "102a8aef1b3953825b841803de80c43856372474ee4ce733b3d9bcf2c74c1ced",
+				"fixed": "ada43fbe6fb29e37b794a23dce8e326c58e928a399554fb6d432c1bea4b10792",
 				"original": "5a93b090310bf38c618501307d67f0131e3be5983bb0fda52a34a1047b42ca7d",
-				"patch": "f9854e69de062cab522dee6437643b06e6fc036afe4b7df9fe30b56e058e1241"
+				"patch": "667e352eb93067765a4f63ad58b1cf92fbde1ba038b081b8ef8abff5e0bcd2b2"
 			},
 			"garrysmod/resource/ClientScheme.res": {
-				"fixed": "43939f7239b81c629d68b978e85105a4fc65ebb809fb83edaf4e75e330396f4c",
+				"fixed": "3c86d3fe1792923e06240b1fd7ec60dcc34391c660faeeedc5bf3033bf40bd82",
 				"original": "cd609f48a30ceea7b95c3c8b2a030231bc6e187606dccac58ef6d0088f72045c",
-				"patch": "8187374cd45dfb137075e12f4385549476fa385196c8f490ea6b6b4ef6d1dcde"
+				"patch": "3e76e85471d7e015587cfd3a9cc0a975fd2b6c7fb7e51c604d9ec9221274aa24"
 			},
 			"garrysmod/resource/SourceScheme.res": {
 				"fixed": "37342a7d71d0c1248d92b093c329029a8cec8a06e89fedbc98d17b2c1606e668",
@@ -2841,14 +2841,14 @@
 				"patch": "7a84daae811028110d329892749ff497f9521673e97b5377ad9a5b9f0e9bb590"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
-				"fixed": "a65c93a1031252042c33bdce2ece8a47e8e135330be8df2d0410385f32ae9c5b",
+				"fixed": "ada43fbe6fb29e37b794a23dce8e326c58e928a399554fb6d432c1bea4b10792",
 				"original": "5a93b090310bf38c618501307d67f0131e3be5983bb0fda52a34a1047b42ca7d",
-				"patch": "a00aeb68e8189ba94b9d32640fd76753c71591ea26e28189450ced902afab66e"
+				"patch": "667e352eb93067765a4f63ad58b1cf92fbde1ba038b081b8ef8abff5e0bcd2b2"
 			},
 			"garrysmod/resource/ClientScheme.res": {
-				"fixed": "f6a0eaee4c786e02f50a60bee2386ddaf3e4fd391b409504eb99205e7b3f46a3",
+				"fixed": "3c86d3fe1792923e06240b1fd7ec60dcc34391c660faeeedc5bf3033bf40bd82",
 				"original": "cd609f48a30ceea7b95c3c8b2a030231bc6e187606dccac58ef6d0088f72045c",
-				"patch": "d849b7f1ed7555fc26f9ed938647d5396f351b30b37dd88804601662f59dc3e6"
+				"patch": "3e76e85471d7e015587cfd3a9cc0a975fd2b6c7fb7e51c604d9ec9221274aa24"
 			},
 			"garrysmod/resource/SourceScheme.res": {
 				"fixed": "37342a7d71d0c1248d92b093c329029a8cec8a06e89fedbc98d17b2c1606e668",
