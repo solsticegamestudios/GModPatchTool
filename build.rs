@@ -37,6 +37,7 @@ fn main() -> io::Result<()> {
 			.set_icon("GModPatchToolLogo.ico")
 			.set_language(0x0009) // English
 			.set_version_info(winresource::VersionInfo::FILEVERSION, version)
+			.set_manifest_file("gmodpatchtool.exe.manifest")
 			.compile()?;
 	}
 
