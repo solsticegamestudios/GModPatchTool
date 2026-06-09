@@ -504,7 +504,7 @@ enum IntegrityStatus {
 
 fn determine_file_integrity_status(gmod_path: PathBuf, filename: &str, hashes: &IndexMap<String, String>) -> Result<IntegrityStatus, String> {
 	let file_parts: Vec<&str> = filename.split("/").collect();
-	let file_path = pathbuf_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_path, &file_parts[..]), false);
+	let file_path = path_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_path, &file_parts[..]), false);
 	let mut file_hash = BLANK_FILE_HASH.to_string();
 
 	if let Ok(file_path) = file_path {
@@ -543,7 +543,7 @@ where
 	};
 	let file_parts: Vec<&str> = filename_no_zst.split("/").collect();
 	let cache_file_path = extend_pathbuf_and_return(cache_dir, &file_parts[..]);
-	let cache_file_path_result = pathbuf_to_canonical_pathbuf(cache_file_path.clone(), false);
+	let cache_file_path_result = path_to_canonical_pathbuf(&cache_file_path, false);
 
 	terminal_write(writer, format!("\tDownloading: {filename} ...").as_str(), true, None);
 
@@ -565,7 +565,7 @@ where
 		// Create directories if needed
 		let mut cache_file_path_dir = cache_file_path.clone();
 		cache_file_path_dir.pop();
-		let cache_file_path_dir_canonical = pathbuf_to_canonical_pathbuf(cache_file_path_dir.clone(), false);
+		let cache_file_path_dir_canonical = path_to_canonical_pathbuf(&cache_file_path_dir, false);
 
 		if cache_file_path_dir_canonical.is_err() {
 			let create_dir_result = tokio::fs::create_dir_all(cache_file_path_dir).await;
@@ -659,7 +659,7 @@ where
 	if new_integrity_status == IntegrityStatus::NeedOriginal {
 		let original_filename = format!("originals/{platform_masked}/{gmod_branch}/{filename}");
 		let original_file_parts: Vec<&str> = original_filename.split("/").collect();
-		let original_cache_file_path = pathbuf_to_canonical_pathbuf(extend_pathbuf_and_return(cache_dir.to_path_buf(), &original_file_parts[..]), false);
+		let original_cache_file_path = path_to_canonical_pathbuf(extend_pathbuf_and_return(cache_dir.to_path_buf(), &original_file_parts[..]), false);
 
 		match original_cache_file_path {
 			Ok(original_cache_file_path) => {
@@ -683,7 +683,7 @@ where
 	// Create/truncate original file (it doesn't exist without patches applied)
 	if new_integrity_status == IntegrityStatus::NeedWipeFix {
 		let gmod_file_path_dir = gmod_file_path.parent().unwrap().to_path_buf();
-		let gmod_file_path_dir_path = pathbuf_to_canonical_pathbuf(gmod_file_path_dir.clone(), false);
+		let gmod_file_path_dir_path = path_to_canonical_pathbuf(&gmod_file_path_dir, false);
 
 		if gmod_file_path_dir_path.is_err() {
 			let create_dir_result = std::fs::create_dir_all(gmod_file_path_dir);
@@ -707,7 +707,7 @@ where
 
 	// Patch the original file into the fixed one!
 	if new_integrity_status == IntegrityStatus::NeedFix {
-		let gmod_file_path = match pathbuf_to_canonical_pathbuf(gmod_file_path, false) {
+		let gmod_file_path = match path_to_canonical_pathbuf(gmod_file_path, false) {
 			Ok(gmod_file_path) => gmod_file_path,
 			Err(error) => {
 				terminal_write(writer, format!("\tFailed to Patch: {filename} | {integrity_status_string} / Step 1: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
@@ -718,7 +718,7 @@ where
 		let patch_filename = format!("patches/{platform_masked}/{gmod_branch}/{filename}.bsdiff");
 		let patch_file_parts: Vec<&str> = patch_filename.split("/").collect();
 
-		let patch_file_path = match pathbuf_to_canonical_pathbuf(extend_pathbuf_and_return(cache_dir.to_path_buf(), &patch_file_parts[..]), false) {
+		let patch_file_path = match path_to_canonical_pathbuf(extend_pathbuf_and_return(cache_dir.to_path_buf(), &patch_file_parts[..]), false) {
 			Ok(patch_file_path) => patch_file_path,
 			Err(error) => {
 				terminal_write(writer, format!("\tFailed to Patch: {filename} | {integrity_status_string} / Step 2: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
@@ -915,7 +915,7 @@ where
 	let mut steam_path = None;
 	if let Some(steam_path_arg) = args.steam_path {
 		// Make sure the path the user is forcing actually exists
-		let steam_path_arg_pathbuf = pathbuf_to_canonical_pathbuf(steam_path_arg.clone(), true);
+		let steam_path_arg_pathbuf = path_to_canonical_pathbuf(&steam_path_arg, true);
 
 		steam_path = match steam_path_arg_pathbuf {
 			Ok(steam_path) => Some(steam_path),
@@ -929,7 +929,7 @@ where
 		{
 			if let Ok(steam_reg_key) = windows_registry::CURRENT_USER.open("Software\\Valve\\Steam") {
 				if let Ok(steam_reg_path) = steam_reg_key.get_string("SteamPath") {
-					steam_path = string_to_canonical_pathbuf(steam_reg_path);
+					steam_path = path_to_canonical_pathbuf(steam_reg_path, true).ok();
 				}
 			}
 		}
@@ -940,7 +940,7 @@ where
 			// $HOME/Library/Application Support/Steam
 			let mut steam_data_path = dirs::data_dir().unwrap();
 			steam_data_path.push("Steam");
-			steam_path = pathbuf_to_canonical_pathbuf(steam_data_path, true).ok();
+			steam_path = path_to_canonical_pathbuf(steam_data_path, true).ok();
 		}
 
 		// Anything else (we assume Linux)
@@ -961,7 +961,7 @@ where
 			let mut valid_steam_paths = vec![];
 
 			for pathbuf in possible_steam_paths {
-				if let Ok(pathbuf) = pathbuf_to_canonical_pathbuf(pathbuf, true) {
+				if let Ok(pathbuf) = path_to_canonical_pathbuf(pathbuf, true) {
 					if !valid_steam_paths.contains(&pathbuf) {
 						valid_steam_paths.push(pathbuf);
 					}
@@ -970,7 +970,7 @@ where
 
 			// $XDG_DATA_HOME/Steam
 			if let Some(steam_xdg_path) = dirs::data_dir() {
-				if let Ok(steam_xdg_pathbuf) = pathbuf_to_canonical_pathbuf(extend_pathbuf_and_return(steam_xdg_path, &["Steam"]), true) {
+				if let Ok(steam_xdg_pathbuf) = path_to_canonical_pathbuf(extend_pathbuf_and_return(steam_xdg_path, &["Steam"]), true) {
 					if !valid_steam_paths.contains(&steam_xdg_pathbuf) {
 						valid_steam_paths.push(steam_xdg_pathbuf);
 					}
@@ -1088,9 +1088,9 @@ where
 	let steam_libraryfolders: HashMap<&str, SteamLibraryFolder> = steam_libraryfolders.unwrap();
 	for (_, steam_library) in steam_libraryfolders {
 		// Get potential Steam Library
-		let new_gmod_steam_library_path = string_to_canonical_pathbuf(steam_library.path);
+		let new_gmod_steam_library_path = path_to_canonical_pathbuf(steam_library.path, true);
 
-		if let Some(new_gmod_steam_library_path) = new_gmod_steam_library_path {
+		if let Ok(new_gmod_steam_library_path) = new_gmod_steam_library_path {
 			// Get GMod manifest
 			let mut new_gmod_manifest_path = extend_pathbuf_and_return(new_gmod_steam_library_path.to_path_buf(), &["steamapps", "appmanifest_4000.acf"]);
 			let mut new_gmod_manifest_str = tokio::fs::read_to_string(new_gmod_manifest_path).await;
@@ -1154,11 +1154,11 @@ where
 	// Get GMod path
 	// TODO: What about `steamapps/<username>/GarrysMod`? Is that still a thing, or did SteamPipe kill/migrate it completely?
 	let gmod_path_config = gmod_manifest.install_dir;
-	let mut gmod_path = pathbuf_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_steam_library_path.clone(), &["steamapps", "common", &gmod_path_config]), true);
+	let mut gmod_path = path_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_steam_library_path.clone(), &["steamapps", "common", &gmod_path_config]), true);
 
 	// Try SteamApps with capitalization
 	if gmod_path.is_err() {
-		gmod_path = pathbuf_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_steam_library_path.clone(), &["SteamApps", "common", &gmod_path_config]), true);
+		gmod_path = path_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_steam_library_path.clone(), &["SteamApps", "common", &gmod_path_config]), true);
 	}
 
 	if gmod_path.is_err() {
@@ -1387,10 +1387,10 @@ where
 	if pending_files_len > 0 {
 		// Delete old GModCEFCodecFix cache directory
 		#[cfg(windows)]
-		let old_cache_dir = pathbuf_to_canonical_pathbuf(extend_pathbuf_and_return(os_cache_dir.clone(), &["Temp", "GModCEFCodecFix"]), false);
+		let old_cache_dir = path_to_canonical_pathbuf(extend_pathbuf_and_return(os_cache_dir.clone(), &["Temp", "GModCEFCodecFix"]), false);
 
 		#[cfg(not(windows))]
-		let old_cache_dir = pathbuf_to_canonical_pathbuf(extend_pathbuf_and_return(os_cache_dir.clone(), &["GModCEFCodecFix"]), false);
+		let old_cache_dir = path_to_canonical_pathbuf(extend_pathbuf_and_return(os_cache_dir.clone(), &["GModCEFCodecFix"]), false);
 
 		if let Ok(old_cache_dir) = old_cache_dir {
 			let old_cache_dir_result = tokio::fs::remove_dir_all(old_cache_dir).await;
@@ -1408,7 +1408,7 @@ where
 		// Create new GModPatchTool cache directory if it doesn't exist
 		let cache_path = extend_pathbuf_and_return(os_cache_dir, &["GModPatchTool"]);
 		let mut cache_path_str = cache_path.to_string_lossy();
-		let mut cache_dir = pathbuf_to_canonical_pathbuf(cache_path.clone(), false);
+		let mut cache_dir = path_to_canonical_pathbuf(&cache_path, false);
 
 		// ...but make sure it doesn't exist (and clear it) if disable_cache is set
 		if args.disable_cache {
@@ -1425,14 +1425,14 @@ where
 				}
 			}
 
-			cache_dir = pathbuf_to_canonical_pathbuf(cache_path.clone(), false);
+			cache_dir = path_to_canonical_pathbuf(&cache_path, false);
 		}
 
 		if cache_dir.is_err() {
 			let create_result = tokio::fs::create_dir(cache_path.clone()).await;
 
 			if create_result.is_ok() {
-				cache_dir = pathbuf_to_canonical_pathbuf(cache_path.clone(), false);
+				cache_dir = path_to_canonical_pathbuf(&cache_path, false);
 			}
 		}
 
@@ -1526,7 +1526,7 @@ where
 			if let Some(executable) = executable {
 				if executable == "true" {
 					let gmod_file_parts: Vec<&str> = filename.split("/").collect();
-					let gmod_file_path = pathbuf_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_path.clone(), &gmod_file_parts[..]), true);
+					let gmod_file_path = path_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_path.clone(), &gmod_file_parts[..]), true);
 
 					if let Ok(gmod_file_path) = gmod_file_path {
 						let metadata = tokio::fs::metadata(&gmod_file_path).await;
@@ -1562,7 +1562,7 @@ where
 	// Delete ChromiumCache/ChromiumCacheMultirun
 	// Solves issues with being corrupt/stuck lockfiles, and GMod MUST NOT be running for this tool to run, so it probably solves more issues than it could create
 	if !args.skip_clear_chromiumcache {
-		let gmod_chromiumcache_path = pathbuf_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_path.clone(), &["ChromiumCache"]), false);
+		let gmod_chromiumcache_path = path_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_path.clone(), &["ChromiumCache"]), false);
 		if let Ok(gmod_chromiumcache_path) = gmod_chromiumcache_path {
 			terminal_write(writer, "\nClearing ChromiumCache...", true, None);
 			if let Err(error) = tokio::fs::remove_dir_all(gmod_chromiumcache_path).await {
@@ -1572,7 +1572,7 @@ where
 			}
 		}
 
-		let gmod_chromiumcachemultirun_path = pathbuf_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_path.clone(), &["ChromiumCacheMultirun"]), false);
+		let gmod_chromiumcachemultirun_path = path_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_path.clone(), &["ChromiumCacheMultirun"]), false);
 		if let Ok(gmod_chromiumcachemultirun_path) = gmod_chromiumcachemultirun_path {
 			terminal_write(writer, "\nClearing ChromiumCacheMultirun...", true, None);
 			if let Err(error) = tokio::fs::remove_dir_all(gmod_chromiumcachemultirun_path).await {

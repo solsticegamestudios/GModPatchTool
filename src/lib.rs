@@ -28,6 +28,7 @@ Discord: https://solsticegamestudios.com/discord/
 Email: contact@solsticegamestudios.com
 "#;
 
+use std::io;
 use std::path::{Path, PathBuf};
 use std::collections::HashMap;
 use indexmap::IndexMap;
@@ -46,43 +47,19 @@ fn pathbuf_dir_not_empty(pathbuf: &Path) -> bool {
 	pathbuf_dir.is_ok() && pathbuf_dir.unwrap().next().is_some()
 }
 
-fn pathbuf_to_canonical_pathbuf(pathbuf: PathBuf, checkdirempty: bool) -> Result<PathBuf, String> {
+fn path_to_canonical_pathbuf(path: impl AsRef<Path>, checkdirempty: bool) -> io::Result<PathBuf> {
 	#[cfg(windows)]
 	use dunce::canonicalize;
 	#[cfg(not(windows))]
 	let canonicalize = Path::canonicalize;
 
-	let pathbuf_result = canonicalize(pathbuf.as_path());
+	let pathbuf = canonicalize(path.as_ref())?;
 
-	match pathbuf_result {
-		Ok(pathbuf) => {
-			if !checkdirempty || pathbuf_dir_not_empty(&pathbuf) {
-				Ok(pathbuf)
-			} else {
-				Err("Directory is empty".to_string())
-			}
-		},
-		Err(error) => {
-			Err(error.to_string())
-		}
-	}
-}
-
-fn string_to_canonical_pathbuf(path_str: String) -> Option<PathBuf> {
-	#[cfg(windows)]
-	use dunce::canonicalize;
-	#[cfg(not(windows))]
-	let canonicalize = Path::canonicalize;
-
-	let pathbuf_result = canonicalize(Path::new(&path_str));
-
-	if let Ok(pathbuf) = pathbuf_result {
-		if pathbuf_dir_not_empty(&pathbuf) {
-			return Some(pathbuf);
-		}
+	if checkdirempty && !pathbuf_dir_not_empty(&pathbuf) {
+		return Err(io::Error::other("Directory is empty"));
 	}
 
-	None
+	Ok(pathbuf)
 }
 
 fn extend_pathbuf_and_return(mut pathbuf: PathBuf, segments: &[&str]) -> PathBuf {

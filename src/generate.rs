@@ -249,11 +249,11 @@ pub fn main() {
 	// Parse the args (will also exit if something's wrong with them)
 	let args = Args::parse();
 
-	let original_src = pathbuf_to_canonical_pathbuf(args.original_src.clone(), true);
-	let fixed_src = pathbuf_to_canonical_pathbuf(args.fixed_src.clone(), true);
-	let patch_dest = pathbuf_to_canonical_pathbuf(args.patch_dest.clone(), false);
-	let original_dest = pathbuf_to_canonical_pathbuf(args.original_dest.clone(), false);
-	let symbol_dest = pathbuf_to_canonical_pathbuf(args.symbol_dest.clone(), false);
+	let original_src = path_to_canonical_pathbuf(&args.original_src, true);
+	let fixed_src = path_to_canonical_pathbuf(&args.fixed_src, true);
+	let patch_dest = path_to_canonical_pathbuf(&args.patch_dest, false);
+	let original_dest = path_to_canonical_pathbuf(&args.original_dest, false);
+	let symbol_dest = path_to_canonical_pathbuf(&args.symbol_dest, false);
 
 	let mut cmd = Args::command();
 	if let Err(original_src) = original_src {
