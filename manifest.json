@@ -1098,8 +1098,8 @@
 			"GarrysMod_Signed.app/Contents/MacOS/gmod": {
 				"executable": "true",
 				"fixed": "3325e34416bd0e3dd64b6f53e68d9998bf581a61da77c5090f26ba58cbe8faf2",
-				"original": "null",
-				"patch": "ab3b223a668ab00bcb0ff74f78ea82b16a88774d2ff138e62de0722a80a98f8d"
+				"original": "4e3188c4fa8a5a1b5c99e8b41a6eaafeddc9d623ced6a3bfe70ccbe7806d1fc6",
+				"patch": "6bac78683580db23785cb4facc09503a36f97bf4cb9777b7f98c28d28d69146d"
 			},
 			"GarrysMod_Signed.app/Contents/MacOS/html_chromium.dylib": {
 				"executable": "true",
