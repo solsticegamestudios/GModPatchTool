@@ -792,6 +792,51 @@ unsafe extern "C" {
 	safe fn geteuid() -> u32;
 }
 
+// HACK: Rip out the "WebStorage" section to mitigate stack overflow issues
+// See `thread_stack_size` in main_script
+// See https://github.com/CosmicHorrorDev/vdf-rs/issues/54
+fn strip_localconfig_webstorage(localconfig: String) -> String {
+	let webstorage_start_regex = Regex::new(r"WebStorage.+\s+\{").unwrap();
+	let webstorage_start_match = webstorage_start_regex.find(&localconfig);
+
+	if let Some(webstorage_start_match) = webstorage_start_match {
+		let webstorage_open_bracket = webstorage_start_match.end();
+
+		// Quoted values can contain unbalanced brackets (e.g. Overlay page titles), so only count brackets outside strings
+		let mut next_char_escaped = false;
+		let mut in_string = false;
+		let mut open_bracket_count: usize = 1;
+		let mut webstorage_close_bracket_offset: Option<usize> = None;
+		for (offset, byte) in (0_usize..).zip(localconfig[webstorage_open_bracket..].bytes()) {
+			if next_char_escaped {
+				next_char_escaped = false;
+			} else if byte == b'\\' {
+				next_char_escaped = true;
+			} else if byte == b'"' {
+				in_string = !in_string;
+			} else if !in_string {
+				if byte == b'{' {
+					open_bracket_count += 1;
+				} else if byte == b'}' {
+					open_bracket_count -= 1;
+				}
+
+				if open_bracket_count == 0 {
+					webstorage_close_bracket_offset = Some(offset);
+					break;
+				}
+			}
+		}
+
+		if let Some(webstorage_close_bracket_offset) = webstorage_close_bracket_offset {
+			let webstorage_close_bracket = webstorage_open_bracket + webstorage_close_bracket_offset;
+			return format!("{}{}", &localconfig[..webstorage_open_bracket], &localconfig[webstorage_close_bracket..]);
+		}
+	}
+
+	localconfig
+}
+
 async fn main_script_internal<W>(writer: fn() -> W, writer_is_interactive: bool, args: Args) -> Result<(), AlmightyError>
 where
 	W: std::io::Write + 'static
@@ -1236,41 +1281,7 @@ where
 		return Err(AlmightyError::Generic(format!("Couldn't find/read Steam localconfig.vdf. Have you ever launched/signed in to Steam?\n\t{error}")));
 	}
 
-	// HACK: Rip out the "WebStorage" section to mitigate stack overflow issues
-	// See `thread_stack_size` below
-	// See https://github.com/CosmicHorrorDev/vdf-rs/issues/54
-	let mut steam_user_localconfig_str = steam_user_localconfig_str.unwrap();
-	let webstorage_start_regex = Regex::new(r"WebStorage.+\s+\{").unwrap();
-	let webstorage_start_match = webstorage_start_regex.find(&steam_user_localconfig_str);
-
-	if let Some(webstorage_start_match) = webstorage_start_match {
-		let webstorage_open_bracket = webstorage_start_match.end();
-
-		let mut next_char_escaped = false;
-		let mut open_bracket_count: usize = 1;
-		let mut webstorage_close_bracket_offset: Option<usize> = None;
-		for (offset, byte) in (0_usize..).zip(steam_user_localconfig_str[webstorage_open_bracket..].bytes()) {
-			if !next_char_escaped {
-				if byte == b'{' {
-					open_bracket_count += 1;
-				} else if byte == b'}' {
-					open_bracket_count -= 1;
-				}
-
-				if open_bracket_count == 0 {
-					webstorage_close_bracket_offset = Some(offset);
-					break;
-				}
-			}
-
-			next_char_escaped = byte == b'\\';
-		}
-
-		if let Some(webstorage_close_bracket_offset) = webstorage_close_bracket_offset {
-			let webstorage_close_bracket = webstorage_open_bracket + webstorage_close_bracket_offset;
-			steam_user_localconfig_str = format!("{}{}", &steam_user_localconfig_str[..webstorage_open_bracket], &steam_user_localconfig_str[webstorage_close_bracket..]);
-		}
-	}
+	let steam_user_localconfig_str = strip_localconfig_webstorage(steam_user_localconfig_str.unwrap());
 
 	let steam_user_localconfig = vdf::from_str(steam_user_localconfig_str.as_str());
 
@@ -1751,3 +1762,6 @@ pub fn main() {
 		delete_pid_lockfile();
 	}
 }
+
+#[cfg(test)]
+mod tests;
