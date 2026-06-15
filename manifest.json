@@ -627,9 +627,9 @@
 				"patch": "6c37143af10a53e9876041559745e7fdffdb0414135f4342a5aae55dcb2a3fca"
 			},
 			"garrysmod/html/menu.html": {
-				"fixed": "a3864abe7a4780221421a2cf3d40be0d34dadadb1bb3f3ed35d80f38d6a093e1",
+				"fixed": "94d4c1f4628882ba902b36448f3f10869afa69434ba1e885d3974e131ae540b1",
 				"original": "4680eba1d0696df4532d7db69334799b58a8dc58d4f96af7ad7d75786ecaedee",
-				"patch": "b3cff5f604afe1de0fde0e847282a5bdf17c8e15fb2923ad46ec42b303cb3f41"
+				"patch": "14c8d5185bb7fff78dd7b909a1968e63e7e2320816dd2c798982bdce1676e718"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
 				"fixed": "ada43fbe6fb29e37b794a23dce8e326c58e928a399554fb6d432c1bea4b10792",
@@ -1138,9 +1138,9 @@
 				"patch": "6c37143af10a53e9876041559745e7fdffdb0414135f4342a5aae55dcb2a3fca"
 			},
 			"garrysmod/html/menu.html": {
-				"fixed": "a3864abe7a4780221421a2cf3d40be0d34dadadb1bb3f3ed35d80f38d6a093e1",
+				"fixed": "94d4c1f4628882ba902b36448f3f10869afa69434ba1e885d3974e131ae540b1",
 				"original": "4680eba1d0696df4532d7db69334799b58a8dc58d4f96af7ad7d75786ecaedee",
-				"patch": "b3cff5f604afe1de0fde0e847282a5bdf17c8e15fb2923ad46ec42b303cb3f41"
+				"patch": "14c8d5185bb7fff78dd7b909a1968e63e7e2320816dd2c798982bdce1676e718"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
 				"fixed": "ada43fbe6fb29e37b794a23dce8e326c58e928a399554fb6d432c1bea4b10792",
@@ -2836,9 +2836,9 @@
 				"patch": "6c37143af10a53e9876041559745e7fdffdb0414135f4342a5aae55dcb2a3fca"
 			},
 			"garrysmod/html/menu.html": {
-				"fixed": "a3864abe7a4780221421a2cf3d40be0d34dadadb1bb3f3ed35d80f38d6a093e1",
+				"fixed": "94d4c1f4628882ba902b36448f3f10869afa69434ba1e885d3974e131ae540b1",
 				"original": "4680eba1d0696df4532d7db69334799b58a8dc58d4f96af7ad7d75786ecaedee",
-				"patch": "b3cff5f604afe1de0fde0e847282a5bdf17c8e15fb2923ad46ec42b303cb3f41"
+				"patch": "14c8d5185bb7fff78dd7b909a1968e63e7e2320816dd2c798982bdce1676e718"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
 				"fixed": "ada43fbe6fb29e37b794a23dce8e326c58e928a399554fb6d432c1bea4b10792",
