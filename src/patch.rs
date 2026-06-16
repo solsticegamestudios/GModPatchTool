@@ -309,8 +309,8 @@ fn terminal_write<W>(writer: fn() -> W, output: &str, newline: bool, color: Opti
 where
 	W: std::io::Write + 'static
 {
-	if color.is_some() && COLOR_LOOKUP.contains_key(color.unwrap()) {
-		write!(writer(), "{}", COLOR_LOOKUP[color.unwrap()]).unwrap();
+	if let Some(color) = color && COLOR_LOOKUP.contains_key(color) {
+		write!(writer(), "{}", COLOR_LOOKUP[color]).unwrap();
 	}
 
 	if newline {
@@ -551,12 +551,11 @@ where
 	if cache_file_path_result.is_ok() {
 		let file_hash_result = get_file_hash(&cache_file_path);
 
-		if let Ok(file_hash) = file_hash_result {
-			if file_hash == target_hash {
+		if let Ok(file_hash) = file_hash_result
+			&& file_hash == target_hash {
 				terminal_write(writer, format!("\tDownloaded (From Cache): {filename}").as_str(), true, None);
 				return Ok(());
 			}
-		}
 	}
 
 	// If it's not in the cache, or there's a checksum mismatch with the version in the cache, (re-)download it
@@ -643,12 +642,11 @@ where
 	// If we can't delete it outright, try and truncate it
 	// We could alternatively "patch" it into being empty...but that's a waste of CPU cycles, and if truncating doesn't work, that won't work either
 	if new_integrity_status == IntegrityStatus::NeedDelete {
-		if let Err(delete_error) = std::fs::remove_file(&gmod_file_path) {
-			if let Err(truncate_error) = File::create(&gmod_file_path) {
+		if let Err(delete_error) = std::fs::remove_file(&gmod_file_path)
+			&& let Err(truncate_error) = File::create(&gmod_file_path) {
 				terminal_write(writer, format!("\tFailed to Patch: {filename} | {integrity_status_string}:\n\tDelete: {delete_error}\n\tTruncate: {truncate_error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
 				return new_integrity_status;
 			}
-		}
 
 		terminal_write(writer, format!("\tPatched: {filename}").as_str(), true, None);
 		new_integrity_status = IntegrityStatus::Fixed;
@@ -850,13 +848,11 @@ where
 	// Abort if another instance is already running
 	let pid_path = extend_pathbuf_and_return(os_cache_dir.clone(), &["gmodpatchtool.pid"]);
 	let running_instance_pid = tokio::fs::read_to_string(&pid_path).await;
-	if let Ok(pid) = running_instance_pid {
-		if let Ok(pid) = pid.parse::<usize>() {
-			if sys.process(sysinfo::Pid::from(pid)).is_some() {
+	if let Ok(pid) = running_instance_pid
+		&& let Ok(pid) = pid.parse::<usize>()
+			&& sys.process(sysinfo::Pid::from(pid)).is_some() {
 				return Err(AlmightyError::Generic(format!("Another instance of GModPatchTool is already running ({pid}).")));
 			}
-		}
-	}
 
 	// Create PID lockfile
 	let pid_write_result = tokio::fs::write(&pid_path, std::process::id().to_string()).await;
@@ -957,6 +953,8 @@ where
 	}
 
 	// Find Steam
+	// None is the Windows/Linux fallback when no path is found; macOS always reassigns
+	#[allow(unused_assignments)]
 	let mut steam_path = None;
 	if let Some(steam_path_arg) = args.steam_path {
 		// Make sure the path the user is forcing actually exists
@@ -1218,13 +1216,11 @@ where
 	// Abort if they're running as root AND the GMod directory isn't owned by root
 	// Will hopefully prevent broken installs/updating
 	#[cfg(unix)]
-	if root {
-		if let Ok(gmod_dir_meta) = tokio::fs::metadata(&gmod_path).await {
-			if gmod_dir_meta.uid() != 0 {
+	if root
+		&& let Ok(gmod_dir_meta) = tokio::fs::metadata(&gmod_path).await
+			&& gmod_dir_meta.uid() != 0 {
 				return Err(AlmightyError::Generic("You are running GModPatchTool as root, but the Garry's Mod directory isn't owned by root. Either fix your permissions or don't run as root! Aborting...".to_string()));
 			}
-		}
-	}
 
 	// Determine target platform
 	// Get GMod CompatTool config (Steam Linux Runtime, Proton, etc) on Linux
@@ -1293,8 +1289,8 @@ where
 	let steam_user_localconfig_gmod = steam_user_localconfig.software.valve.steam.apps.gmod;
 
 	if let Some(steam_user_localconfig_gmod) = steam_user_localconfig_gmod {
-		if let Some(steam_user_localconfig_gmod_launchopts) = &steam_user_localconfig_gmod.launch_options {
-			if steam_user_localconfig_gmod_launchopts.contains("-nochromium") {
+		if let Some(steam_user_localconfig_gmod_launchopts) = &steam_user_localconfig_gmod.launch_options
+			&& steam_user_localconfig_gmod_launchopts.contains("-nochromium") {
 				terminal_write(writer, "WARNING: -nochromium is in GMod's Launch Options! CEF will not work with this.\n\tPlease go to Steam > Garry's Mod > Properties > General and remove it.\n\tAdditionally, if you have gmod-lua-menu installed, uninstall it.", true, if writer_is_interactive { Some("yellow") } else { None });
 
 				let mut secs_to_continue: u8 = 5;
@@ -1310,7 +1306,6 @@ where
 					terminal_write(writer, "\x1B[0K\n", false, None);
 				}
 			}
-		}
 	} else {
 		return Err(AlmightyError::Generic("Couldn't find Garry's Mod in user localconfig.vdf. Is Garry's Mod installed?".to_string()));
 	}
@@ -1534,8 +1529,8 @@ where
 		for (filename, fileinfo) in platform_branch_files {
 			let executable = fileinfo.get("executable");
 
-			if let Some(executable) = executable {
-				if executable == "true" {
+			if let Some(executable) = executable
+				&& executable == "true" {
 					let gmod_file_parts: Vec<&str> = filename.split("/").collect();
 					let gmod_file_path = path_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_path.clone(), &gmod_file_parts[..]), true);
 
@@ -1566,7 +1561,6 @@ where
 						}
 					}
 				}
-			}
 		}
 	}
 
@@ -1622,16 +1616,14 @@ fn delete_pid_lockfile() {
 	let pid_path = extend_pathbuf_and_return(os_cache_dir.clone(), &["gmodpatchtool.pid"]);
 	let running_instance_pid = std::fs::read_to_string(&pid_path);
 
-	if let Ok(pid) = running_instance_pid {
-		if let Ok(pid) = pid.parse::<u32>() {
-			if pid == std::process::id() {
+	if let Ok(pid) = running_instance_pid
+		&& let Ok(pid) = pid.parse::<u32>()
+			&& pid == std::process::id() {
 				let pid_remove_result = std::fs::remove_file(&pid_path);
 				if let Err(error) = pid_remove_result {
 					println!("Failed to remove gmodpatchtool.pid: {error}");
 				}
 			}
-		}
-	}
 }
 
 fn terminal_exit_handler() {

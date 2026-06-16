@@ -18,7 +18,8 @@ pub enum Error {
 pub type Result<T, E = Error> = core::result::Result<T, E>;
 
 pub fn from_str_with_key<'de, T: Deserialize<'de>>(s: &'de str) -> Result<(T, Cow<'de, str>)> {
-	let vdf = Vdf::parse(s)
+	let vdf = keyvalues_serde::parser::parse(s)
+		.map(Vdf::from)
 		.map_err(Box::new)
 		.map_err(Error::KeyvaluesParser)?;
 	let (mut deserializer, key) = keyvalues_serde::Deserializer::new_with_key(vdf)
@@ -38,6 +39,8 @@ pub fn from_str_with_key<'de, T: Deserialize<'de>>(s: &'de str) -> Result<(T, Co
 		}
 	};
 
+	// keyvalues-serde has no public trailing-token check (it uses this internally too)
+	#[allow(deprecated)]
 	if !deserializer.is_empty() {
 		return Err(Error::KeyvaluesSerde(Box::new(
 			keyvalues_serde::Error::TrailingTokens,
