@@ -1,77 +1,138 @@
-name: All Platform Build
+name: Build & Release
 
+# No tag-push trigger: publishing the draft makes the tag, which would re-fire this against the now-immutable release
 on:
   workflow_dispatch:
-  release:
-    types: [released]
-  #push:
-  #  branches:
-  #    - master
+
+permissions: {}
 
 jobs:
   build:
+    name: Build (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-20.04, macos-13]
+        include:
+          - name: Windows
+            os: windows-latest
+            artifact: GModPatchTool-Windows.zip
+          - name: Linux
+            os: ubuntu-22.04
+            artifact: GModPatchTool-Linux.zip
+          - name: macOS
+            os: macos-latest
+            artifact: GModPatchTool-macOS.zip
 
     steps:
-      - name: Repo Checkout
-        uses: actions/checkout@main
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
-          lfs: true
+          lfs: true # build.rs aborts if the logo PNG is an LFS pointer; Windows .ico is LFS too
 
-      - name: Setup Python
-        uses: actions/setup-python@main
-        with:
-          python-version: '3.12' # PyInstaller supports up to 3.12
+      - name: Set up Rust
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
 
-      - name: Get Dependencies and PyInstaller
+      # Windows: plain release exe
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
+        run: cargo build --release --locked
+
+      - name: Stage and zip (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
         run: |
-          python -m pip install --upgrade pip
-          pip install --upgrade wheel
-          pip install --upgrade -r requirements.txt
-          pip install pyinstaller==6.10.0
+          New-Item -ItemType Directory staging | Out-Null
+          Copy-Item target/release/gmodpatchtool.exe, LICENSE.txt, README.md, version.txt staging/
+          Compress-Archive -Path staging/* -DestinationPath ${{ matrix.artifact }}
 
-      # Windows Defender is throwing false-positive matches
-      #- name: Build PyInstaller Bootloader
-      #  if: ${{ runner.os == 'Windows' }}
-      #  run: |
-      #    git clone https://github.com/pyinstaller/pyinstaller.git --depth 1 --branch "v6.10.0"
-      #    cd pyinstaller/bootloader
-      #    python ./waf all
-      #    rm -r "$(python -c "import os, sys; print(os.path.dirname(sys.executable))")/Lib/site-packages/PyInstaller/bootloader"
-      #    cp -r "../PyInstaller/bootloader" "$(python -c "import os, sys; print(os.path.dirname(sys.executable))")/Lib/site-packages/PyInstaller"
+      # Linux: target glibc 2.28 (Debian 10+/Ubuntu 20.04+) via cargo-zigbuild, matching CEF 137
+      - name: Install Zig (Linux)
+        if: runner.os == 'Linux'
+        uses: mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29 # v2.2.1
 
-      - name: Install Tkinter
-        if: ${{ runner.os == 'macOS' }}
-        run: brew install python-tk@3.12 && echo -n 'export PATH="/usr/local/opt/python/libexec/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc && echo -n 'export PATH="/usr/local/opt/python/libexec/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
-
-      - name: PyInstaller Build
-        run: ${{ runner.os == 'Windows' && 'iex ' || ''}}$(cat pyinstaller_${{ runner.os == 'Windows' && 'windows' || runner.os == 'Linux' && 'linux' || 'macos' }}.txt)
-
-      - name: PyInstaller Build (ZIP)
-        if: ${{ runner.os == 'Windows' }}
-        run: Compress-Archive "dist/GModCEFCodecFix" "GModCEFCodecFix.zip"
-
-      - name: Get Latest Release Info
-        id: latest-release
-        uses: actions/github-script@main
+      - name: Install cargo-zigbuild (Linux)
+        if: runner.os == 'Linux'
+        uses: taiki-e/install-action@15449e3094499af05d8d964a1c884208e4b8b595 # v2.81.11
         with:
-          script: |
-            return github.rest.repos.getLatestRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
+          tool: cargo-zigbuild
 
-      # TODO: Use https://github.com/softprops/action-gh-release instead (is it drop-in or do we have to do stuff?)
-      - name: Upload Release Binary
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build (Linux)
+        if: runner.os == 'Linux'
+        run: cargo zigbuild --release --locked --target x86_64-unknown-linux-gnu.2.28
+
+      - name: Stage and zip (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          mkdir staging
+          cp target/x86_64-unknown-linux-gnu/release/gmodpatchtool LICENSE.txt README.md version.txt staging/
+          (cd staging && zip -X -r "../${{ matrix.artifact }}" .)
+
+      # macOS: universal2 DMG; build+lipo lives in Cargo.toml before-packaging-command
+      - name: Install cargo-packager (macOS)
+        if: runner.os == 'macOS'
+        run: cargo install cargo-packager@0.11.8 --locked
+
+      - name: Build universal DMG (macOS)
+        if: runner.os == 'macOS'
+        run: cargo packager --release
+
+      - name: Stage and zip (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          mkdir staging
+          dmg="$(find target -name '*.dmg' | head -n1)"
+          test -n "$dmg" || { echo "No .dmg produced"; exit 1; }
+          cp "$dmg" LICENSE.txt README.md version.txt staging/
+          (cd staging && zip -X -r "../${{ matrix.artifact }}" .)
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          upload_url: ${{ fromJSON(steps.latest-release.outputs.result).data.upload_url }}
-          asset_path: ./dist/GModCEFCodecFix${{ runner.os == 'Windows' && '.zip' || '' }}
-          asset_name: GModCEFCodecFix-${{ runner.os }}${{ runner.os == 'Windows' && '.zip' || '' }}
-          asset_content_type: application/octet-stream
+          name: ${{ matrix.name }}
+          path: ${{ matrix.artifact }}
+          if-no-files-found: error
+
+  release:
+    name: Draft release + attest
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create/update the release
+      id-token: write # OIDC for attestation signing
+      attestations: write # store the build-provenance attestation
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        # need version.txt for the tag; no LFS required here
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Compute tag and checksums
+        id: meta
+        run: |
+          tag="$(cat version.txt)"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          (cd dist && sha256sum *.zip > SHA256SUMS.txt)
+          echo "Tag: $tag"; cat dist/SHA256SUMS.txt
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v4.1.0
+        with:
+          subject-path: dist/*.zip
+
+      - name: Create/update draft release
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
+        with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          draft: true # you publish manually -> locks immutable + green-check attestation
+          fail_on_unmatched_files: true
+          files: |
+            dist/*.zip
+            dist/SHA256SUMS.txt
