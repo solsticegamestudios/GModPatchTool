@@ -1062,13 +1062,14 @@ where
 
 	// Get most recent Steam User, which is probably the one they're using/want
 	let steam_loginusers_path = extend_pathbuf_and_return(steam_path.clone(), &["config", "loginusers.vdf"]);
-	let steam_loginusers_str = tokio::fs::read_to_string(steam_loginusers_path).await;
+	let steam_loginusers_bytes = tokio::fs::read(steam_loginusers_path).await;
 
-	if steam_loginusers_str.is_err() {
+	if steam_loginusers_bytes.is_err() {
 		return Err(AlmightyError::Generic("Couldn't find Steam loginusers.vdf. Have you ever launched/signed in to Steam?".to_string()));
 	}
 
-	let steam_loginusers_str = steam_loginusers_str.unwrap();
+	// loginusers.vdf can hold invalid UTF-8 (truncated persona names), so decode lossily
+	let steam_loginusers_str = String::from_utf8_lossy(&steam_loginusers_bytes.unwrap()).into_owned();
 	let steam_loginusers = vdf::from_str(steam_loginusers_str.as_str());
 
 	if let Err(error) = steam_loginusers {
@@ -1271,13 +1272,14 @@ where
 	// Warn if -nochromium is in launch options
 	// Some GMod "menu error fix" guides include it + gmod-lua-menu
 	let steam_user_localconfig_path = extend_pathbuf_and_return(steam_path.clone(), &["userdata", steam_id.account_id().into_u32().to_string().as_str(), "config", "localconfig.vdf"]);
-	let steam_user_localconfig_str = tokio::fs::read_to_string(steam_user_localconfig_path).await;
+	let steam_user_localconfig_bytes = tokio::fs::read(steam_user_localconfig_path).await;
 
-	if let Err(error) = steam_user_localconfig_str {
+	if let Err(error) = steam_user_localconfig_bytes {
 		return Err(AlmightyError::Generic(format!("Couldn't find/read Steam localconfig.vdf. Have you ever launched/signed in to Steam?\n\t{error}")));
 	}
 
-	let steam_user_localconfig_str = strip_localconfig_webstorage(steam_user_localconfig_str.unwrap());
+	// localconfig.vdf can hold invalid UTF-8 (Steam truncates friend persona names mid-codepoint), so decode lossily
+	let steam_user_localconfig_str = strip_localconfig_webstorage(String::from_utf8_lossy(&steam_user_localconfig_bytes.unwrap()).into_owned());
 
 	let steam_user_localconfig = vdf::from_str(steam_user_localconfig_str.as_str());
 
