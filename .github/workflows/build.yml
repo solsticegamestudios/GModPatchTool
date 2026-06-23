@@ -52,12 +52,14 @@ jobs:
       - name: Install Zig (Linux)
         if: runner.os == 'Linux'
         uses: mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29 # v2.2.1
+        with:
+          version: "0.16.0" # pin Zig; cargo-zigbuild's CI tests against 0.16.0
 
       - name: Install cargo-zigbuild (Linux)
         if: runner.os == 'Linux'
         uses: taiki-e/install-action@15449e3094499af05d8d964a1c884208e4b8b595 # v2.81.11
         with:
-          tool: cargo-zigbuild
+          tool: cargo-zigbuild@0.23.0
 
       - name: Build (Linux)
         if: runner.os == 'Linux'
