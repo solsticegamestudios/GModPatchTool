@@ -390,6 +390,7 @@ where
 		let response = get_http_response(writer, writer_is_interactive, servers, filename, server_id, try_count).await;
 
 		if let Some(response) = response {
+			// TODO: Stream to disk via reqwest's "stream" feature instead of buffering whole files in RAM
 			let response_bytes_raw = response.bytes().await;
 
 			match response_bytes_raw {
