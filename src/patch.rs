@@ -64,7 +64,7 @@ struct Args {
 	#[arg(long)]
 	no_sourcescheme: bool,
 
-	/// Skip deleting ChromiumCache/ChromiumCacheMultirun from the GarrysMod directory
+	/// Skip deleting ChromiumCache/ChromiumCacheMultirun/chromium.log from the GarrysMod directory
 	#[arg(long)]
 	skip_clear_chromiumcache: bool,
 
@@ -1567,7 +1567,7 @@ where
 		}
 	}
 
-	// Delete ChromiumCache/ChromiumCacheMultirun
+	// Delete ChromiumCache/ChromiumCacheMultirun/chromium.log
 	// Solves issues with being corrupt/stuck lockfiles, and GMod MUST NOT be running for this tool to run, so it probably solves more issues than it could create
 	if !args.skip_clear_chromiumcache {
 		let gmod_chromiumcache_path = path_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_path.clone(), &["ChromiumCache"]), false);
@@ -1585,6 +1585,16 @@ where
 			terminal_write(writer, "\nClearing ChromiumCacheMultirun...", true, None);
 			if let Err(error) = tokio::fs::remove_dir_all(gmod_chromiumcachemultirun_path).await {
 				terminal_write(writer, format!("\tFailed: {error}\n\tYou may want to delete ChromiumCacheMultirun from the GarrysMod directory manually!").as_str(), true, if writer_is_interactive { Some("yellow") } else { None });
+			} else {
+				terminal_write(writer, "Done!", true, None);
+			}
+		}
+
+		let gmod_chromiumlog_path = path_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_path.clone(), &["chromium.log"]), false);
+		if let Ok(gmod_chromiumlog_path) = gmod_chromiumlog_path {
+			terminal_write(writer, "\nRemoving chromium.log...", true, None);
+			if let Err(error) = tokio::fs::remove_file(gmod_chromiumlog_path).await {
+				terminal_write(writer, format!("\tFailed: {error}\n\tYou may want to delete chromium.log from the GarrysMod directory manually!").as_str(), true, if writer_is_interactive { Some("yellow") } else { None });
 			} else {
 				terminal_write(writer, "Done!", true, None);
 			}
