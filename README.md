@@ -13,13 +13,16 @@
   - Allows setting a maximum internal FPS limit for ALL CEF web panels
   - May improve game framerate in exchange for less web content framerate
   - Default is 60
+- Adds `-chromium_remote_debugging_port` Launch Option for GMod
+  - Opt-in: starts CEF's Remote Debugging server (Chrome DevTools) on the given port so you can inspect in-game HTML panels
+  - Off by default; set a port between 1024 and 65535 to enable, e.g. `-chromium_remote_debugging_port 9222`
 - Improves the Legacy VGUI Theme with our custom SourceScheme.res
 - Replaces Debug/Console fonts with [PT Mono](https://fonts.google.com/specimen/PT+Mono) to improve consistency/readability across platforms
   - This is particularly important for Proton, where text using those fonts are broken/tiny out of the box (no Lucida Console)
   - If you don't like the theme changes or the font replacement, you can disable those patches by using the `--no-sourcescheme` argument when running the tool
 
 ### In-Game Web Browser ([Chromium Embedded Framework, aka CEF](https://en.wikipedia.org/wiki/Chromium_Embedded_Framework))
-- Updates CEF to 137.0.10 (Chromium 137.0.7151.69)
+- Updates CEF to 137.0.19 (Chromium 137.0.7151.121)
 - Enables [Proprietary Video/Audio codec](https://www.chromium.org/audio-video), like H.264 (MP4) and AAC, support
 - Enables [Widevine](https://www.widevine.com) support (but [no VMP](https://github.com/solsticegamestudios/GModPatchTool/issues/100), so Netflix et al. don't work currently...)
 - Enables Software WebGL
