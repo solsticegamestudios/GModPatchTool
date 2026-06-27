@@ -257,15 +257,15 @@
 			},
 			"bin/linux64/gmod": {
 				"executable": "true",
-				"fixed": "68b89ff89a7b8d4af4c90f552c0b9a44c0c49dca3b219bca246869f33bf0e4d0",
+				"fixed": "c718674c4fc7be246ad8dc6cd273e392afdaafa1699ea351a070ba0e4464b00e",
 				"original": "ebaae04d84dadad76d2d1264c4a1bf92f9b38e9a22dedb282a60d7130b866a5c",
-				"patch": "9151af340e235efc8c83016a18e0448965540e1d7a713eee3d2193fe9d7b1f97"
+				"patch": "f80bc015199d06c2a2fd635181fd402cc4b4a982cbfd60cfbb26e1b8e330ef53"
 			},
 			"bin/linux64/html_chromium_client.so": {
 				"executable": "true",
-				"fixed": "1f500b9142c166b0fa5bcd0a8046d31fa65b2483ddca7d4411c6dd393ae2ba44",
+				"fixed": "53aacab328369c1431232a26eab41692dc021b8f8f0484902c2821a5923d932a",
 				"original": "8dca85e9ab8c20f8d06dcf7df69f449a29be3cb7d04e7a5a6fbdaf0e26f0ccff",
-				"patch": "154f7300c0304ad669041ac85bb087516d484a938e73c14d0b194fdb5adba342"
+				"patch": "fbedd429ca903876bd67605ca4ab1d3dd28d310fed789684a8fa06c5d40c8626"
 			},
 			"bin/linux64/icudtl.dat": {
 				"fixed": "7fc8f453677bb4624bb200e78080289e5ef5f4ca818e082980f98f60e8c83f32",
