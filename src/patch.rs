@@ -68,6 +68,11 @@ struct Args {
 	#[arg(long)]
 	skip_clear_chromiumcache: bool,
 
+	/// Skip pre-warming Rosetta translations of patched libraries on Apple Silicon
+	#[cfg(target_os = "macos")]
+	#[arg(long)]
+	skip_rosetta_prewarm: bool,
+
 	/// Force redownload all patch files from scratch and clear the GModPatchTool cache directory on exit
 	#[arg(long)]
 	disable_cache: bool,
@@ -1567,6 +1572,71 @@ where
 		}
 	}
 
+	// Rosetta has to re-translate everything we patch before it can run again, which takes a LONG time for CEF on slower Apple Silicon Macs (and makes the first launch look like it's hanging)
+	// Prewarm Rosetta's translation cache now by loading the patched libraries in an x86-64 subprocess, so we can get through it here instead of on first launch
+	#[cfg(target_os = "macos")]
+	if !args.skip_rosetta_prewarm {
+		// Rosetta only exists on Apple Silicon, so this also skips Intel Macs
+		if std::path::Path::new("/Library/Apple/usr/share/rosetta/rosetta").is_file() {
+			let mut prewarm_paths = Vec::new();
+			for (filename, fileinfo) in platform_branch_files {
+				let executable = fileinfo.get("executable");
+
+				// Only libraries can be dlopen'd, but the executables are tiny compared to them anyway
+				if let Some(executable) = executable
+					&& executable == "true"
+					&& (filename.ends_with(".dylib") || filename.ends_with("Chromium Embedded Framework")) {
+						let gmod_file_parts: Vec<&str> = filename.split("/").collect();
+						let gmod_file_path = path_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_path.clone(), &gmod_file_parts[..]), true);
+
+						if let Ok(gmod_file_path) = gmod_file_path {
+							prewarm_paths.push(gmod_file_path);
+						}
+					}
+			}
+
+			// The CEF Framework is by far the biggest, so translate it first in case we hit the timeout
+			prewarm_paths.sort_by_key(|prewarm_path| !prewarm_path.ends_with("Chromium Embedded Framework"));
+
+			if !prewarm_paths.is_empty() {
+				terminal_write(writer, "\nPre-warming Rosetta translations (this can take a few minutes on slower Macs)...", true, None);
+
+				match std::env::current_exe() {
+					Ok(current_exe) => {
+						let mut prewarm_command = tokio::process::Command::new("/usr/bin/arch");
+						prewarm_command.arg("-x86_64")
+							.arg(current_exe)
+							.arg("--rosetta-prewarm")
+							.args(&prewarm_paths)
+							.kill_on_drop(true);
+
+						let prewarm_result = tokio::time::timeout(time::Duration::from_secs(300), prewarm_command.status()).await;
+
+						match prewarm_result {
+							Ok(Ok(prewarm_status)) if prewarm_status.success() => {
+								terminal_write(writer, "Done!", true, None);
+							},
+							Ok(Ok(_)) => {
+								terminal_write(writer, "\tSome libraries failed to prewarm! The first launch may be slow while macOS translates the new files.", true, if writer_is_interactive { Some("yellow") } else { None });
+							},
+							Ok(Err(error)) => {
+								terminal_write(writer, format!("\tFailed to prewarm: {error}\n\tThe first launch may be slow while macOS translates the new files.").as_str(), true, if writer_is_interactive { Some("yellow") } else { None });
+							},
+							Err(_) => {
+								terminal_write(writer, "\tTimed out! The first launch may be slow while macOS translates the new files.", true, if writer_is_interactive { Some("yellow") } else { None });
+							}
+						}
+					},
+					Err(error) => {
+						terminal_write(writer, format!("\tFailed to prewarm: {error}").as_str(), true, if writer_is_interactive { Some("yellow") } else { None });
+					}
+				}
+			}
+		} else if std::env::consts::ARCH == "aarch64" {
+			terminal_write(writer, "\nRosetta 2 is not installed! Garry's Mod needs it to run on Apple Silicon:\n\tsoftwareupdate --install-rosetta --agree-to-license", true, if writer_is_interactive { Some("yellow") } else { None });
+		}
+	}
+
 	// Delete ChromiumCache/ChromiumCacheMultirun/chromium.log
 	// Solves issues with being corrupt/stuck lockfiles, and GMod MUST NOT be running for this tool to run, so it probably solves more issues than it could create
 	if !args.skip_clear_chromiumcache {
@@ -1624,6 +1694,52 @@ where
 	Ok(())
 }
 
+// Prewarm child mode: dlopen each library given on the command line, which makes Rosetta translate it into its cache before returning
+// dlopen can only load x86-64 libraries from an x86-64 process, so the prewarm step above runs our own x86-64 slice via /usr/bin/arch
+// This MUST run before everything else in main() so the child doesn't continue into the GUI/lockfile/arg stuff
+#[cfg(target_os = "macos")]
+fn rosetta_prewarm_child() {
+	let mut args = std::env::args_os();
+
+	if args.nth(1).as_deref() != Some(std::ffi::OsStr::new("--rosetta-prewarm")) {
+		return;
+	}
+
+	unsafe extern "C" {
+		fn dlopen(filename: *const std::ffi::c_char, flags: std::ffi::c_int) -> *mut std::ffi::c_void;
+		fn dlerror() -> *const std::ffi::c_char;
+	}
+	const RTLD_NOW: std::ffi::c_int = 0x2;
+
+	let mut prewarm_failed = false;
+
+	for path in args {
+		let path_cstring = std::ffi::CString::new(path.as_encoded_bytes());
+
+		match path_cstring {
+			Ok(path_cstring) => {
+				// Loading the library is all it takes; we don't need to do anything with it
+				let dlopen_result = unsafe { dlopen(path_cstring.as_ptr(), RTLD_NOW) };
+
+				if dlopen_result.is_null() {
+					let dlopen_error = unsafe { dlerror() };
+					let dlopen_error = if dlopen_error.is_null() { std::borrow::Cow::from("Unknown Error") } else { unsafe { std::ffi::CStr::from_ptr(dlopen_error) }.to_string_lossy() };
+					println!("\tFailed to translate: {} | {dlopen_error}", path.to_string_lossy());
+					prewarm_failed = true;
+				} else {
+					println!("\tTranslated: {}", path.to_string_lossy());
+				}
+			},
+			Err(error) => {
+				println!("\tFailed to translate: {} | {error}", path.to_string_lossy());
+				prewarm_failed = true;
+			}
+		}
+	}
+
+	std::process::exit(if prewarm_failed { 1 } else { 0 });
+}
+
 fn delete_pid_lockfile() {
 	let os_cache_dir = if let Some(dirs_cache_dir) = dirs::cache_dir() { dirs_cache_dir } else { std::env::temp_dir() };
 	let pid_path = extend_pathbuf_and_return(os_cache_dir.clone(), &["gmodpatchtool.pid"]);
@@ -1679,6 +1795,10 @@ where
 }
 
 pub fn main() {
+	// Exits the process if this is a prewarm child
+	#[cfg(target_os = "macos")]
+	rosetta_prewarm_child();
+
 	#[cfg(target_os = "windows")]
 	use crossterm::ansi_support::supports_ansi;
 	#[cfg(not(target_os = "windows"))]
