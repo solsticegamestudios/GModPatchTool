@@ -969,7 +969,7 @@ where
 		steam_path = match steam_path_arg_pathbuf {
 			Ok(steam_path) => Some(steam_path),
 			Err(error) => {
-				return Err(AlmightyError::Generic(format!("Please check the --steam_path argument is pointing to a valid path:\n\t{error}")));
+				return Err(AlmightyError::Generic(format!("Please check the --steam-path argument is pointing to a valid path:\n\t{error}")));
 			}
 		}
 	} else {
@@ -1058,7 +1058,7 @@ where
 	}
 
 	if steam_path.is_none() {
-		return Err(AlmightyError::Generic("Couldn't find Steam. If it's installed, try using the --steam_path argument to force a specific path.".to_string()));
+		return Err(AlmightyError::Generic("Couldn't find Steam. If it's installed, try using the --steam-path argument to force a specific path.".to_string()));
 	}
 
 	let steam_path = steam_path.unwrap();
