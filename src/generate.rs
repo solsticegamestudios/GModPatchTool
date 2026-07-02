@@ -104,19 +104,25 @@ fn hash_diff_compress_file(patch_dest: PathBuf, filename: &String, file_paths: &
 
 		// MZ (Windows, technically DOS but not going to dig for PE header)
 		// 0x4D 0x5A
-		if fixed[0x00] == b'M' && fixed[0x01] == b'Z' {
+		if fixed.starts_with(b"MZ") {
 			executable = true;
 		}
 
 		// ELF (Linux)
 		// 0x7F 0x45 0x4C 0x46
-		if fixed[0x00] == 0x7F && fixed[0x01] == b'E' && fixed[0x02] == b'L' && fixed[0x03] == b'F' {
+		if fixed.starts_with(&[0x7F, b'E', b'L', b'F']) {
 			executable = true;
 		}
 
-		// Mach-O (macOS)
-		// 0xCF 0xFA 0xED 0xFE
-		if fixed[0x00] == 0xCF && fixed[0x01] == 0xFA && fixed[0x02] == 0xED && fixed[0x03] == 0xFE {
+		// Mach-O (macOS): thin 64-bit and fat/universal
+		// 0xCF 0xFA 0xED 0xFE (thin) / 0xCA 0xFE 0xBA 0xBE (fat)
+		if fixed.starts_with(&[0xCF, 0xFA, 0xED, 0xFE]) || fixed.starts_with(&[0xCA, 0xFE, 0xBA, 0xBE]) {
+			executable = true;
+		}
+
+		// Shebang scripts (hl2_osx, hl2.sh)
+		// 0x23 0x21
+		if fixed.starts_with(b"#!") {
 			executable = true;
 		}
 
