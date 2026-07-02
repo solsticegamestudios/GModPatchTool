@@ -21,6 +21,7 @@ http = { version = "1.3", optional = true }
 iced = { version = "0.14", optional = true, features = ["image"] }
 iced_term = { version = "0.8", optional = true }
 image = { version = "0.25", optional = true, default-features = false }
+indicatif = { version = "0.17", optional = true }
 indexmap = { version = "2.12", features = ["rayon", "serde"] }
 keyvalues-serde = { version = "0.2", optional = true }
 open = { version = "5.3", optional = true }
@@ -49,7 +50,7 @@ win32console = "0.1"
 [features]
 default = ["patch"]
 #default = ["generate"]
-patch = ["dep:bytes", "dep:dirs", "dep:http", "dep:iced", "dep:iced_term", "dep:image", "dep:keyvalues-serde", "dep:open", "dep:phf", "dep:reqwest", "dep:steamid", "dep:sysinfo", "dep:thiserror", "dep:tokio", "dep:tracing", "dep:tracing-subscriber", "dep:windows-registry"]
+patch = ["dep:bytes", "dep:dirs", "dep:http", "dep:iced", "dep:iced_term", "dep:image", "dep:indicatif", "dep:keyvalues-serde", "dep:open", "dep:phf", "dep:reqwest", "dep:steamid", "dep:sysinfo", "dep:thiserror", "dep:tokio", "dep:tracing", "dep:tracing-subscriber", "dep:windows-registry"]
 generate = []
 
 # Build config

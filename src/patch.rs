@@ -13,6 +13,15 @@ const BINARY_SERVER_ROOTS: [&str; 2] = [
 //const GMOD_STEAM_APPID: u64 = 4000;
 const BLANK_FILE_HASH: &str = "null";
 
+// Spinner: a 2x4 Braille well that fills bottom-up with uniform 1-row block drops (3DS download vibe)
+// The full well holds for two ticks before the reset beat; the last frame is indicatif's finished state
+// The reset frame stays escaped because U+2800 (Braille blank) is invisible in source
+const SPINNER_FRAMES: &[&str] = &[
+	"⠄", "⡀", "⡠", "⣀", "⣂", "⣄", "⣔",
+	"⣤", "⣥", "⣦", "⣮", "⣶", "⣶", "\u{2800}", "⣶",
+];
+const SPINNER_TICK: time::Duration = time::Duration::from_millis(100);
+
 use crate::*;
 
 use serde::Deserialize;
@@ -33,8 +42,17 @@ use tokio::time::Instant;
 use tokio::task::JoinSet;
 use qbsdiff::Bspatch;
 use regex::Regex;
+use std::sync::OnceLock;
+use indicatif::{MultiProgress, ProgressBar, ProgressStyle, ProgressDrawTarget};
 
 use super::vdf;
+
+// Live progress UI; bars register here so terminal_write can suspend them while printing
+static UI: OnceLock<MultiProgress> = OnceLock::new();
+
+fn spinner_style(template: &str) -> ProgressStyle {
+	ProgressStyle::with_template(template).unwrap().tick_strings(SPINNER_FRAMES).progress_chars("#>-")
+}
 
 #[cfg(windows)]
 use is_elevated::is_elevated;
@@ -314,18 +332,27 @@ fn terminal_write<W>(writer: fn() -> W, output: &str, newline: bool, color: Opti
 where
 	W: std::io::Write + 'static
 {
-	if let Some(color) = color && COLOR_LOOKUP.contains_key(color) {
-		write!(writer(), "{}", COLOR_LOOKUP[color]).unwrap();
-	}
+	let write_now = || {
+		if let Some(color) = color && COLOR_LOOKUP.contains_key(color) {
+			write!(writer(), "{}", COLOR_LOOKUP[color]).unwrap();
+		}
 
-	if newline {
-		writeln!(writer(), "{output}").unwrap();
+		if newline {
+			writeln!(writer(), "{output}").unwrap();
+		} else {
+			write!(writer(), "{output}").unwrap();
+		}
+
+		if color.is_some() {
+			write!(writer(), "\x1B[0m").unwrap();
+		}
+	};
+
+	// Suspend any live progress bars so the spinner line isn't clobbered
+	if let Some(ui) = UI.get() {
+		ui.suspend(write_now);
 	} else {
-		write!(writer(), "{output}").unwrap();
-	}
-
-	if color.is_some() {
-		write!(writer(), "\x1B[0m").unwrap();
+		write_now();
 	}
 }
 
@@ -383,28 +410,51 @@ where
 // Make sure we have response data that *works*
 // Otherwise we'll get "error decoding response body" or something later, where we don't have retry logic
 // TODO: These could probably be DRY'd up...
-async fn get_http_response_bytes<W>(writer: fn() -> W, writer_is_interactive: bool, servers: &[&str], filename: &str) -> Option<Bytes>
+async fn get_http_response_bytes<W>(writer: fn() -> W, writer_is_interactive: bool, bar: &ProgressBar, servers: &[&str], filename: &str) -> Option<Bytes>
 where
 	W: std::io::Write + 'static
 {
 	let mut server_id: u8 = 0;
 	let mut try_count: u8 = 0;
 	let mut response_bytes = None;
+	let mut length_counted = false;
 
 	while (server_id as usize) < servers.len() {
 		let response = get_http_response(writer, writer_is_interactive, servers, filename, server_id, try_count).await;
 
-		if let Some(response) = response {
-			// TODO: Stream to disk via reqwest's "stream" feature instead of buffering whole files in RAM
-			let response_bytes_raw = response.bytes().await;
+		if let Some(mut response) = response {
+			// Count this file's size toward the bar total once, even across retries
+			if !length_counted {
+				bar.inc_length(response.content_length().unwrap_or(0));
+				length_counted = true;
+			}
 
-			match response_bytes_raw {
-				// TODO: Check if Bytes is empty as well
-				Ok(response_bytes_raw) => {
-					response_bytes = Some(response_bytes_raw);
+			let mut buf: Vec<u8> = Vec::with_capacity(response.content_length().unwrap_or(0) as usize);
+			let mut stream_error = None;
+
+			// Stream chunks so we can show live download progress
+			// TODO: Stream to disk instead of accumulating whole files in RAM
+			loop {
+				match response.chunk().await {
+					Ok(Some(chunk)) => {
+						bar.inc(chunk.len() as u64);
+						buf.extend_from_slice(&chunk);
+					},
+					Ok(None) => break,
+					Err(error) => {
+						stream_error = Some(error);
+						break;
+					}
+				}
+			}
+
+			match stream_error {
+				// TODO: Check if buf is empty as well
+				None => {
+					response_bytes = Some(Bytes::from(buf));
 					break;
 				},
-				Err(error) => {
+				Some(error) => {
 					terminal_write(writer, format!("\nHTTP Bytes Error: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
 					response_bytes = None;
 					try_count += 1;
@@ -537,7 +587,7 @@ fn determine_file_integrity_status(gmod_path: PathBuf, filename: &str, hashes: &
 	}
 }
 
-async fn download_file_to_cache<W>(writer: fn() -> W, writer_is_interactive: bool, cache_dir: PathBuf, filename: String, target_hash: String) -> Result<(), ()>
+async fn download_file_to_cache<W>(writer: fn() -> W, writer_is_interactive: bool, bar: ProgressBar, cache_dir: PathBuf, filename: String, target_hash: String) -> Result<(), ()>
 where
 	W: std::io::Write + 'static
 {
@@ -565,7 +615,7 @@ where
 	}
 
 	// If it's not in the cache, or there's a checksum mismatch with the version in the cache, (re-)download it
-	let response_bytes = get_http_response_bytes(writer, writer_is_interactive, &BINARY_SERVER_ROOTS, filename.as_str()).await;
+	let response_bytes = get_http_response_bytes(writer, writer_is_interactive, &bar, &BINARY_SERVER_ROOTS, filename.as_str()).await;
 	if let Some(response_bytes) = response_bytes {
 		// Create directories if needed
 		let mut cache_file_path_dir = cache_file_path.clone();
@@ -847,6 +897,13 @@ where
 {
 	let now = Instant::now();
 	let sys = System::new_all();
+
+	// Set up the live progress UI; hidden when output isn't a terminal so we don't spam control codes
+	let _ = UI.set(MultiProgress::with_draw_target(if writer_is_interactive {
+		ProgressDrawTarget::stdout()
+	} else {
+		ProgressDrawTarget::hidden()
+	}));
 
 	// Figure out where our cache should go based on OS
 	let os_cache_dir = if let Some(dirs_cache_dir) = dirs::cache_dir() { dirs_cache_dir } else { std::env::temp_dir() };
@@ -1463,27 +1520,46 @@ where
 		// Download what we need
 		terminal_write(writer, "Downloading patch files...", true, None);
 
+		// Length starts at 1 (0 renders as a full bar) and grows as each download's Content-Length arrives
+		let download_bar = UI.get().unwrap().add(ProgressBar::new(1));
+		download_bar.set_style(spinner_style("{spinner} Downloading {msg} file(s) [{bar:25}] {percent}% \u{B7} {bytes}/{total_bytes} ({binary_bytes_per_sec})"));
+		download_bar.enable_steady_tick(SPINNER_TICK);
+
 		let mut download_futures = JoinSet::new();
 		for (filename, integrity_status, hashes) in &pending_files {
 			// Need Original
 			if *integrity_status == IntegrityStatus::NeedOriginal {
-				download_futures.spawn(download_file_to_cache(writer, writer_is_interactive, cache_dir.clone(), format!("originals/{platform_masked}/{gmod_branch}/{filename}.zst"), hashes["original"].clone()));
+				download_futures.spawn(download_file_to_cache(writer, writer_is_interactive, download_bar.clone(), cache_dir.clone(), format!("originals/{platform_masked}/{gmod_branch}/{filename}.zst"), hashes["original"].clone()));
 			}
 
 			// Need Fix (we filtered out IntegrityStatus::Fixed above, but we still need IntegrityStatus::NeedDelete for later)
 			if *integrity_status != IntegrityStatus::NeedDelete {
-				download_futures.spawn(download_file_to_cache(writer, writer_is_interactive, cache_dir.clone(), format!("patches/{platform_masked}/{gmod_branch}/{filename}.bsdiff"), hashes["patch"].clone()));
+				download_futures.spawn(download_file_to_cache(writer, writer_is_interactive, download_bar.clone(), cache_dir.clone(), format!("patches/{platform_masked}/{gmod_branch}/{filename}.bsdiff"), hashes["patch"].clone()));
 			}
 		}
+
+		let download_files_total = download_futures.len();
+		let mut download_files_done: usize = 0;
+		download_bar.set_message(format!("0/{download_files_total}"));
 
 		while let Some(download_result) = download_futures.join_next().await {
 			if download_result.is_err() {
+				download_bar.finish_and_clear();
 				return Err(AlmightyError::Generic("Failed to download one or more patch files!".to_string()));
 			}
+
+			download_files_done += 1;
+			download_bar.set_message(format!("{download_files_done}/{download_files_total}"));
 		}
+
+		download_bar.finish_and_clear();
 
 		// Patch the files
 		terminal_write(writer, format!("\nPatching {pending_files_len} file(s)...").as_str(), true, None);
+
+		let patch_bar = UI.get().unwrap().add(ProgressBar::new(pending_files_len as u64));
+		patch_bar.set_style(spinner_style("{spinner} Patching {pos}/{len} file(s) [{bar:25}] {percent}%"));
+		patch_bar.enable_steady_tick(SPINNER_TICK);
 
 		// TODO: Early exit if any patches fail
 		let patch_results: Vec<(&String, IntegrityStatus)> = pending_files.par_iter()
@@ -1501,8 +1577,12 @@ where
 				hashes
 			);
 
+			patch_bar.inc(1);
+
 			(*filename, new_integrity_status)
 		}).collect();
+
+		patch_bar.finish_and_clear();
 
 		for (_, integrity_status) in patch_results {
 			if integrity_status != IntegrityStatus::Fixed {
