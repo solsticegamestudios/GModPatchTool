@@ -1543,7 +1543,8 @@ where
 		download_bar.set_message(format!("0/{download_files_total}"));
 
 		while let Some(download_result) = download_futures.join_next().await {
-			if download_result.is_err() {
+			// The outer Result is task failure (panic/abort), the inner is download failure
+			if !matches!(download_result, Ok(Ok(()))) {
 				download_bar.finish_and_clear();
 				return Err(AlmightyError::Generic("Failed to download one or more patch files!".to_string()));
 			}
