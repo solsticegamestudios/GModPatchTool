@@ -1769,7 +1769,9 @@ where
 		terminal_write(writer, "You can now launch Garry's Mod in Steam.", true, if writer_is_interactive { Some("green") } else { None });
 	}
 
-	terminal_write(writer, "\n💖 Did you find this tool useful? Please consider donating a few dollars to help support it:", true, if writer_is_interactive { Some("magenta") } else { None });
+	// Keep the emoji outside the colored span: bold color codes break color emoji in the GUI terminal
+	terminal_write(writer, "\n💖 ", false, None);
+	terminal_write(writer, "Did you find this tool useful? Please consider donating a few dollars to help support it:", true, if writer_is_interactive { Some("magenta") } else { None });
 	terminal_write(writer, "\thttps://solsticegamestudios.com/donate/", true, None);
 
 	Ok(())
