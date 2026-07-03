@@ -35,7 +35,7 @@ jobs:
       - name: Set up Rust
         uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
 
-      # Windows: plain release exe
+      # Windows: plain release exe; the pdb ships next to it so user backtraces resolve to file:line
       - name: Build (Windows)
         if: runner.os == 'Windows'
         run: cargo build --release --locked
@@ -45,7 +45,7 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory staging | Out-Null
-          Copy-Item target/release/gmodpatchtool.exe, LICENSE.txt, README.md, version.txt staging/
+          Copy-Item target/release/gmodpatchtool.exe, target/release/gmodpatchtool.pdb, LICENSE.txt, README.md, version.txt staging/
           Compress-Archive -Path staging/* -DestinationPath ${{ matrix.artifact }}
 
       # Linux: target glibc 2.28 (Debian 10+/Ubuntu 20.04+) via cargo-zigbuild, matching CEF 137
@@ -79,6 +79,9 @@ jobs:
 
       - name: Build universal DMG (macOS)
         if: runner.os == 'macOS'
+        env:
+          # Pack DWARF into per-arch dSYMs (the default, unpacked, leaves it in intermediate .o files)
+          CARGO_PROFILE_RELEASE_SPLIT_DEBUGINFO: packed
         run: cargo packager --release
 
       - name: Stage and zip (macOS)
@@ -90,11 +93,29 @@ jobs:
           cp "$dmg" LICENSE.txt README.md version.txt staging/
           (cd staging && zip -X -r "../${{ matrix.artifact }}" .)
 
+      # Archived per release so crash addresses from the wild can be symbolized offline
+      - name: Zip symbols (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          mkdir symbols
+          cp -R target/aarch64-apple-darwin/release/gmodpatchtool.dSYM symbols/gmodpatchtool-aarch64.dSYM
+          cp -R target/x86_64-apple-darwin/release/gmodpatchtool.dSYM symbols/gmodpatchtool-x86_64.dSYM
+          (cd symbols && zip -X -r ../GModPatchTool-macOS-Symbols.zip .)
+
       - name: Upload build artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ${{ matrix.name }}
           path: ${{ matrix.artifact }}
+          if-no-files-found: error
+
+      # Goes in dist/ with the zips, so checksums, attestation, and the release pick it up automatically
+      - name: Upload symbols artifact (macOS)
+        if: runner.os == 'macOS'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ matrix.name }}-Symbols
+          path: GModPatchTool-macOS-Symbols.zip
           if-no-files-found: error
 
   release:
