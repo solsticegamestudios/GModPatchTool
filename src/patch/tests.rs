@@ -44,6 +44,15 @@ fn strip_localconfig_webstorage_no_section() {
 	assert_eq!(strip_localconfig_webstorage(localconfig.to_string()), localconfig);
 }
 
+// Regression: libraryfolders.vdf can carry plain number values (e.g. contentstatsid) that aren't library folders
+#[test]
+fn libraryfolders_tolerates_non_folder_entries() {
+	let vdf = "\"libraryfolders\"\n{\n\t\"0\"\n\t{\n\t\t\"path\"\t\"/home/x/.steam\"\n\t}\n\t\"contentstatsid\"\t\"12345\"\n}\n";
+	let parsed: IndexMap<&str, SteamLibraryFolderEntry> = vdf::from_str(vdf).unwrap();
+	let folders = parsed.values().filter(|entry| matches!(entry, SteamLibraryFolderEntry::Folder(_))).count();
+	assert_eq!(folders, 1);
+}
+
 // Regression: a Steam Client Beta dropped MostRecent (and maybe Timestamp) from loginusers.vdf entries (#258)
 #[test]
 fn loginusers_missing_mostrecent_and_timestamp() {

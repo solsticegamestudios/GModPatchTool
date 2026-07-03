@@ -162,6 +162,14 @@ struct SteamLibraryFolder {
 	//apps: SteamLibraryFolderApps
 }
 
+// Steam adds plain number values here too (e.g. contentstatsid), so tolerate anything that isn't a folder
+#[derive(Deserialize, Debug)]
+#[serde(untagged)]
+enum SteamLibraryFolderEntry {
+	Folder(SteamLibraryFolder),
+	Other(serde::de::IgnoredAny)
+}
+
 //#[derive(Deserialize, Debug)]
 //struct SteamLibraryFolderApps {
 //	#[serde(rename = "4000")]
@@ -1223,8 +1231,13 @@ where
 	let mut gmod_manifest_str = None;
 
 	// IndexMap keeps the VDF's order so a stale appmanifest in a later library can't randomly win over the real install
-	let steam_libraryfolders: IndexMap<&str, SteamLibraryFolder> = steam_libraryfolders.unwrap();
+	let steam_libraryfolders: IndexMap<&str, SteamLibraryFolderEntry> = steam_libraryfolders.unwrap();
 	for (_, steam_library) in steam_libraryfolders {
+		// Skip non-folder entries (number values like contentstatsid)
+		let SteamLibraryFolderEntry::Folder(steam_library) = steam_library else {
+			continue;
+		};
+
 		// Get potential Steam Library
 		let new_gmod_steam_library_path = path_to_canonical_pathbuf(steam_library.path, true);
 
