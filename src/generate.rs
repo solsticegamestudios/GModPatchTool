@@ -343,6 +343,17 @@ pub fn main() {
 		.exit();
 	}
 
+	// The dest dirs get wiped with remove_dir_all, so none may be a source directory or another dest
+	for (dest_name, dest) in [("Patch Dest", &patch_dest), ("Original Dest", &original_dest), ("Symbol Dest", &symbol_dest)] {
+		if *dest == original_src || *dest == fixed_src {
+			cmd.error(ErrorKind::ValueValidation, format!("{dest_name} cannot be a source directory.")).exit();
+		}
+	}
+
+	if patch_dest == original_dest || patch_dest == symbol_dest || original_dest == symbol_dest {
+		cmd.error(ErrorKind::ValueValidation, "Patch, Original, and Symbol Dest must all be different.").exit();
+	}
+
 	let mut manifest_file_path = patch_dest.clone();
 	manifest_file_path.pop();
 	let manifest_file_path = extend_pathbuf_and_return(manifest_file_path, &["manifest.json"]);
