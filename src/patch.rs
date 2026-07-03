@@ -466,6 +466,9 @@ where
 					}
 				}
 			}
+		} else {
+			// get_http_response only returns None once every server is exhausted, so stop instead of looping forever
+			break;
 		}
 	}
 
@@ -504,6 +507,9 @@ where
 					}
 				}
 			}
+		} else {
+			// get_http_response only returns None once every server is exhausted, so stop instead of looping forever
+			break;
 		}
 	}
 
@@ -543,6 +549,9 @@ where
 					}
 				}
 			}
+		} else {
+			// get_http_response only returns None once every server is exhausted, so stop instead of looping forever
+			break;
 		}
 	}
 
