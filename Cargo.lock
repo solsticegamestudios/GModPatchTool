@@ -4843,7 +4843,7 @@ checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 [[package]]
 name = "steamid"
 version = "0.1.2"
-source = "git+https://github.com/JohnPeel/steamid#b19ddd38d9497329b9e3ba90ac27b267835161c3"
+source = "git+https://github.com/JohnPeel/steamid?rev=b19ddd38d9497329b9e3ba90ac27b267835161c3#b19ddd38d9497329b9e3ba90ac27b267835161c3"
 dependencies = [
  "displaydoc",
  "paste",
