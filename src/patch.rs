@@ -1851,16 +1851,24 @@ fn main_script<W>(writer: fn() -> W, writer_is_interactive: bool, args: Args) ->
 where
 	W: std::io::Write + 'static
 {
-	tokio::runtime::Builder::new_multi_thread()
-		.enable_all()
-		// HACK: Default is typically 2 MiB, but Vdf parsing can sometimes overflow the stack...
-		// TODO: Report localconfig.vdf/config.vdf overflow: https://github.com/CosmicHorrorDev/vdf-rs/issues
-		.thread_stack_size(0x800000) // 8 MiB
-		.build()
-		.map_err(|error| AlmightyError::Generic(format!("Failed to create Tokio runtime: {error}")))?
-		.block_on(
-			main_script_internal(writer, writer_is_interactive, args)
-		)
+	// Run the script on a thread with a bigger stack, since VDF parsing can overflow the default (only 1 MiB on Windows)
+	// block_on polls the future on the calling thread, so the runtime's thread_stack_size only covers its worker threads
+	// TODO: Report localconfig.vdf/config.vdf overflow: https://github.com/CosmicHorrorDev/vdf-rs/issues
+	std::thread::Builder::new()
+		.stack_size(0x800000) // 8 MiB
+		.spawn(move || {
+			tokio::runtime::Builder::new_multi_thread()
+				.enable_all()
+				.thread_stack_size(0x800000) // 8 MiB
+				.build()
+				.map_err(|error| AlmightyError::Generic(format!("Failed to create Tokio runtime: {error}")))?
+				.block_on(
+					main_script_internal(writer, writer_is_interactive, args)
+				)
+		})
+		.map_err(|error| AlmightyError::Generic(format!("Failed to spawn patch thread: {error}")))?
+		.join()
+		.map_err(|_| AlmightyError::Generic("Patch thread panicked".to_string()))?
 }
 
 fn init_logger<W>(ansi: bool, writer: fn() -> W)
