@@ -1160,12 +1160,19 @@ where
 	}
 
 	let mut steam_user: HashMap<&str, String> = HashMap::new();
+	let mut steam_user_is_most_recent = false;
 	let steam_loginusers: HashMap<&str, SteamUser> = steam_loginusers.unwrap();
 	for (other_steam_id_64, other_steam_user) in steam_loginusers {
 		let mostrecent = other_steam_user.most_recent;
 		let timestamp = other_steam_user.timestamp;
 
-		if !steam_user.contains_key("Timestamp") || mostrecent || (timestamp > steam_user.get("Timestamp").unwrap().parse::<u64>().unwrap()) {
+		// MostRecent wins outright; otherwise the newest timestamp wins, but never over a MostRecent pick
+		let take = !steam_user.contains_key("Timestamp")
+			|| mostrecent
+			|| (!steam_user_is_most_recent && timestamp > steam_user.get("Timestamp").unwrap().parse::<u64>().unwrap());
+
+		if take {
+			steam_user_is_most_recent = mostrecent;
 			steam_user.insert("SteamID64", other_steam_id_64.to_string());
 			steam_user.insert("Timestamp", timestamp.to_string());
 			steam_user.insert("AccountName", other_steam_user.account_name);
@@ -1177,7 +1184,10 @@ where
 		return Err(AlmightyError::Generic("Couldn't find Steam User. Have you ever launched/signed in to Steam?".to_string()));
 	}
 
-	let steam_id = SteamId::new(steam_user.get("SteamID64").unwrap().parse::<u64>().unwrap()).unwrap();
+	let steam_id = steam_user.get("SteamID64").unwrap().parse::<u64>().ok().and_then(|steam_id_64| SteamId::new(steam_id_64).ok());
+	let Some(steam_id) = steam_id else {
+		return Err(AlmightyError::Generic("Couldn't parse Steam loginusers.vdf. Is the file corrupt?".to_string()));
+	};
 
 	terminal_write(writer, format!("Steam User: {} ({} / {})\n", steam_user.get("PersonaName").unwrap(), steam_user.get("SteamID64").unwrap(), steam_id.steam3id()).as_str(), true, None);
 
@@ -1212,7 +1222,8 @@ where
 	let mut gmod_steam_library_path = None;
 	let mut gmod_manifest_str = None;
 
-	let steam_libraryfolders: HashMap<&str, SteamLibraryFolder> = steam_libraryfolders.unwrap();
+	// IndexMap keeps the VDF's order so a stale appmanifest in a later library can't randomly win over the real install
+	let steam_libraryfolders: IndexMap<&str, SteamLibraryFolder> = steam_libraryfolders.unwrap();
 	for (_, steam_library) in steam_libraryfolders {
 		// Get potential Steam Library
 		let new_gmod_steam_library_path = path_to_canonical_pathbuf(steam_library.path, true);
