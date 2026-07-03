@@ -7,11 +7,15 @@ use iced::{window, Color, Font, Length, Size, Subscription, Task, Theme};
 use iced_term::TerminalView;
 
 static ICON: LazyLock<icon::Icon> = LazyLock::new(|| {
-	icon::from_file_data(
+	let logo = image::load_from_memory_with_format(
 		include_bytes!("../GModPatchToolLogo.png"),
-		Some(image::ImageFormat::Png),
+		image::ImageFormat::Png,
 	)
-	.expect("failed to load icon data")
+	.expect("failed to decode icon data")
+	.into_rgba8();
+	let (width, height) = logo.dimensions();
+
+	icon::from_rgba(logo.into_raw(), width, height).expect("failed to load icon data")
 });
 
 #[derive(Debug, Clone)]
@@ -135,4 +139,13 @@ pub fn main() -> iced::Result {
 		})
 		.subscription(App::subscription)
 		.run()
+}
+
+#[cfg(test)]
+mod tests {
+	// The window icon is decoded at startup; a bad PNG would panic there
+	#[test]
+	fn icon_loads() {
+		let _ = &*super::ICON;
+	}
 }
