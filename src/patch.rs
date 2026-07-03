@@ -992,7 +992,7 @@ where
 	}
 
 	// Abort if GMod is currently running
-	if !args.ignore_gmod_running && sys.processes_by_exact_name("gmod.exe".as_ref()).next().is_some() || sys.processes_by_exact_name("gmod".as_ref()).next().is_some() {
+	if !args.ignore_gmod_running && (sys.processes_by_exact_name("gmod.exe".as_ref()).next().is_some() || sys.processes_by_exact_name("gmod".as_ref()).next().is_some()) {
 		return Err(AlmightyError::Generic("Garry's Mod is currently running. Please close it before running this tool.".to_string()));
 	}
 
@@ -1851,10 +1851,6 @@ fn main_script<W>(writer: fn() -> W, writer_is_interactive: bool, args: Args) ->
 where
 	W: std::io::Write + 'static
 {
-	if args.skip_exit_prompt && !writer_is_interactive {
-		return Err(AlmightyError::Generic("Interactive tty is required without --skip-exit-prompt".into()));
-	}
-
 	tokio::runtime::Builder::new_multi_thread()
 		.enable_all()
 		// HACK: Default is typically 2 MiB, but Vdf parsing can sometimes overflow the stack...
