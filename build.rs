@@ -18,11 +18,8 @@ fn main() -> io::Result<()> {
 	if std::env::var_os("CARGO_CFG_WINDOWS").is_some() {
 		// HACK: Since we aren't using SemVer "correctly" and FILEVERSION only supports 16 bits per version point, we've gotta break it out
 		// PRODUCTVERSION doesn't have the same limitation
-		let version = std::env::var("CARGO_PKG_VERSION_MAJOR")
-			.unwrap()
-			.parse()
-			.unwrap_or(0)
-			.to_string();
+		let version = std::env::var("CARGO_PKG_VERSION_MAJOR").unwrap();
+		assert!(version.len() == 8 && version.bytes().all(|byte| byte.is_ascii_digit()), "version major must be an 8-digit YYYYMMDD, got {version:?}");
 		let version_year = version[0..4].parse::<u64>().unwrap();
 		let version_month = version[4..6].parse::<u64>().unwrap();
 		let version_day = version[6..8].parse::<u64>().unwrap();
