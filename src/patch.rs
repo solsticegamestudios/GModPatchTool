@@ -1298,7 +1298,7 @@ where
 	// TODO: Change branch to x86-64 if the current branch isn't in the manifest
 	let gmod_mountedconfig = gmod_manifest.mounted_config;
 	let gmod_branch = gmod_mountedconfig.beta_key;
-	let gmod_branch = if let Some(gmod_branch) = gmod_branch { gmod_branch } else { "public".to_string() };
+	let gmod_branch = match gmod_branch { Some(gmod_branch) if !gmod_branch.is_empty() => gmod_branch, _ => "public".to_string() };
 
 	terminal_write(writer, format!("GMod Beta Branch: {gmod_branch}\n").as_str(), true, None);
 
@@ -1819,7 +1819,7 @@ where
 	if args.launch_gmod {
 		terminal_write(writer, "Launching Garry's Mod...", true, if writer_is_interactive { Some("green") } else { None });
 
-		let open_result = open::that("steam://rungameid/4000");
+		let open_result = open::that_detached("steam://rungameid/4000");
 		if let Err(error) = open_result {
 			terminal_write(writer, format!("\tFailed: {error}").as_str(), true, if writer_is_interactive { Some("yellow") } else { None });
 		}
