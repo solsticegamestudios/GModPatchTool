@@ -821,24 +821,18 @@ where
 			return new_integrity_status;
 		}
 
-		let write_result = std::fs::write(&gmod_file_path, &new_gmod_file);
+		// Sanity check the checksum before writing, so a bad patch doesn't clobber the file on disk
+		let file_hash = format!("{}", blake3::hash(&new_gmod_file));
 
-		if let Err(error) = write_result {
-			terminal_write(writer, format!("\tFailed to Patch: {filename} | {integrity_status_string} / Step 7: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
+		if file_hash != hashes["fixed"] {
+			terminal_write(writer, format!("\tFailed to Patch: {filename} | {integrity_status_string} / Step 7: Checksum mismatch").as_str(), true, if writer_is_interactive { Some("red") } else { None });
 			return new_integrity_status;
 		}
 
-		// Sanity check the final checksum
-		let file_hash = match get_file_hash(&gmod_file_path) {
-			Ok(file_hash) => file_hash,
-			Err(error) => {
-				terminal_write(writer, format!("\tFailed to Patch: {filename} | {integrity_status_string} / Step 8: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
-				return new_integrity_status;
-			}
-		};
+		let write_result = std::fs::write(&gmod_file_path, &new_gmod_file);
 
-		if file_hash != hashes["fixed"] {
-			terminal_write(writer, format!("\tFailed to Patch: {filename} | {integrity_status_string} / Step 9: Checksum mismatch").as_str(), true, if writer_is_interactive { Some("red") } else { None });
+		if let Err(error) = write_result {
+			terminal_write(writer, format!("\tFailed to Patch: {filename} | {integrity_status_string} / Step 8: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
 			return new_integrity_status;
 		}
 
