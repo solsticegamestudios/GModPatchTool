@@ -1963,7 +1963,8 @@ pub fn main() {
 
 	let skip_exit_prompt = args.skip_exit_prompt;
 
-	if let Err(error) = main_script(writer, writer_is_interactive, args) {
+	let script_result = main_script(writer, writer_is_interactive, args);
+	if let Err(error) = &script_result {
 		error!("{error}");
 	}
 
@@ -1971,6 +1972,11 @@ pub fn main() {
 		terminal_exit_handler();
 	} else {
 		delete_pid_lockfile();
+	}
+
+	// Exit non-zero on failure
+	if script_result.is_err() {
+		std::process::exit(1);
 	}
 }
 
