@@ -912,19 +912,35 @@ where
 	// Figure out where our cache should go based on OS
 	let os_cache_dir = if let Some(dirs_cache_dir) = dirs::cache_dir() { dirs_cache_dir } else { std::env::temp_dir() };
 
-	// Abort if another instance is already running
+	// Take the PID lockfile atomically (O_EXCL); a pre-existing file only counts as running if it points at a live gmodpatchtool
 	let pid_path = extend_pathbuf_and_return(os_cache_dir.clone(), &["gmodpatchtool.pid"]);
-	let running_instance_pid = tokio::fs::read_to_string(&pid_path).await;
-	if let Ok(pid) = running_instance_pid
-		&& let Ok(pid) = pid.parse::<usize>()
-			&& sys.process(sysinfo::Pid::from(pid)).is_some() {
-				return Err(AlmightyError::Generic(format!("Another instance of GModPatchTool is already running ({pid}).")));
-			}
+	let mut lock_attempts = 0;
+	loop {
+		match std::fs::OpenOptions::new().write(true).create_new(true).open(&pid_path) {
+			Ok(mut pid_file) => {
+				use std::io::Write;
+				if let Err(error) = pid_file.write_all(std::process::id().to_string().as_bytes()) {
+					return Err(AlmightyError::Generic(format!("Failed to create gmodpatchtool.pid: {error}")));
+				}
+				break;
+			},
+			Err(error) if error.kind() == io::ErrorKind::AlreadyExists && lock_attempts < 2 => {
+				lock_attempts += 1;
 
-	// Create PID lockfile
-	let pid_write_result = tokio::fs::write(&pid_path, std::process::id().to_string()).await;
-	if let Err(error) = pid_write_result {
-		return Err(AlmightyError::Generic(format!("Failed to create gmodpatchtool.pid: {error}")));
+				let existing_pid = std::fs::read_to_string(&pid_path).ok().and_then(|pid| pid.trim().parse::<usize>().ok());
+				if let Some(existing_pid) = existing_pid
+					&& let Some(process) = sys.process(sysinfo::Pid::from(existing_pid))
+						&& process.name().to_string_lossy().starts_with("gmodpatchtool") {
+							return Err(AlmightyError::Generic(format!("Another instance of GModPatchTool is already running ({existing_pid}).")));
+						}
+
+				// Stale lockfile (crashed run or recycled PID); remove it and retry
+				let _ = std::fs::remove_file(&pid_path);
+			},
+			Err(error) => {
+				return Err(AlmightyError::Generic(format!("Failed to create gmodpatchtool.pid: {error}")));
+			}
+		}
 	}
 
 	// Get local version
