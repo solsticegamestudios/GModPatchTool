@@ -1404,6 +1404,14 @@ where
 
 	let platform_branch_files = platform_branch_files.unwrap();
 
+	// Reject manifest paths that could escape the GMod directory or inject terminal escapes, in case the manifest is ever compromised
+	for filename in platform_branch_files.keys() {
+		let path_is_safe = std::path::Path::new(filename).components().all(|component| matches!(component, std::path::Component::Normal(_)));
+		if !path_is_safe || filename.chars().any(|character| character.is_control()) {
+			return Err(AlmightyError::Generic(format!("Manifest contains an unsafe file path: {filename:?}")));
+		}
+	}
+
 	// Determine file integrity status
 	terminal_write(writer, "Determining file integrity status...", true, None);
 
