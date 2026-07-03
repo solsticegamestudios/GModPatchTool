@@ -99,6 +99,11 @@ fn hash_diff_compress_file(patch_dest: PathBuf, filename: &String, file_paths: &
 		let original = original.unwrap();
 		let fixed = fixed.unwrap();
 
+		// A git-lfs pointer means LFS wasn't checked out; diffing it would ship corruption to every user
+		if original.starts_with(b"version https://git-lfs") || fixed.starts_with(b"version https://git-lfs") {
+			return Err((true, "git-lfs pointer file (is git-lfs installed and checked out?)".to_string()));
+		}
+
 		// Figure out if the fixed file is an executable, and if so, mark it
 		let mut executable = false;
 
