@@ -366,6 +366,7 @@ where
 		let url = servers[server_id as usize].to_string() + filename;
 
 		let client = reqwest::Client::builder()
+			.https_only(true) // Never follow a redirect down to plaintext HTTP
 			.connect_timeout(std::time::Duration::new(10, 0)) // Initial connection failure
 			.read_timeout(std::time::Duration::new(10, 0)) // Stall detection
 			//.timeout(std::time::Duration::new(size, 0)) // TODO: Total DEADLINE timeout (downloading too slow)
