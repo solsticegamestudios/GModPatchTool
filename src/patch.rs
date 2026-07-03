@@ -900,7 +900,7 @@ where
 	W: std::io::Write + 'static
 {
 	let now = Instant::now();
-	let sys = System::new_all();
+	let mut sys = System::new_all();
 
 	// Set up the live progress UI; hidden when output isn't a terminal so we don't spam control codes
 	let _ = UI.set(MultiProgress::with_draw_target(if writer_is_interactive {
@@ -1593,6 +1593,12 @@ where
 		}
 
 		download_bar.finish_and_clear();
+
+		// Re-check that GMod wasn't launched during the download phase, since we're about to write to its files
+		sys.refresh_processes(sysinfo::ProcessesToUpdate::All, true);
+		if !args.ignore_gmod_running && (sys.processes_by_exact_name("gmod.exe".as_ref()).next().is_some() || sys.processes_by_exact_name("gmod".as_ref()).next().is_some()) {
+			return Err(AlmightyError::Generic("Garry's Mod is currently running. Please close it before running this tool.".to_string()));
+		}
 
 		// Patch the files
 		terminal_write(writer, format!("\nPatching {pending_files_len} file(s)...").as_str(), true, None);
