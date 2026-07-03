@@ -1722,14 +1722,12 @@ dependencies = [
 name = "gmodpatchtool"
 version = "20260623.0.0"
 dependencies = [
- "anyhow",
  "blake3",
  "bytes",
  "clap",
  "crossterm",
  "dirs",
  "dunce",
- "http",
  "iced",
  "iced_term",
  "image",
