@@ -657,6 +657,7 @@
 				"patch": "12d71bcd0762d1117a4e240549b8c02559a8b398dde59b6fdb013fdda92ce76d"
 			},
 			"hl2.sh": {
+				"executable": "true",
 				"fixed": "b819a0b8db614e7365de29c1ab0fcebaf74087ed6ea7c35d6115917f976ad326",
 				"original": "f70c0650cf048379ef9b86db6971e31bd68b23dc73e1ab9866b506ce74d96e24",
 				"patch": "5e22f191703ac21c29eda4f4803815d118020115ea1fe442d4a27da75b56030e"
@@ -668,28 +669,28 @@
 			"GarrysMod_Signed.app/Contents/Frameworks/Chromium Embedded Framework.framework/Chromium Embedded Framework": {
 				"executable": "true",
 				"fixed": "87ffc6e15073fcd2bbeab4aa1d8894e32f306865c457bdf1640893a64448f265",
-				"original": "41fc9a5c85fc330935baf8907114a1d72f536380fbf3b97e7307d69d4d120192",
-				"patch": "de0e3c256b0cf60a87411972ec43a14c8fa506b9934cfcd2c5bc02803335ecef"
+				"original": "25e9a0a760cf204b47a4886e85de8259c2bd901b57344c6de8ee55a9ace98127",
+				"patch": "b6124ef064900953eb5515faa9de7b461e41262147da610901be520e5af99cde"
 			},
 			"GarrysMod_Signed.app/Contents/Frameworks/Chromium Embedded Framework.framework/Libraries/libEGL.dylib": {
 				"executable": "true",
 				"fixed": "d8d6c82746edec14832c53439429609637a8f4678df4164c7d691d61c4bc9b50",
-				"original": "bf839c179aa38b27fb181b697c9ffbc161a34b67190abcd98238132220c1c67c",
+				"original": "735087d4ab368a93c8a2bd6041a5d7f908c6b794d6567633f0bd369d8238ef4a",
 				"patch": "a1b0543b509456ae3fa084e039e8768e5810626089bf4f7c1ef67974d77e7d79"
 			},
 			"GarrysMod_Signed.app/Contents/Frameworks/Chromium Embedded Framework.framework/Libraries/libGLESv2.dylib": {
 				"executable": "true",
 				"fixed": "12d97adb9f739b0e77b19157a0ff29ca1e1435df567f05d19174430aa851289e",
-				"original": "1ca34f49a48b05dc12b73b7af24414aa3062292c7b09e585091afd9bafe55cb9",
+				"original": "e90f469983593254c0dc4ef87dce74148b7151d860dabba1159b658007edc5d0",
 				"patch": "3eed95d60adb4dd03de4e8a690a35158a3934b362a472a62401b9a824d589613"
 			},
 			"GarrysMod_Signed.app/Contents/Frameworks/Chromium Embedded Framework.framework/Libraries/libswiftshader_libEGL.dylib": {
 				"fixed": "null",
-				"original": "47a4687d528c50cd4038622b87c83f9fb57b9dac99d4bb66005b286b81081af3"
+				"original": "229bf02b68dfcc1d8b002bb7467355c97302cbf76293f9fe84005eddb2a41512"
 			},
 			"GarrysMod_Signed.app/Contents/Frameworks/Chromium Embedded Framework.framework/Libraries/libswiftshader_libGLESv2.dylib": {
 				"fixed": "null",
-				"original": "7f516c1b74349f695f7efcb9f12f5c38516acc5f6da6dc93ae51639bfb09cb34"
+				"original": "201a7de62d4bd308c9d99a778a2108c6d6f1ad43cbd835e4fe799a570365b4c6"
 			},
 			"GarrysMod_Signed.app/Contents/Frameworks/Chromium Embedded Framework.framework/Libraries/libvk_swiftshader.dylib": {
 				"executable": "true",
@@ -1059,8 +1060,8 @@
 			"GarrysMod_Signed.app/Contents/Frameworks/gmod Helper (GPU).app/Contents/MacOS/gmod Helper (GPU)": {
 				"executable": "true",
 				"fixed": "2e350a52f84b06a3a421b1936825ab7a03581d5054a917fc945d8a7295e3a17c",
-				"original": "ba4db24df140367debd48fc94801b650234954eaeed9f54884be2dd9979e2d18",
-				"patch": "86677e2ba0ddef2ec589b8b5364dee60e60f464c5f06ee1c03fbeed725ea5d50"
+				"original": "3db45ad7fb4ec96596f96c1eb14df36523f5c4260542c4a9f1c148c2f51eaa32",
+				"patch": "4b01b02f1b340f7866b3236d4f904e303ea1d60298e1965a07290194f5ef625b"
 			},
 			"GarrysMod_Signed.app/Contents/Frameworks/gmod Helper (Plugin).app/Contents/Info.plist": {
 				"fixed": "333a56e59201b872f1cc8193d129d34e10377cab2eeb34ed33e2ddef3a06004f",
@@ -1070,8 +1071,8 @@
 			"GarrysMod_Signed.app/Contents/Frameworks/gmod Helper (Plugin).app/Contents/MacOS/gmod Helper (Plugin)": {
 				"executable": "true",
 				"fixed": "daf649ec7dd56ec3e53b89164b6dd22c2a7e9e25a234a38c24e48c1d99e7ca15",
-				"original": "f1878d262b28ad88b0ec8b6581cf8386c5fc4a9ce4eba58d3c6a8e84839b0a99",
-				"patch": "07855fd4013a1c0d74948282efebfaf467f381b5df1f444ac0d1de4aedb90941"
+				"original": "cf6f5496633c7457ff9be2b336bc0598208a454dd08e6ede0d0d30530547b21c",
+				"patch": "6dca01ef42cb96ae06fae3d8dd9c3e256eeedb9cdf76c2ef0a569465d2b81566"
 			},
 			"GarrysMod_Signed.app/Contents/Frameworks/gmod Helper (Renderer).app/Contents/Info.plist": {
 				"fixed": "a43e99f96eee5f1d9825eebba26cf633aff6794a308954baecbbab0a752aeba5",
@@ -1081,8 +1082,8 @@
 			"GarrysMod_Signed.app/Contents/Frameworks/gmod Helper (Renderer).app/Contents/MacOS/gmod Helper (Renderer)": {
 				"executable": "true",
 				"fixed": "2295a527cc20c865c3728228aa14d3da112a7ac76372f9a37173beeaa9ddd1c4",
-				"original": "9c19eaaed1f8d00db0ec921785da7a276f3b1006f5d81c5ef76c2bf49dae63e7",
-				"patch": "561c3398bbc6048b5e262097a2704350ab0d1f5f3a3ba47dd87054de470bd5fb"
+				"original": "212a04bc3f5d5637280c332dad32d82c1f28e7d062aa773f037b76c874ef8ecb",
+				"patch": "864f16e221c62c1eac9fc71a551335628a1ad06f0f67638e80306be1dd6c9868"
 			},
 			"GarrysMod_Signed.app/Contents/Frameworks/gmod Helper.app/Contents/Info.plist": {
 				"fixed": "d46cc259991babb0dd07d81167d4e44e9156e186842f786f58170aa17ceebf76",
@@ -1092,20 +1093,20 @@
 			"GarrysMod_Signed.app/Contents/Frameworks/gmod Helper.app/Contents/MacOS/gmod Helper": {
 				"executable": "true",
 				"fixed": "76e4d3493b9f02f82fba6c5c8847a45ce4d5e9268fc2877ff38bce6749b01924",
-				"original": "cd8961694f0cc2490f7842f2b326bfb352a5bb33d38a24cf7d0ad6c124d91064",
-				"patch": "245422f975eff5bc85c35deac3cabf81bdbaeead04cdab6916e748a5c43d8d1e"
+				"original": "90df9d99fb11cbbf40fda4affaf0869607af40e191f16a76b8b094d98f4c0007",
+				"patch": "67b495828e6b68cb08eee59c0edf983a1b254277c688b9b21e255a9c6f6835eb"
 			},
 			"GarrysMod_Signed.app/Contents/MacOS/gmod": {
 				"executable": "true",
 				"fixed": "3325e34416bd0e3dd64b6f53e68d9998bf581a61da77c5090f26ba58cbe8faf2",
-				"original": "6b38d064aa52438e151e1f377f81e70be1265d1943108b071481035091ff8fd7",
-				"patch": "6bac78683580db23785cb4facc09503a36f97bf4cb9777b7f98c28d28d69146d"
+				"original": "f57f2d38d55d295c6fbd85eb83582e61bb5ed84ae903f51a010a21366c7c222b",
+				"patch": "84481f0f2af00157e0a5d1e58ac53f948f5e09d7e3f547416cac4b9100e474c8"
 			},
 			"GarrysMod_Signed.app/Contents/MacOS/html_chromium.dylib": {
 				"executable": "true",
 				"fixed": "af64d9fed805afccc7f8e13314b6f891733ad48418841b2bdafe9fba8e16069d",
-				"original": "9fb834f793c4021308c83a2ab1ca14804bb8622c38b7819868b908aef2ab741d",
-				"patch": "7276732ec51281c0abe7be0d19c31c70cc91b30ad9377fe351de037bf6671c56"
+				"original": "a755b173b6fb70cf9463aeeb2959a10c2ce6f49f882e47a662887243c89628b2",
+				"patch": "2171096411331bfe5112ee191f79c777a7a583db8447abcb965d3d5601e021fb"
 			},
 			"garrysmod/gamemodes/sandbox/gamemode/spawnmenu/creationmenu/content/contenttypes/dupes.lua": {
 				"fixed": "9f694c42e9e1b2346c3048e82cd29a761ca1cae4f67a30dbcb47eb6475bad490",
@@ -1168,6 +1169,7 @@
 				"patch": "12d71bcd0762d1117a4e240549b8c02559a8b398dde59b6fdb013fdda92ce76d"
 			},
 			"hl2_osx": {
+				"executable": "true",
 				"fixed": "1d4c6e6517d99af80e0a7cfaa3aeaee803dbfc7743c87f24daf6e6e3d5a67e53",
 				"original": "564fad763d2a6c9ce3a0e9ab1413262102bccd37e021d47d5b705ba3029bb317",
 				"patch": "3fe526fbc94bb00f0988db63f96740f864c51f680be7db9e63439a53c975fcd9"
@@ -1433,8 +1435,8 @@
 			"bin/html_chromium.dll": {
 				"executable": "true",
 				"fixed": "dffa39ce822f6987c9bd635ca8188871a052106714972c23ac7fea9093165e37",
-				"original": "ba3fac254a65959a4bd07ab7c4f48dc0a00ea16e634adf2ce9dcfd8ab0071a7b",
-				"patch": "cc1b0f348beadce681f383e3881726ec924746e785789595722b790c3b101d9c"
+				"original": "b58418c0b94d69bb790b9f86795a4ce1ab846465527d4cb7715c043d5bc4a3f8",
+				"patch": "b9623d6a59e7694d0c5dd5cde653aec737bf1b4584b880550adf71957c0e5dce"
 			},
 			"bin/icudtl.dat": {
 				"fixed": "7fc8f453677bb4624bb200e78080289e5ef5f4ca818e082980f98f60e8c83f32",
@@ -2171,8 +2173,8 @@
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
 				"fixed": "ada43fbe6fb29e37b794a23dce8e326c58e928a399554fb6d432c1bea4b10792",
-				"original": "5a93b090310bf38c618501307d67f0131e3be5983bb0fda52a34a1047b42ca7d",
-				"patch": "667e352eb93067765a4f63ad58b1cf92fbde1ba038b081b8ef8abff5e0bcd2b2"
+				"original": "3456b71a890d0608e5926ad55fb7e0f7da887c66fdf00d03ec09b2fc2b836c7b",
+				"patch": "b86a02b96f32e2aef7ad5bda6b2f04033cc10eb9fba1723756c7708eb83c0980"
 			},
 			"garrysmod/resource/ClientScheme.res": {
 				"fixed": "3c86d3fe1792923e06240b1fd7ec60dcc34391c660faeeedc5bf3033bf40bd82",
