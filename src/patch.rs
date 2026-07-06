@@ -95,6 +95,10 @@ struct Args {
 	#[arg(long)]
 	disable_cache: bool,
 
+	/// Don't use the OS proxy configuration for HTTP requests
+	#[arg(long)]
+	no_system_proxy: bool,
+
 	/// Apply patches even if Garry's Mod is currently running (may cause issues!)
 	#[arg(long)]
 	ignore_gmod_running: bool,
@@ -364,7 +368,7 @@ where
 	}
 }
 
-async fn get_http_response<W>(writer: fn() -> W, writer_is_interactive: bool, servers: &[&str], filename: &str, mut server_id: u8, mut try_count: u8) -> Option<Response>
+async fn get_http_response<W>(writer: fn() -> W, writer_is_interactive: bool, servers: &[&str], filename: &str, mut server_id: u8, mut try_count: u8, no_system_proxy: bool) -> Option<Response>
 where
 	W: std::io::Write + 'static
 {
@@ -373,7 +377,13 @@ where
 	while (server_id as usize) < servers.len() {
 		let url = servers[server_id as usize].to_string() + filename;
 
-		let client = reqwest::Client::builder()
+		let mut builder = reqwest::Client::builder();
+
+		if no_system_proxy {
+			builder = builder.no_proxy();
+		}
+
+		let client = builder
 			.https_only(true) // Never follow a redirect down to plaintext HTTP
 			.connect_timeout(std::time::Duration::new(10, 0)) // Initial connection failure
 			.read_timeout(std::time::Duration::new(10, 0)) // Stall detection
@@ -419,7 +429,7 @@ where
 // Make sure we have response data that *works*
 // Otherwise we'll get "error decoding response body" or something later, where we don't have retry logic
 // TODO: These could probably be DRY'd up...
-async fn get_http_response_bytes<W>(writer: fn() -> W, writer_is_interactive: bool, bar: &ProgressBar, servers: &[&str], filename: &str) -> Option<Bytes>
+async fn get_http_response_bytes<W>(writer: fn() -> W, writer_is_interactive: bool, bar: &ProgressBar, servers: &[&str], filename: &str, no_system_proxy: bool) -> Option<Bytes>
 where
 	W: std::io::Write + 'static
 {
@@ -429,7 +439,7 @@ where
 	let mut length_counted = false;
 
 	while (server_id as usize) < servers.len() {
-		let response = get_http_response(writer, writer_is_interactive, servers, filename, server_id, try_count).await;
+		let response = get_http_response(writer, writer_is_interactive, servers, filename, server_id, try_count, no_system_proxy).await;
 
 		if let Some(mut response) = response {
 			// Count this file's size toward the bar total once, even across retries
@@ -484,7 +494,7 @@ where
 	response_bytes
 }
 
-async fn get_http_response_text<W>(writer: fn() -> W, writer_is_interactive: bool, servers: &[&str], filename: &str) -> Option<String>
+async fn get_http_response_text<W>(writer: fn() -> W, writer_is_interactive: bool, servers: &[&str], filename: &str, no_system_proxy: bool) -> Option<String>
 where
 	W: std::io::Write + 'static
 {
@@ -493,7 +503,7 @@ where
 	let mut response_text = None;
 
 	while (server_id as usize) < servers.len() {
-		let response = get_http_response(writer, writer_is_interactive, servers, filename, server_id, try_count).await;
+		let response = get_http_response(writer, writer_is_interactive, servers, filename, server_id, try_count, no_system_proxy).await;
 
 		if let Some(response) = response {
 			let response_text_raw = response.text().await;
@@ -525,7 +535,7 @@ where
 	response_text
 }
 
-async fn get_http_response_json<W, T>(writer: fn() -> W, writer_is_interactive: bool, servers: &[&str], filename: &str) -> Option<T>
+async fn get_http_response_json<W, T>(writer: fn() -> W, writer_is_interactive: bool, servers: &[&str], filename: &str, no_system_proxy: bool) -> Option<T>
 where
 	W: std::io::Write + 'static,
 	T: serde::de::DeserializeOwned
@@ -535,7 +545,7 @@ where
 	let mut response_json = None;
 
 	while (server_id as usize) < servers.len() {
-		let response = get_http_response(writer, writer_is_interactive, servers, filename, server_id, try_count).await;
+		let response = get_http_response(writer, writer_is_interactive, servers, filename, server_id, try_count, no_system_proxy).await;
 
 		if let Some(response) = response {
 			let response_json_raw = response.json::<T>().await;
@@ -605,7 +615,7 @@ fn determine_file_integrity_status(gmod_path: PathBuf, filename: &str, hashes: &
 	}
 }
 
-async fn download_file_to_cache<W>(writer: fn() -> W, writer_is_interactive: bool, bar: ProgressBar, cache_dir: PathBuf, filename: String, target_hash: String) -> Result<(), ()>
+async fn download_file_to_cache<W>(writer: fn() -> W, writer_is_interactive: bool, bar: ProgressBar, cache_dir: PathBuf, filename: String, target_hash: String, no_system_proxy: bool) -> Result<(), ()>
 where
 	W: std::io::Write + 'static
 {
@@ -633,7 +643,7 @@ where
 	}
 
 	// If it's not in the cache, or there's a checksum mismatch with the version in the cache, (re-)download it
-	let response_bytes = get_http_response_bytes(writer, writer_is_interactive, &bar, &BINARY_SERVER_ROOTS, filename.as_str()).await;
+	let response_bytes = get_http_response_bytes(writer, writer_is_interactive, &bar, &BINARY_SERVER_ROOTS, filename.as_str(), no_system_proxy).await;
 	if let Some(response_bytes) = response_bytes {
 		// Create directories if needed
 		let mut cache_file_path_dir = cache_file_path.clone();
@@ -957,7 +967,7 @@ where
 	// Get remote version
 	terminal_write(writer, "Getting remote version...", true, None);
 
-	let remote_version = get_http_response_text(writer, writer_is_interactive, &TEXT_SERVER_ROOTS, "version.txt").await;
+	let remote_version = get_http_response_text(writer, writer_is_interactive, &TEXT_SERVER_ROOTS, "version.txt", args.no_system_proxy).await;
 
 	if remote_version.is_none() {
 		return Err(AlmightyError::Generic("Couldn't get remote version. Please check your internet connection!".to_string()));
@@ -1422,7 +1432,7 @@ where
 	// Get remote manifest
 	terminal_write(writer, "Getting remote manifest...", true, None);
 
-	let remote_manifest = get_http_response_json::<_, Manifest>(writer, writer_is_interactive, &TEXT_SERVER_ROOTS, "manifest.json").await;
+	let remote_manifest = get_http_response_json::<_, Manifest>(writer, writer_is_interactive, &TEXT_SERVER_ROOTS, "manifest.json", args.no_system_proxy).await;
 
 	if remote_manifest.is_none() {
 		terminal_write(writer, "", true, None); // Newline
@@ -1581,12 +1591,12 @@ where
 		for (filename, integrity_status, hashes) in &pending_files {
 			// Need Original
 			if *integrity_status == IntegrityStatus::NeedOriginal {
-				download_futures.spawn(download_file_to_cache(writer, writer_is_interactive, download_bar.clone(), cache_dir.clone(), format!("originals/{platform_masked}/{gmod_branch}/{filename}.zst"), hashes["original"].clone()));
+				download_futures.spawn(download_file_to_cache(writer, writer_is_interactive, download_bar.clone(), cache_dir.clone(), format!("originals/{platform_masked}/{gmod_branch}/{filename}.zst"), hashes["original"].clone(), args.no_system_proxy));
 			}
 
 			// Need Fix (we filtered out IntegrityStatus::Fixed above, but we still need IntegrityStatus::NeedDelete for later)
 			if *integrity_status != IntegrityStatus::NeedDelete {
-				download_futures.spawn(download_file_to_cache(writer, writer_is_interactive, download_bar.clone(), cache_dir.clone(), format!("patches/{platform_masked}/{gmod_branch}/{filename}.bsdiff"), hashes["patch"].clone()));
+				download_futures.spawn(download_file_to_cache(writer, writer_is_interactive, download_bar.clone(), cache_dir.clone(), format!("patches/{platform_masked}/{gmod_branch}/{filename}.bsdiff"), hashes["patch"].clone(), args.no_system_proxy));
 			}
 		}
 
