@@ -2163,8 +2163,8 @@
 			},
 			"garrysmod/html/js/menu/control.Menu.js": {
 				"fixed": "69ac727dedd64724f95c42f559a3312e8934109dbffa12ba155a2839e7fe9ab8",
-				"original": "e6e74ec9c0158f83140befe791bc3b8d918ceaf229e30be7faa563f02a2d9bc0",
-				"patch": "6c37143af10a53e9876041559745e7fdffdb0414135f4342a5aae55dcb2a3fca"
+				"original": "3aa49c637ac91a28cc8127938e72a1d429b06c502f3e3fe82908136cb578b8ac",
+				"patch": "d6631c52a545f33603300839cbc812733d31d35a20487fb14d3dd37a2e905594"
 			},
 			"garrysmod/html/menu.html": {
 				"fixed": "94d4c1f4628882ba902b36448f3f10869afa69434ba1e885d3974e131ae540b1",
