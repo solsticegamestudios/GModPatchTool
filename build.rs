@@ -17,7 +17,7 @@ fn main() -> io::Result<()> {
 	#[cfg(target_os = "windows")]
 	if std::env::var_os("CARGO_CFG_WINDOWS").is_some() {
 		// HACK: Since we aren't using SemVer "correctly" and FILEVERSION only supports 16 bits per version point, we've gotta break it out
-		// PRODUCTVERSION doesn't have the same limitation
+		// winresource also derives a numeric PRODUCTVERSION on its own, with the same truncation, so we override that too
 		let version = std::env::var("CARGO_PKG_VERSION_MAJOR").unwrap();
 		assert!(version.len() == 8 && version.bytes().all(|byte| byte.is_ascii_digit()), "version major must be an 8-digit YYYYMMDD, got {version:?}");
 		let version_year = version[0..4].parse::<u64>().unwrap();
@@ -34,6 +34,7 @@ fn main() -> io::Result<()> {
 			.set_icon("GModPatchToolLogo.ico")
 			.set_language(0x0009) // English
 			.set_version_info(winresource::VersionInfo::FILEVERSION, version)
+			.set_version_info(winresource::VersionInfo::PRODUCTVERSION, version)
 			.set_manifest_file("gmodpatchtool.exe.manifest")
 			.compile()?;
 	}
