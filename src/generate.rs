@@ -34,8 +34,8 @@ fn get_files_recursive(source: &str, path_base: String, files: &mut HashMap<Stri
 
 		// TODO: Move gmod-update.txt from these directories
 		if entry_filename != "gmod-update.txt" {
-			let source = if entry_filename.contains(".sym") { "symbol" } else { source };
-			let entry_filename = if entry_filename.contains(".sym") { entry_filename.replace(".sym", "") } else { entry_filename };
+			let source = if entry_filename.ends_with(".sym") { "symbol" } else { source };
+			let entry_filename = if let Some(entry_filename) = entry_filename.strip_suffix(".sym") { entry_filename.to_string() } else { entry_filename };
 			let entry_relative_path_str = if path_base.is_empty() { entry_filename } else { format!("{path_base}/{entry_filename}") };
 
 			if entry_path.is_dir() {
