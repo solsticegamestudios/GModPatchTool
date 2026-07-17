@@ -739,6 +739,18 @@ where
 
 	// Copy/overwrite the target gmod file with original copy we have
 	if new_integrity_status == IntegrityStatus::NeedOriginal {
+		let gmod_file_path_dir = gmod_file_path.parent().unwrap().to_path_buf();
+		let gmod_file_path_dir_path = path_to_canonical_pathbuf(&gmod_file_path_dir, false);
+
+		if gmod_file_path_dir_path.is_err() {
+			let create_dir_result = std::fs::create_dir_all(gmod_file_path_dir);
+
+			if let Err(error) = create_dir_result {
+				terminal_write(writer, format!("\tFailed to Patch: {filename} | {integrity_status_string}: {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
+				return new_integrity_status;
+			}
+		}
+
 		let original_filename = format!("originals/{platform_masked}/{gmod_branch}/{filename}");
 		let original_file_parts: Vec<&str> = original_filename.split("/").collect();
 		let original_cache_file_path = path_to_canonical_pathbuf(extend_pathbuf_and_return(cache_dir.to_path_buf(), &original_file_parts[..]), false);
