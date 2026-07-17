@@ -1698,6 +1698,8 @@ where
 	{
 		terminal_write(writer, "\nApplying file permissions...", true, None);
 
+		let mut exec_bit_failed = false;
+
 		for (filename, fileinfo) in platform_branch_files {
 			let executable = fileinfo.get("executable");
 
@@ -1713,6 +1715,7 @@ where
 							Ok(metadata) => {
 								// Ensure the executable bit is present and apply it to the file
 								let mut perms = metadata.permissions();
+								let already_executable = perms.mode() & 0o111 != 0;
 								perms.set_mode(perms.mode() | 0o111);
 								let perms_result: Result<(), io::Error> = tokio::fs::set_permissions(&gmod_file_path, perms).await;
 
@@ -1722,17 +1725,24 @@ where
 									},
 									Err(error) => {
 										terminal_write(writer, format!("\tFailed to Apply Permissions: {filename} | {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
-										// TODO: Fatal?
+
+										// Re-applying perms can fail on already-fine files we don't own; only a missing bit is fatal
+										if !already_executable {
+											exec_bit_failed = true;
+										}
 									}
 								}
 							},
 							Err(error) => {
 								terminal_write(writer, format!("\tFailed to Apply Permissions: {filename} | {error}").as_str(), true, if writer_is_interactive { Some("red") } else { None });
-								// TODO: Fatal?
 							}
 						}
 					}
 				}
+		}
+
+		if exec_bit_failed {
+			return Err(AlmightyError::Generic("Failed to make one or more files executable!".to_string()));
 		}
 	}
 
