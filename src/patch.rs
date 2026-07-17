@@ -942,6 +942,9 @@ where
 	// Figure out where our cache should go based on OS
 	let os_cache_dir = if let Some(dirs_cache_dir) = dirs::cache_dir() { dirs_cache_dir } else { std::env::temp_dir() };
 
+	// The cache base (ex. ~/.cache) may not exist on a fresh account; the lockfile create reports any real failure
+	let _ = std::fs::create_dir_all(&os_cache_dir);
+
 	// Take the PID lockfile atomically (O_EXCL); a pre-existing file only counts as running if it points at a live gmodpatchtool
 	let pid_path = extend_pathbuf_and_return(os_cache_dir.clone(), &["gmodpatchtool.pid"]);
 	let mut lock_attempts = 0;
@@ -1574,7 +1577,7 @@ where
 		}
 
 		if cache_dir.is_err() {
-			let create_result = tokio::fs::create_dir(cache_path.clone()).await;
+			let create_result = tokio::fs::create_dir_all(cache_path.clone()).await;
 
 			if create_result.is_ok() {
 				cache_dir = path_to_canonical_pathbuf(&cache_path, false);
