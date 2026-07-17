@@ -155,6 +155,7 @@ jobs:
         uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
         with:
           tag_name: ${{ steps.meta.outputs.tag }}
+          target_commitish: ${{ github.sha }} # publish creates the tag; without this it points at whatever master is by then
           draft: true # you publish manually -> locks immutable + green-check attestation
           fail_on_unmatched_files: true
           files: |
