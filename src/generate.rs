@@ -343,15 +343,15 @@ pub fn main() {
 		.exit();
 	}
 
-	// The dest dirs get wiped with remove_dir_all, so none may be a source directory or another dest
+	// The dest dirs get wiped with remove_dir_all, so none may overlap a source directory or another dest
 	for (dest_name, dest) in [("Patch Dest", &patch_dest), ("Original Dest", &original_dest), ("Symbol Dest", &symbol_dest)] {
-		if *dest == original_src || *dest == fixed_src {
-			cmd.error(ErrorKind::ValueValidation, format!("{dest_name} cannot be a source directory.")).exit();
+		if dest.starts_with(&original_src) || original_src.starts_with(dest) || dest.starts_with(&fixed_src) || fixed_src.starts_with(dest) {
+			cmd.error(ErrorKind::ValueValidation, format!("{dest_name} cannot overlap a source directory.")).exit();
 		}
 	}
 
-	if patch_dest == original_dest || patch_dest == symbol_dest || original_dest == symbol_dest {
-		cmd.error(ErrorKind::ValueValidation, "Patch, Original, and Symbol Dest must all be different.").exit();
+	if patch_dest.starts_with(&original_dest) || original_dest.starts_with(&patch_dest) || patch_dest.starts_with(&symbol_dest) || symbol_dest.starts_with(&patch_dest) || original_dest.starts_with(&symbol_dest) || symbol_dest.starts_with(&original_dest) {
+		cmd.error(ErrorKind::ValueValidation, "Patch, Original, and Symbol Dest must not overlap.").exit();
 	}
 
 	let mut manifest_file_path = patch_dest.clone();
