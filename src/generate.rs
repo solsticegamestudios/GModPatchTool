@@ -41,6 +41,13 @@ fn get_files_recursive(source: &str, path_base: String, files: &mut HashMap<Stri
 			if entry_path.is_dir() {
 				get_files_recursive(source, entry_relative_path_str, files, entry_path);
 			} else if entry_path.is_file() {
+				// Files must sit under platform/branch/ or the manifest build misfiles them
+				if entry_relative_path_str.split("/").count() < 3 {
+					println!("Unexpected file outside a platform/branch directory: {}", entry_path.to_string_lossy());
+					println!("FATAL ERROR, EXITING...");
+					std::process::exit(1);
+				}
+
 				let file_hashmap = files.get_mut(&entry_relative_path_str);
 
 				match file_hashmap {
