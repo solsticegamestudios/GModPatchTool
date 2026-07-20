@@ -16,6 +16,9 @@
 - Adds `-chromium_remote_debugging_port` Launch Option for GMod
   - Opt-in: starts CEF's Remote Debugging server (Chrome DevTools) on the given port so you can inspect in-game HTML panels
   - Off by default; set a port between 1024 and 65535 to enable, e.g. `-chromium_remote_debugging_port 9222`
+- Adds `-chromium_mute_audio` Launch Option for GMod
+  - Opt-in: mutes ALL CEF web panel audio for that game instance
+  - Useful for running a second GMod instance (`-multirun`) without doubled-up sound
 - Improves the Legacy VGUI Theme with our custom SourceScheme.res
 - Replaces Debug/Console fonts with [PT Mono](https://fonts.google.com/specimen/PT+Mono) to improve consistency/readability across platforms
   - This is particularly important for Proton, where text using those fonts is broken/tiny out of the box (no Lucida Console)
