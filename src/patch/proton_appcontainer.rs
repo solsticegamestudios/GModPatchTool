@@ -181,11 +181,20 @@ fn normalized_hotfix_hash(bytes: &[u8], filename: &str) -> Result<Option<String>
 		return Ok(None);
 	};
 
-	if all_sites_match(bytes, sites, false) {
+	let replacement_count = sites
+		.iter()
+		.filter(|site| {
+			bytes.get(site.offset..site.offset + site.replacement.len()) == Some(site.replacement)
+		})
+		.count();
+
+	// A vanilla executable has an entirely different layout. It still needs the
+	// normal manifest patch before this compatibility fix can be considered.
+	if replacement_count == 0 {
 		return Ok(None);
 	}
 
-	if !all_sites_match(bytes, sites, true) {
+	if replacement_count != sites.len() {
 		return Err(format!(
 			"{filename} has a partial or unknown Proton AppContainer compatibility patch"
 		));
@@ -341,6 +350,15 @@ mod tests {
 			normalized_hotfix_hash(&bytes, "bin/win64/gmod.exe")
 				.unwrap_err()
 				.contains("partial or unknown")
+		);
+	}
+
+	#[test]
+	fn vanilla_executable_layout_is_left_for_the_manifest_patcher() {
+		let bytes = vec![0_u8; X86_64_SITES.last().unwrap().offset + 16];
+		assert_eq!(
+			normalized_hotfix_hash(&bytes, "bin/win64/gmod.exe").unwrap(),
+			None
 		);
 	}
 }
