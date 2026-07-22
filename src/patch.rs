@@ -21,6 +21,7 @@ const SPINNER_FRAMES: &[&str] = &[
 	"⣤", "⣥", "⣦", "⣮", "⣶", "⣶", "\u{2800}", "⣶",
 ];
 const SPINNER_TICK: time::Duration = time::Duration::from_millis(100);
+pub(crate) const EMBEDDED_TERMINAL_ENV: &str = "GMODPATCHTOOL_EMBEDDED_TERMINAL";
 
 use crate::*;
 
@@ -43,7 +44,7 @@ use tokio::task::JoinSet;
 use qbsdiff::Bspatch;
 use regex::Regex;
 use std::sync::OnceLock;
-use indicatif::{MultiProgress, ProgressBar, ProgressStyle, ProgressDrawTarget};
+use indicatif::{MultiProgress, ProgressBar, ProgressStyle, ProgressDrawTarget, TermLike};
 
 use super::vdf;
 
@@ -52,6 +53,80 @@ mod proton_appcontainer;
 
 // Live progress UI; bars register here so terminal_write can suspend them while printing
 static UI: OnceLock<MultiProgress> = OnceLock::new();
+
+#[derive(Debug)]
+struct EmbeddedStdoutTerm;
+
+impl EmbeddedStdoutTerm {
+	fn write(output: &[u8]) -> io::Result<()> {
+		use std::io::Write;
+		std::io::stdout().lock().write_all(output)
+	}
+
+	fn move_cursor(code: u8, distance: usize) -> io::Result<()> {
+		if distance == 0 {
+			return Ok(());
+		}
+
+		Self::write(format!("\x1b[{distance}{}", char::from(code)).as_bytes())
+	}
+}
+
+// The GUI child runs inside iced_term's PTY, but some desktop launch paths do
+// not report that PTY as an attended stdout to the console/indicatif crates.
+// This adapter is only selected for a child explicitly marked by the parent.
+impl TermLike for EmbeddedStdoutTerm {
+	fn width(&self) -> u16 {
+		crossterm::terminal::size().map(|size| size.0).unwrap_or(100)
+	}
+
+	fn height(&self) -> u16 {
+		crossterm::terminal::size().map(|size| size.1).unwrap_or(30)
+	}
+
+	fn move_cursor_up(&self, distance: usize) -> io::Result<()> {
+		Self::move_cursor(b'A', distance)
+	}
+
+	fn move_cursor_down(&self, distance: usize) -> io::Result<()> {
+		Self::move_cursor(b'B', distance)
+	}
+
+	fn move_cursor_right(&self, distance: usize) -> io::Result<()> {
+		Self::move_cursor(b'C', distance)
+	}
+
+	fn move_cursor_left(&self, distance: usize) -> io::Result<()> {
+		Self::move_cursor(b'D', distance)
+	}
+
+	fn write_line(&self, output: &str) -> io::Result<()> {
+		Self::write(format!("{output}\n").as_bytes())
+	}
+
+	fn write_str(&self, output: &str) -> io::Result<()> {
+		Self::write(output.as_bytes())
+	}
+
+	fn clear_line(&self) -> io::Result<()> {
+		Self::write(b"\r\x1b[2K")
+	}
+
+	fn flush(&self) -> io::Result<()> {
+		use std::io::Write;
+		std::io::stdout().lock().flush()
+	}
+}
+
+fn progress_draw_target(writer_is_interactive: bool, embedded_terminal: bool) -> ProgressDrawTarget {
+	if embedded_terminal {
+		ProgressDrawTarget::term_like_with_hz(Box::new(EmbeddedStdoutTerm), 20)
+	} else if writer_is_interactive {
+		ProgressDrawTarget::stdout()
+	} else {
+		ProgressDrawTarget::hidden()
+	}
+}
 
 fn spinner_style(template: &str) -> ProgressStyle {
 	ProgressStyle::with_template(template).unwrap().tick_strings(SPINNER_FRAMES).progress_chars("#>-")
@@ -934,7 +1009,7 @@ fn strip_localconfig_webstorage(localconfig: String) -> String {
 	localconfig
 }
 
-async fn main_script_internal<W>(writer: fn() -> W, writer_is_interactive: bool, args: Args) -> Result<(), AlmightyError>
+async fn main_script_internal<W>(writer: fn() -> W, writer_is_interactive: bool, embedded_terminal: bool, args: Args) -> Result<(), AlmightyError>
 where
 	W: std::io::Write + 'static
 {
@@ -942,11 +1017,7 @@ where
 	let mut sys = System::new_all();
 
 	// Set up the live progress UI; hidden when output isn't a terminal so we don't spam control codes
-	let _ = UI.set(MultiProgress::with_draw_target(if writer_is_interactive {
-		ProgressDrawTarget::stdout()
-	} else {
-		ProgressDrawTarget::hidden()
-	}));
+	let _ = UI.set(MultiProgress::with_draw_target(progress_draw_target(writer_is_interactive, embedded_terminal)));
 
 	// Figure out where our cache should go based on OS
 	let os_cache_dir = if let Some(dirs_cache_dir) = dirs::cache_dir() { dirs_cache_dir } else { std::env::temp_dir() };
@@ -1971,7 +2042,7 @@ fn terminal_exit_handler() {
 	delete_pid_lockfile();
 }
 
-fn main_script<W>(writer: fn() -> W, writer_is_interactive: bool, args: Args) -> Result<(), AlmightyError>
+fn main_script<W>(writer: fn() -> W, writer_is_interactive: bool, embedded_terminal: bool, args: Args) -> Result<(), AlmightyError>
 where
 	W: std::io::Write + 'static
 {
@@ -1987,7 +2058,7 @@ where
 				.build()
 				.map_err(|error| AlmightyError::Generic(format!("Failed to create Tokio runtime: {error}")))?
 				.block_on(
-					main_script_internal(writer, writer_is_interactive, args)
+					main_script_internal(writer, writer_is_interactive, embedded_terminal, args)
 				)
 		})
 		.map_err(|error| AlmightyError::Generic(format!("Failed to spawn patch thread: {error}")))?
@@ -2019,7 +2090,9 @@ pub fn main() {
 	fn supports_ansi() -> bool { true }
 
 	let is_terminal = io::stdout().is_terminal();
-	let is_ansi = is_terminal && supports_ansi();
+	let embedded_terminal = std::env::var_os(EMBEDDED_TERMINAL_ENV).as_deref() == Some(std::ffi::OsStr::new("1"));
+	let writer_is_interactive = is_terminal || embedded_terminal;
+	let is_ansi = writer_is_interactive && supports_ansi();
 
 	init_logger(is_ansi, std::io::stdout);
 
@@ -2074,7 +2147,6 @@ pub fn main() {
 	}
 
 	let writer = std::io::stdout;
-	let writer_is_interactive = is_terminal;
 
 	// Write about
 	terminal_write(writer, ABOUT, true, if writer_is_interactive { Some("cyan") } else { None });
@@ -2091,7 +2163,7 @@ pub fn main() {
 
 	let skip_exit_prompt = args.skip_exit_prompt;
 
-	let script_result = main_script(writer, writer_is_interactive, args);
+	let script_result = main_script(writer, writer_is_interactive, embedded_terminal, args);
 	if let Err(error) = &script_result {
 		error!("{error}");
 	}

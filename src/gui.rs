@@ -76,6 +76,10 @@ impl App {
 			backend: iced_term::settings::BackendSettings {
 				program,
 				args,
+				env: std::collections::HashMap::from([(
+					crate::patch::EMBEDDED_TERMINAL_ENV.to_owned(),
+					"1".to_owned(),
+				)]),
 				..Default::default()
 			},
 		};

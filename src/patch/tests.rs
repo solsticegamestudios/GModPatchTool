@@ -64,3 +64,9 @@ fn loginusers_missing_mostrecent_and_timestamp() {
 	assert_eq!(user.timestamp, 0);
 	assert_eq!(user.account_name, "someuser");
 }
+
+#[test]
+fn embedded_terminal_forces_visible_progress_target() {
+	assert!(!progress_draw_target(false, true).is_hidden());
+	assert!(progress_draw_target(false, false).is_hidden());
+}
