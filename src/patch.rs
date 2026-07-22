@@ -47,6 +47,9 @@ use indicatif::{MultiProgress, ProgressBar, ProgressStyle, ProgressDrawTarget};
 
 use super::vdf;
 
+#[cfg(target_os = "linux")]
+mod proton_appcontainer;
+
 // Live progress UI; bars register here so terminal_write can suspend them while printing
 static UI: OnceLock<MultiProgress> = OnceLock::new();
 
@@ -586,16 +589,22 @@ enum IntegrityStatus {
 	Fixed = 4
 }
 
-fn determine_file_integrity_status(gmod_path: PathBuf, filename: &str, hashes: &IndexMap<String, String>) -> Result<IntegrityStatus, String> {
+fn determine_file_integrity_status(gmod_path: PathBuf, filename: &str, hashes: &IndexMap<String, String>, accept_proton_appcontainer_hotfix: bool) -> Result<IntegrityStatus, String> {
 	let file_parts: Vec<&str> = filename.split("/").collect();
 	let file_path = path_to_canonical_pathbuf(extend_pathbuf_and_return(gmod_path, &file_parts[..]), false);
 	let mut file_hash = BLANK_FILE_HASH.to_string();
+	let mut proton_hotfix_matches = false;
 
-	if let Ok(file_path) = file_path {
+	if let Ok(file_path) = &file_path {
 		file_hash = get_file_hash(&file_path)?;
+
+		#[cfg(target_os = "linux")]
+		if accept_proton_appcontainer_hotfix && file_hash != hashes["fixed"] {
+			proton_hotfix_matches = proton_appcontainer::matches_hotfixed_file(file_path, filename, &hashes["fixed"])?;
+		}
 	}
 
-	if file_hash == hashes["fixed"] {
+	if file_hash == hashes["fixed"] || proton_hotfix_matches {
 		Ok(IntegrityStatus::Fixed)
 	} else {
 		// File needs to be fixed...
@@ -1491,6 +1500,7 @@ where
 	]);
 
 	#[allow(clippy::type_complexity)]
+	let accept_proton_appcontainer_hotfix = cfg!(target_os = "linux") && platform_masked == "windows";
 	let integrity_results: Vec<(&String, Result<IntegrityStatus, String>, &IndexMap<String, String>)> = platform_branch_files.par_iter()
 	.map(|(filename, hashes)| {
 		let integrity_result;
@@ -1498,7 +1508,7 @@ where
 			terminal_write(writer, format!("\t{filename}: Skipping due to --no-sourcescheme").as_str(), true, if writer_is_interactive { Some("yellow") } else { None });
 			integrity_result = Ok(IntegrityStatus::Fixed);
 		} else {
-			integrity_result = determine_file_integrity_status(gmod_path.clone(), filename, hashes);
+			integrity_result = determine_file_integrity_status(gmod_path.clone(), filename, hashes, accept_proton_appcontainer_hotfix);
 			let integrity_result_clone = integrity_result.clone();
 
 			match integrity_result_clone {
@@ -1688,6 +1698,30 @@ where
 		}
 	} else {
 		terminal_write(writer, "No files need patching!", true, None);
+	}
+
+	// CEF 137 directly imports an AppContainer API that Wine/Proton does not
+	// provide. Simulate the API's normal failure result on Proton only; do not
+	// disable CEF's sandbox or change native Windows installations.
+	#[cfg(target_os = "linux")]
+	if platform_masked == "windows" {
+		terminal_write(writer, "\nApplying Proton AppContainer compatibility fix...", true, None);
+
+		for filename in ["bin/win64/gmod.exe", "bin/gmod.exe"] {
+			let Some(hashes) = platform_branch_files.get(filename) else {
+				continue;
+			};
+
+			let file_parts: Vec<&str> = filename.split('/').collect();
+			let file_path = extend_pathbuf_and_return(gmod_path.clone(), &file_parts);
+			let result = proton_appcontainer::apply_to_file(&file_path, filename, &hashes["fixed"])
+				.map_err(|error| AlmightyError::Generic(format!("Failed to apply Proton AppContainer compatibility fix: {error}")))?;
+			let status = match result {
+				proton_appcontainer::ApplyResult::Applied => "Applied",
+				proton_appcontainer::ApplyResult::AlreadyApplied => "Already applied"
+			};
+			terminal_write(writer, format!("\t{filename}: {status}").as_str(), true, None);
+		}
 	}
 
 	// Make sure executables are executable on Linux and macOS
