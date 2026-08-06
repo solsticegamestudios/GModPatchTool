@@ -2172,9 +2172,9 @@
 				"patch": "14c8d5185bb7fff78dd7b909a1968e63e7e2320816dd2c798982bdce1676e718"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
-				"fixed": "7eb3d9308cd5da280998face2d04e8cf3e81354063f31e96d67aa86fc227e0f5",
-				"original": "0feb7cbd88348e5da71d804433af3c30e29ef9881903452d1e378194123a3d9c",
-				"patch": "c5904d7bec44eba1984f6a067c6682b9b57602951f3f76644e2d665875195995"
+				"fixed": "7726d59cc174e3c32a32818f5692088dd5b2aa40544cfcdef48b9257bc6bb41b",
+				"original": "6f6bae3dc968252f98a24108f111f7e6f8830958945a471512cd500ca686602f",
+				"patch": "6ce9322c3eb6c1528ce1e297942f4fdc6813cf718b6b71ba928e82e5d9eceb5a"
 			},
 			"garrysmod/resource/ClientScheme.res": {
 				"fixed": "3c86d3fe1792923e06240b1fd7ec60dcc34391c660faeeedc5bf3033bf40bd82",
