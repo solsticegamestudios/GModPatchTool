@@ -1435,8 +1435,8 @@
 			"bin/html_chromium.dll": {
 				"executable": "true",
 				"fixed": "ca1b14993423767de66a7f289c85d2b5c580be5af1b58069b594c199b4c08644",
-				"original": "5dabbf85bd32f6d6c0847ea857ed5aa581422a9cbf6d1c160473dfeafb02a4bb",
-				"patch": "d0eda9c547e835e0c2a3d362f1a4aa205669a447058893c250a40c3924faf31b"
+				"original": "307f000c8ece8c898ee77d1a4f965db7640df50bc91722e7f999532777bbc26a",
+				"patch": "b6751ceef78ec221786919c6e99a602658a5f6e6fbf4afd54054353219526a64"
 			},
 			"bin/icudtl.dat": {
 				"fixed": "7fc8f453677bb4624bb200e78080289e5ef5f4ca818e082980f98f60e8c83f32",
@@ -1804,8 +1804,8 @@
 			"bin/win64/html_chromium.dll": {
 				"executable": "true",
 				"fixed": "91cce5c3a708df9ecccc932ebce456ba19ca3855a84f55d40bbccdc1da405b54",
-				"original": "5487621270f708f5898bc57cd8a362a2217dc434cd08cbe5fa7a2ad5fb86f667",
-				"patch": "b348c2a7c37408d2abeb9af82ccb9ab9e10f929db94ab66335e98923c4b06891"
+				"original": "ae39dbafdaab0588ce4ced6a34c5561e3bac5f3a6f6adbb2aa07f048df89e1c4",
+				"patch": "b37887c79d312bf0adc1a66dcc1e001250f5fda98afd30cfa7ae38557a71f420"
 			},
 			"bin/win64/icudtl.dat": {
 				"fixed": "7fc8f453677bb4624bb200e78080289e5ef5f4ca818e082980f98f60e8c83f32",
