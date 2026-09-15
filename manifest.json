@@ -1435,8 +1435,8 @@
 			"bin/html_chromium.dll": {
 				"executable": "true",
 				"fixed": "ca1b14993423767de66a7f289c85d2b5c580be5af1b58069b594c199b4c08644",
-				"original": "757bfa3b4457b307c3b366501c20c21d04653e1eea1e9536893f5e57457512ff",
-				"patch": "447e5e98f4981bebc4aba0e5b8572ff1e8ccb73fb16d7002caa767c3ef1a69a3"
+				"original": "1b9e125383f0168890285b562bdfebe3ef0ce937b14286d453b667d03b62ff3f",
+				"patch": "8b7bed6e74393015144fa297a9d058d6cbb60697edad7cb9f764fc6c186439a1"
 			},
 			"bin/icudtl.dat": {
 				"fixed": "7fc8f453677bb4624bb200e78080289e5ef5f4ca818e082980f98f60e8c83f32",
@@ -1804,8 +1804,8 @@
 			"bin/win64/html_chromium.dll": {
 				"executable": "true",
 				"fixed": "91cce5c3a708df9ecccc932ebce456ba19ca3855a84f55d40bbccdc1da405b54",
-				"original": "3b36492d141cc45bad69460fea816223c72baa7229342a872636586fcc46d125",
-				"patch": "880cbb08773153d33a38aa424f69f63b62441a7824c995dc8c393590dcac8064"
+				"original": "8f9d955efecc880193a0b9200806b36ce3869fd73785242f1610cdea038a915f",
+				"patch": "4d52a848b2db703ce956abae794edb680775175ff270d9800aee1fe308cf7f2d"
 			},
 			"bin/win64/icudtl.dat": {
 				"fixed": "7fc8f453677bb4624bb200e78080289e5ef5f4ca818e082980f98f60e8c83f32",
@@ -2199,14 +2199,14 @@
 			"gmod.exe": {
 				"executable": "true",
 				"fixed": "113215dacef1924158c98ad540f22ec52f2b2e529e9015eafdb773dee39cce01",
-				"original": "35d6cc1e7fcbb014d204df368dc8d318cc1d9360c5585b0af216f357fe5014be",
-				"patch": "e7fc29713fdfdba44a77c729d7683967f4f9a66e08854ffc75cd69b845418b5d"
+				"original": "f7cdc56e2a8bc4f2a8b2d25b486f230748c453cab49490fe43738d1d8e6a9365",
+				"patch": "624b0ff1a9bf3ac03d48065077205cb1935232025e6b32e98820529a3b24632e"
 			},
 			"gmod_win64.exe": {
 				"executable": "true",
 				"fixed": "7df204c4e3263e478cc3adadfca61bc7d9302e57ecb7b3106c913b9062df4b32",
-				"original": "cc9579fb521df085b386018f9f385d11bca226ed4f51bcff1c6270f52160bc45",
-				"patch": "2360bda5d7231de12f9825c1be2aa841d58db1cf5c631b6ffff1affeb848f165"
+				"original": "d31b195d6664411ba5210357e19de4fb4afdb4478167ddbbe6026ac22ec8ad77",
+				"patch": "0cde407f525924b7297eb06a6a4c7c4f3b5c75f5d0dd967e540909861badf4cf"
 			}
 		},
 		"public": {
