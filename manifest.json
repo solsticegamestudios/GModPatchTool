@@ -2467,8 +2467,8 @@
 			"bin/html_chromium.dll": {
 				"executable": "true",
 				"fixed": "ca1b14993423767de66a7f289c85d2b5c580be5af1b58069b594c199b4c08644",
-				"original": "5a6de341c3d6442db9e2b97b594dbd0fd5219984450604fe2d8b0f5759df6ec3",
-				"patch": "c7da5c8410bed34ffbcddd7d9b2816818bade7ba945699a8c7f6c28dab838e5a"
+				"original": "b94f9276e24a27eb87d88771f9f4a131980ef5ac814c8dbc4f0c619c0a7443e0",
+				"patch": "a19b0f2745932b7c93d5bb3078367b8271234ee6799669b8ccd791f9afb832b8"
 			},
 			"bin/icudtl.dat": {
 				"fixed": "7fc8f453677bb4624bb200e78080289e5ef5f4ca818e082980f98f60e8c83f32",
@@ -2822,18 +2822,18 @@
 			},
 			"garrysmod/html/js/menu/control.Menu.js": {
 				"fixed": "69ac727dedd64724f95c42f559a3312e8934109dbffa12ba155a2839e7fe9ab8",
-				"original": "e6e74ec9c0158f83140befe791bc3b8d918ceaf229e30be7faa563f02a2d9bc0",
-				"patch": "6c37143af10a53e9876041559745e7fdffdb0414135f4342a5aae55dcb2a3fca"
+				"original": "3aa49c637ac91a28cc8127938e72a1d429b06c502f3e3fe82908136cb578b8ac",
+				"patch": "d6631c52a545f33603300839cbc812733d31d35a20487fb14d3dd37a2e905594"
 			},
 			"garrysmod/html/menu.html": {
 				"fixed": "a3864abe7a4780221421a2cf3d40be0d34dadadb1bb3f3ed35d80f38d6a093e1",
-				"original": "87c9d6aa57c34b12e6fe3c32dbcba36fd3c942b4dea6f954607401dc7510403e",
-				"patch": "7a84daae811028110d329892749ff497f9521673e97b5377ad9a5b9f0e9bb590"
+				"original": "4680eba1d0696df4532d7db69334799b58a8dc58d4f96af7ad7d75786ecaedee",
+				"patch": "b3cff5f604afe1de0fde0e847282a5bdf17c8e15fb2923ad46ec42b303cb3f41"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
 				"fixed": "ada43fbe6fb29e37b794a23dce8e326c58e928a399554fb6d432c1bea4b10792",
-				"original": "5a93b090310bf38c618501307d67f0131e3be5983bb0fda52a34a1047b42ca7d",
-				"patch": "667e352eb93067765a4f63ad58b1cf92fbde1ba038b081b8ef8abff5e0bcd2b2"
+				"original": "e071eb1b4d8c3d30c335ff8e9b98ceb4d56a8bfa5d73b4e45af6bec084aa8756",
+				"patch": "5f02ff3565a111bf45f2487dcc81dd7c1f88b7f0eb46b617204ac2028206f875"
 			},
 			"garrysmod/resource/ClientScheme.res": {
 				"fixed": "3c86d3fe1792923e06240b1fd7ec60dcc34391c660faeeedc5bf3033bf40bd82",
@@ -2858,8 +2858,8 @@
 			"gmod.exe": {
 				"executable": "true",
 				"fixed": "113215dacef1924158c98ad540f22ec52f2b2e529e9015eafdb773dee39cce01",
-				"original": "26e6df26fc78d65ba04dd9e23d74b669fbe64e87e04d5bad4a8d425f3e8a5d4e",
-				"patch": "c5c86db367491bf75f8204764865c93a1b862fc4ea8a7a18a64c5e7ea4c8fea9"
+				"original": "6f97af37d5643b0a41ee023883f8d291e9309eafdad4a84a9ed72d3c00524ed2",
+				"patch": "6513a5e3e6857466e3507bd0732d244ef1d3d73c0ebd3a7c630a24fe1c27c4e1"
 			}
 		},
 		"x86-64": {
