@@ -632,9 +632,9 @@
 				"patch": "14c8d5185bb7fff78dd7b909a1968e63e7e2320816dd2c798982bdce1676e718"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
-				"fixed": "7eb3d9308cd5da280998face2d04e8cf3e81354063f31e96d67aa86fc227e0f5",
+				"fixed": "22749f8e1102f51277a79fbfb8e5df72719715b150bb0177187b2ce099cd87d6",
 				"original": "e071eb1b4d8c3d30c335ff8e9b98ceb4d56a8bfa5d73b4e45af6bec084aa8756",
-				"patch": "79d700a6b5d62e4f31e55eb09c8da9480289c97b01bf17fff778ea927c5eaa48"
+				"patch": "923064be08c76631168383906299018234187b53a8225125b4c6f57687408c9c"
 			},
 			"garrysmod/resource/ClientScheme.res": {
 				"fixed": "3c86d3fe1792923e06240b1fd7ec60dcc34391c660faeeedc5bf3033bf40bd82",
@@ -1144,9 +1144,9 @@
 				"patch": "14c8d5185bb7fff78dd7b909a1968e63e7e2320816dd2c798982bdce1676e718"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
-				"fixed": "7eb3d9308cd5da280998face2d04e8cf3e81354063f31e96d67aa86fc227e0f5",
+				"fixed": "22749f8e1102f51277a79fbfb8e5df72719715b150bb0177187b2ce099cd87d6",
 				"original": "e071eb1b4d8c3d30c335ff8e9b98ceb4d56a8bfa5d73b4e45af6bec084aa8756",
-				"patch": "79d700a6b5d62e4f31e55eb09c8da9480289c97b01bf17fff778ea927c5eaa48"
+				"patch": "923064be08c76631168383906299018234187b53a8225125b4c6f57687408c9c"
 			},
 			"garrysmod/resource/ClientScheme.res": {
 				"fixed": "3c86d3fe1792923e06240b1fd7ec60dcc34391c660faeeedc5bf3033bf40bd82",
@@ -1434,9 +1434,9 @@
 			},
 			"bin/html_chromium.dll": {
 				"executable": "true",
-				"fixed": "ca1b14993423767de66a7f289c85d2b5c580be5af1b58069b594c199b4c08644",
+				"fixed": "baaea4c56212c74d263da7b39bd7733dad861dc38356294157f6ca34f5b6d092",
 				"original": "1b9e125383f0168890285b562bdfebe3ef0ce937b14286d453b667d03b62ff3f",
-				"patch": "8b7bed6e74393015144fa297a9d058d6cbb60697edad7cb9f764fc6c186439a1"
+				"patch": "69b5322d69d160c138bcd35da05b3670f9058ab1689935e9c05f61db4ec47322"
 			},
 			"bin/icudtl.dat": {
 				"fixed": "7fc8f453677bb4624bb200e78080289e5ef5f4ca818e082980f98f60e8c83f32",
@@ -1803,9 +1803,9 @@
 			},
 			"bin/win64/html_chromium.dll": {
 				"executable": "true",
-				"fixed": "91cce5c3a708df9ecccc932ebce456ba19ca3855a84f55d40bbccdc1da405b54",
+				"fixed": "1c155eca9aeed316e399eb8b1d78b2f51f76c4489adeb5e75dfcb5775b6505af",
 				"original": "8f9d955efecc880193a0b9200806b36ce3869fd73785242f1610cdea038a915f",
-				"patch": "4d52a848b2db703ce956abae794edb680775175ff270d9800aee1fe308cf7f2d"
+				"patch": "44361ecd219d9916d32916a78017cd71c1773f577208603b4f4d591ca80a467b"
 			},
 			"bin/win64/icudtl.dat": {
 				"fixed": "7fc8f453677bb4624bb200e78080289e5ef5f4ca818e082980f98f60e8c83f32",
@@ -2172,9 +2172,9 @@
 				"patch": "14c8d5185bb7fff78dd7b909a1968e63e7e2320816dd2c798982bdce1676e718"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
-				"fixed": "7726d59cc174e3c32a32818f5692088dd5b2aa40544cfcdef48b9257bc6bb41b",
+				"fixed": "22749f8e1102f51277a79fbfb8e5df72719715b150bb0177187b2ce099cd87d6",
 				"original": "e071eb1b4d8c3d30c335ff8e9b98ceb4d56a8bfa5d73b4e45af6bec084aa8756",
-				"patch": "132f63ecd3283a78919620573ba97d4d84490cbe3ff94866355c58280286ea69"
+				"patch": "923064be08c76631168383906299018234187b53a8225125b4c6f57687408c9c"
 			},
 			"garrysmod/resource/ClientScheme.res": {
 				"fixed": "3c86d3fe1792923e06240b1fd7ec60dcc34391c660faeeedc5bf3033bf40bd82",
@@ -2198,15 +2198,15 @@
 			},
 			"gmod.exe": {
 				"executable": "true",
-				"fixed": "113215dacef1924158c98ad540f22ec52f2b2e529e9015eafdb773dee39cce01",
+				"fixed": "85d065854b69728ea1e2340c7d4a54fb730315bd43c563f5d0b8ed44a5e096b9",
 				"original": "f7cdc56e2a8bc4f2a8b2d25b486f230748c453cab49490fe43738d1d8e6a9365",
-				"patch": "624b0ff1a9bf3ac03d48065077205cb1935232025e6b32e98820529a3b24632e"
+				"patch": "266d527c28f60e670531fd7067b304f83fa866f48e39d5b4a11c9f0f84a33926"
 			},
 			"gmod_win64.exe": {
 				"executable": "true",
-				"fixed": "7df204c4e3263e478cc3adadfca61bc7d9302e57ecb7b3106c913b9062df4b32",
+				"fixed": "2cac06d261fef689ba4e14547ca30098d983ed1c56c3b5c2fae658dae7be2731",
 				"original": "d31b195d6664411ba5210357e19de4fb4afdb4478167ddbbe6026ac22ec8ad77",
-				"patch": "0cde407f525924b7297eb06a6a4c7c4f3b5c75f5d0dd967e540909861badf4cf"
+				"patch": "40666dee8c11c3e6898e7f89dfbb68b867498a0c00330b6eb1f32b0865fa2682"
 			}
 		},
 		"public": {
@@ -2466,9 +2466,9 @@
 			},
 			"bin/html_chromium.dll": {
 				"executable": "true",
-				"fixed": "ca1b14993423767de66a7f289c85d2b5c580be5af1b58069b594c199b4c08644",
+				"fixed": "baaea4c56212c74d263da7b39bd7733dad861dc38356294157f6ca34f5b6d092",
 				"original": "b94f9276e24a27eb87d88771f9f4a131980ef5ac814c8dbc4f0c619c0a7443e0",
-				"patch": "a19b0f2745932b7c93d5bb3078367b8271234ee6799669b8ccd791f9afb832b8"
+				"patch": "e3e709d9a006de7312768bd62a331e3ea742a89acbe1d5b6db973ceeb41da3d3"
 			},
 			"bin/icudtl.dat": {
 				"fixed": "7fc8f453677bb4624bb200e78080289e5ef5f4ca818e082980f98f60e8c83f32",
@@ -2821,19 +2821,19 @@
 				"patch": "36ff7c3f28e3b2d7ccf0e9d4879aa5f6905c1a033de6bc187663a92002cdffc8"
 			},
 			"garrysmod/html/js/menu/control.Menu.js": {
-				"fixed": "69ac727dedd64724f95c42f559a3312e8934109dbffa12ba155a2839e7fe9ab8",
+				"fixed": "e9ecc217a963147ccc6b726caf7b1b06e44b01be1f7bac1586e850ff9936df3e",
 				"original": "3aa49c637ac91a28cc8127938e72a1d429b06c502f3e3fe82908136cb578b8ac",
-				"patch": "d6631c52a545f33603300839cbc812733d31d35a20487fb14d3dd37a2e905594"
+				"patch": "88c85c5af46d4840bec6c477153485286ea2fb6d4356045e9c295eb32bb12e29"
 			},
 			"garrysmod/html/menu.html": {
-				"fixed": "a3864abe7a4780221421a2cf3d40be0d34dadadb1bb3f3ed35d80f38d6a093e1",
+				"fixed": "94d4c1f4628882ba902b36448f3f10869afa69434ba1e885d3974e131ae540b1",
 				"original": "4680eba1d0696df4532d7db69334799b58a8dc58d4f96af7ad7d75786ecaedee",
-				"patch": "b3cff5f604afe1de0fde0e847282a5bdf17c8e15fb2923ad46ec42b303cb3f41"
+				"patch": "14c8d5185bb7fff78dd7b909a1968e63e7e2320816dd2c798982bdce1676e718"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
-				"fixed": "ada43fbe6fb29e37b794a23dce8e326c58e928a399554fb6d432c1bea4b10792",
+				"fixed": "22749f8e1102f51277a79fbfb8e5df72719715b150bb0177187b2ce099cd87d6",
 				"original": "e071eb1b4d8c3d30c335ff8e9b98ceb4d56a8bfa5d73b4e45af6bec084aa8756",
-				"patch": "5f02ff3565a111bf45f2487dcc81dd7c1f88b7f0eb46b617204ac2028206f875"
+				"patch": "923064be08c76631168383906299018234187b53a8225125b4c6f57687408c9c"
 			},
 			"garrysmod/resource/ClientScheme.res": {
 				"fixed": "3c86d3fe1792923e06240b1fd7ec60dcc34391c660faeeedc5bf3033bf40bd82",
@@ -2857,9 +2857,9 @@
 			},
 			"gmod.exe": {
 				"executable": "true",
-				"fixed": "113215dacef1924158c98ad540f22ec52f2b2e529e9015eafdb773dee39cce01",
+				"fixed": "85d065854b69728ea1e2340c7d4a54fb730315bd43c563f5d0b8ed44a5e096b9",
 				"original": "6f97af37d5643b0a41ee023883f8d291e9309eafdad4a84a9ed72d3c00524ed2",
-				"patch": "6513a5e3e6857466e3507bd0732d244ef1d3d73c0ebd3a7c630a24fe1c27c4e1"
+				"patch": "47f0af5c7fb1122789c3335c34f1186688decbe1de778f61769a179f244bb48f"
 			}
 		},
 		"x86-64": {
@@ -3119,15 +3119,15 @@
 			},
 			"bin/gmod.exe": {
 				"executable": "true",
-				"fixed": "113215dacef1924158c98ad540f22ec52f2b2e529e9015eafdb773dee39cce01",
+				"fixed": "85d065854b69728ea1e2340c7d4a54fb730315bd43c563f5d0b8ed44a5e096b9",
 				"original": "d9cddd6ec213293a9c4f45c725d5c210078da5e3760ebe5d915d13ab75d5df46",
-				"patch": "c560dfa6fa52179ab768a05ab48af0364d8cff23c44b003e3dd713c0fecfed74"
+				"patch": "db23e19d93d870e3a611a3c0e8bfd4fc1cae9907e4cd913239d08163d07565e9"
 			},
 			"bin/html_chromium.dll": {
 				"executable": "true",
-				"fixed": "ca1b14993423767de66a7f289c85d2b5c580be5af1b58069b594c199b4c08644",
+				"fixed": "baaea4c56212c74d263da7b39bd7733dad861dc38356294157f6ca34f5b6d092",
 				"original": "7b904e5d3cdd411f84eb6c843cf16bb1d82b484ca089bb1fc36d4707c89423ce",
-				"patch": "9b4809f981a8cf756a67651edfc40e6588e09980c8eaf2e08f14378b6614e9b4"
+				"patch": "fdd2571faaba30df9937f98d1dfb394b3090f0b3426f3d67fc46031b1e45445a"
 			},
 			"bin/icudtl.dat": {
 				"fixed": "7fc8f453677bb4624bb200e78080289e5ef5f4ca818e082980f98f60e8c83f32",
@@ -3494,15 +3494,15 @@
 			},
 			"bin/win64/gmod.exe": {
 				"executable": "true",
-				"fixed": "7df204c4e3263e478cc3adadfca61bc7d9302e57ecb7b3106c913b9062df4b32",
+				"fixed": "2cac06d261fef689ba4e14547ca30098d983ed1c56c3b5c2fae658dae7be2731",
 				"original": "2c1f28ac81343e7cd73f46f1f334eee0b24fed85823a1f93c03f2f44d5853a77",
-				"patch": "8b494dc70aabd80b289982ecad40e3199f34a2f56abeb226ff7b869cad58df09"
+				"patch": "2ddc8549be47381ea5f7d719d5f5d6b439782da51ccb5ec465acf3ea7c11d344"
 			},
 			"bin/win64/html_chromium.dll": {
 				"executable": "true",
-				"fixed": "91cce5c3a708df9ecccc932ebce456ba19ca3855a84f55d40bbccdc1da405b54",
+				"fixed": "1c155eca9aeed316e399eb8b1d78b2f51f76c4489adeb5e75dfcb5775b6505af",
 				"original": "6c0b2b7966668269be791fea4f3709eb02281eac88859f846bdfec38cf2f870d",
-				"patch": "cd6453a47aaf1950ce62786394596a3b4a8ea8f3f8be038f50abd2a8330150fd"
+				"patch": "3676b1efaeeaf289fe0c2e48627f84c36520f571159f84dd7d78f4d251c8aa8a"
 			},
 			"bin/win64/icudtl.dat": {
 				"fixed": "7fc8f453677bb4624bb200e78080289e5ef5f4ca818e082980f98f60e8c83f32",
@@ -3869,9 +3869,9 @@
 				"patch": "14c8d5185bb7fff78dd7b909a1968e63e7e2320816dd2c798982bdce1676e718"
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
-				"fixed": "7eb3d9308cd5da280998face2d04e8cf3e81354063f31e96d67aa86fc227e0f5",
+				"fixed": "22749f8e1102f51277a79fbfb8e5df72719715b150bb0177187b2ce099cd87d6",
 				"original": "e071eb1b4d8c3d30c335ff8e9b98ceb4d56a8bfa5d73b4e45af6bec084aa8756",
-				"patch": "79d700a6b5d62e4f31e55eb09c8da9480289c97b01bf17fff778ea927c5eaa48"
+				"patch": "923064be08c76631168383906299018234187b53a8225125b4c6f57687408c9c"
 			},
 			"garrysmod/resource/ClientScheme.res": {
 				"fixed": "3c86d3fe1792923e06240b1fd7ec60dcc34391c660faeeedc5bf3033bf40bd82",
