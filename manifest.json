@@ -2199,14 +2199,14 @@
 			"gmod.exe": {
 				"executable": "true",
 				"fixed": "85d065854b69728ea1e2340c7d4a54fb730315bd43c563f5d0b8ed44a5e096b9",
-				"original": "54666a8d49346ff7b26e4610c2e0feb5f6cae6c228d0e7ab021cc405c4d1bc97",
-				"patch": "0640c81802ef14f7364b068848cbf2ac193e8015ab8cabcab4235085850d2ea0"
+				"original": "cd02b8a990d3bbdeca42ead97c7f855cf8a173a8154ed426dc2f31686bafbc1b",
+				"patch": "0b5717a324c77bb0859aa066979fb0bbad58993379b2afec856b95c44e76c864"
 			},
 			"gmod_win64.exe": {
 				"executable": "true",
 				"fixed": "2cac06d261fef689ba4e14547ca30098d983ed1c56c3b5c2fae658dae7be2731",
-				"original": "358a96e16871c128c54182f02b1a8c8cc748813889b4660f24e573520011b63e",
-				"patch": "4749703b7bf6e7fcaabf404076a3951d7ead15f06cf32e0adde5d900c422981f"
+				"original": "47f713aea8da61ab07f8f329b7fc6af47902e7a49f3415d6a45fa68181480b86",
+				"patch": "a835cf8c7a488220ef5cd4a61e527d7fd5b11a85042c9ad1446dcb3b564d7190"
 			}
 		},
 		"public": {
