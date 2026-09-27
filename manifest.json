@@ -2795,6 +2795,375 @@
 				"original": "null",
 				"patch": "a6009e72cd34fd1ec3a3226d97474404d5f7cbb258e5957a5e846db96dd9e20a"
 			},
+			"bin/win64/chrome_100_percent.pak": {
+				"fixed": "64d19976cb365bef33b11def4386f71e8683748481a16f6f89024908d95c519e",
+				"original": "null",
+				"patch": "1f9b63f31b22244a7466eac3cb3bcf4f9b1dc3ff18723dfe2705b0ef72f503dd"
+			},
+			"bin/win64/chrome_200_percent.pak": {
+				"fixed": "c57b5b40142a9ec9c5783e4a53849cf706bb90366982141878c0ce0fc7c5c7a6",
+				"original": "null",
+				"patch": "7e3df33630e2b1bf40e90a7aa12b4b068cb6715a814f9a4d0d8f5e8cc3bb3fb0"
+			},
+			"bin/win64/chrome_elf.dll": {
+				"executable": "true",
+				"fixed": "56093b20ca9d54902822f4e91f9e99d0ebf4185288118f833e4a89630f0c276e",
+				"original": "dbc8451e03047e6ffbce4554173e3492473a7628b0367fca7b2934da7197c154",
+				"patch": "5af68b8620c700368a84f720b6b1055787983cabaa04271a05edf9480a23b152"
+			},
+			"bin/win64/d3dcompiler_47.dll": {
+				"executable": "true",
+				"fixed": "321b9f6a96ef3e5d6eb143cc66bb5268bb7e262ee25d17659728e490a294415e",
+				"original": "null",
+				"patch": "26612ae5764c7b50d00cc195412f7ec5451e2b262ebb4add0cb47b6ff3ad8c9a"
+			},
+			"bin/win64/dxcompiler.dll": {
+				"executable": "true",
+				"fixed": "f8f50e8136c84c2ce07be283152a8c7c0a71f652e79a83644a3331edacdb5785",
+				"original": "null",
+				"patch": "47fb96ff257a2442dbf309683f1f5e35ff41493a9c624d439c8788da7a083f38"
+			},
+			"bin/win64/dxil.dll": {
+				"executable": "true",
+				"fixed": "fbc83a51dff6867c8d040b796be0c1817d7042fadb73cbf57aab16820e3aadf2",
+				"original": "null",
+				"patch": "74cb34277e099dff055f814ae2ba4e560e0ba9c2794bc0f5894435b9c85dde3e"
+			},
+			"bin/win64/html_chromium.dll": {
+				"executable": "true",
+				"fixed": "66cbc31fdf50a1dfa1ce4c6ef986fadf7a1a89e995a63bce27fb5f3f955aba36",
+				"original": "c86429e8e6b5001c7c9fad4c79ff732dc8209ab1ebd597f2ef0a1088fdc8acc1",
+				"patch": "b104407f7bb0dc43e3b6f2fc2c22dc7c7c396621f2c4629dc4c4d6cbc39cd6d5"
+			},
+			"bin/win64/icudtl.dat": {
+				"fixed": "7fc8f453677bb4624bb200e78080289e5ef5f4ca818e082980f98f60e8c83f32",
+				"original": "8fa68d01db50d8eabf432bd1c840009a521bdae6bbc0abf3e664f24f7c853b54",
+				"patch": "c3c19626edb0a5c8d3dace39352c7ec0500375b141a4b4851fe2ee13b850229b"
+			},
+			"bin/win64/libEGL.dll": {
+				"executable": "true",
+				"fixed": "dbdf00dc034400cbff69d58f702054c1e904fb5595e23d5bf5fe0020a37b4b32",
+				"original": "f3bd3d45ed541124992ef05d98d3c97e044ac273954fe11820a97309424b1c26",
+				"patch": "20a34eb943c7b145fbb66e364bc50ade4127ab8e866152cbfc7d0ac1cba3d25a"
+			},
+			"bin/win64/libGLESv2.dll": {
+				"executable": "true",
+				"fixed": "0b0c60c8563f684a11be833b464c652f427253f077923e0cbd3d41bbca053fc7",
+				"original": "fb07e386cf7e1eecda946564ed578c34922b6b6f715753e1927b0742fbebb6a2",
+				"patch": "381de834a98f30ed03494fc1853bd59b7098bbd35083df00a836b9147c8ddb9c"
+			},
+			"bin/win64/libcef.dll": {
+				"executable": "true",
+				"fixed": "15940516aa1a9b93fb9a87500806e44d40c5aebe652ca5904c5f0a2195c35260",
+				"original": "721e8094b1d78198c3498d8bc477c9c1f73712c214ae0e9cd57c1508495937cb",
+				"patch": "36d2871ccb6ce79dbc2cc070bf024ecd5b207b4a675bbfab000942be1cd01f3f"
+			},
+			"bin/win64/locales/af.pak": {
+				"fixed": "2f83076cb94add44c4f11976df4cf9037d4dd3641d5bab7ac1e67cdcb9d9d263",
+				"original": "null",
+				"patch": "c3e591de32cfd237c309baf19867a94e12bd614ada037244359737318576ad1f"
+			},
+			"bin/win64/locales/am.pak": {
+				"fixed": "b59cde3ba5e1df42294559a0b69bea0faa7c2f42b2cf8ca972743bacb1b7e6b8",
+				"original": "null",
+				"patch": "43cb2087c08518ae82772bf92f4fc7585571660280b56a564900954bd42b5ee3"
+			},
+			"bin/win64/locales/ar.pak": {
+				"fixed": "f163b5dac0c44417dc37db7772f165a4b326d0f4aafaf600a2d5cd1925cc0853",
+				"original": "null",
+				"patch": "bf666eb3a7772d21234e01161580a549ef2ef7a890446db0975ba006a3b85734"
+			},
+			"bin/win64/locales/bg.pak": {
+				"fixed": "fd490cbae16ce825c0d3a4aa39dddf272dd008af2151fda9b24786ffd9ca0426",
+				"original": "null",
+				"patch": "10dc4a74ce6851e116f761bd8318ba9bc5f9af47194d54fbe56574d6688a3727"
+			},
+			"bin/win64/locales/bn.pak": {
+				"fixed": "77f39963320de143ecbc0f6cff55eaf6eb5066968e893c804adb39a6ffdc233d",
+				"original": "null",
+				"patch": "71aa42c1be1665bac8af1a4ff308aa7074b1a5a9555f5741203d03601db74dde"
+			},
+			"bin/win64/locales/ca.pak": {
+				"fixed": "e3d73ce68f76b5e6537c65ba9b83b123f50b8a0b06bf4607827a7c8ff8fb3f7a",
+				"original": "null",
+				"patch": "8773e2801c8a86ca47f67b2a1e247ed75946a4b64853028952d94d766ee36eba"
+			},
+			"bin/win64/locales/cs.pak": {
+				"fixed": "e296b5d444dcc6cbb8bc24e8bd587a128fbec38f15c51d55ca3411f16ebb3c69",
+				"original": "null",
+				"patch": "2ed82f2e54a71856fec8082b939db6c84fc35f268de90adb57fb8381d43315e9"
+			},
+			"bin/win64/locales/da.pak": {
+				"fixed": "c38094d6562405a688f5510eb69ecca6db582e3d3b2a0c2fa756b33a613502a0",
+				"original": "null",
+				"patch": "e12d2d96d05f1b8a2b572533a2c078442c5a0b8035e2e3dbd2706dc514da0911"
+			},
+			"bin/win64/locales/de.pak": {
+				"fixed": "2d43e1708cac814f2367e64afa4bdc6bdf5753831aef5c81fd47e3474fc41bcf",
+				"original": "null",
+				"patch": "3c8d379e8b77a9ded2d87bac6fcf6f5a648bc9d32d74bba4e375e5add2dea779"
+			},
+			"bin/win64/locales/el.pak": {
+				"fixed": "cc15f8d0101ac56a78b579935f3ed25e9ff8eff5ad2dd8723abde3163c6e627d",
+				"original": "null",
+				"patch": "df932efa18fd5aa230f716e68288a545b5a10ff0a4280307edcd0d3de829eee0"
+			},
+			"bin/win64/locales/en-GB.pak": {
+				"fixed": "1e8e39c066a1fa1a941b88f5156edfbc2352b5724becaa172cd0fc636cd68aae",
+				"original": "null",
+				"patch": "cc5b1fe0063abc8472040925a942efaf6106c1d20844795c612fadec79ed1854"
+			},
+			"bin/win64/locales/en-US.pak": {
+				"fixed": "612d09268ee1681485ca76075dbf96765e0fa7c0befdf969a3ce7f8324a7381e",
+				"original": "null",
+				"patch": "ce41c27f5f3a83ea2095c43e6ca4f09dc3c950c80318c430fe382a7fbea4984e"
+			},
+			"bin/win64/locales/es-419.pak": {
+				"fixed": "299e1c45fb68858418e8b03313c96bdb7a47cb90c304aa786ba74f72d405b406",
+				"original": "null",
+				"patch": "d872c1cb735db6e704ab7ef67dc060507d4cfc08fe31ef0b40d19ab9b17addab"
+			},
+			"bin/win64/locales/es.pak": {
+				"fixed": "e0dbe504beeb12c777f1b7c5321fd5115da927fb96a6ff09c9540d53a29198a4",
+				"original": "null",
+				"patch": "b7586ff1e50de8b7508c2a1397abf68a2f03349a7c6ebde1cf5b4f046a6c5e2b"
+			},
+			"bin/win64/locales/et.pak": {
+				"fixed": "24f94406dc490dd6aaed80e94928c7f247df5b8e793ff21258ea5f56af935cc1",
+				"original": "null",
+				"patch": "92585f4adb11707b8915ad56eb5387a5d38244006bcb3f33576dc998648b7916"
+			},
+			"bin/win64/locales/fa.pak": {
+				"fixed": "f3b9a46373d6b0251df11d2cae4a73cbbac6ecadd3aecef2e90e6bed154306e5",
+				"original": "null",
+				"patch": "3b8057c47a91f42deec36b8006ae59968f678a9ba7578402d62082c58c3d3870"
+			},
+			"bin/win64/locales/fi.pak": {
+				"fixed": "4ccd84deab0d0a0be5988d3ecb8eaf08de338c63f8b85be1c283142f178b9810",
+				"original": "null",
+				"patch": "2c48b6152d26d8b4e3de5426cd294c30bc69ba5044d65c2d1746fa9d364518eb"
+			},
+			"bin/win64/locales/fil.pak": {
+				"fixed": "8c200c36ef16d4bbf214e5115869bdf375ebe0005a54f64c8fc5c3ab35fe28ed",
+				"original": "null",
+				"patch": "dc0e0e55362bee9786bc0437cd6cad58cf0234721f1442e9ad566fd69d4e2625"
+			},
+			"bin/win64/locales/fr.pak": {
+				"fixed": "e5bb0376e9cf3f947043ba7372ba5ac529530e0234fdfb4f65fa229b8a59fc41",
+				"original": "null",
+				"patch": "f42028031640e3ae0e06677467aa2b4999bded465b2e3bf88ec2ae5c3f9fb144"
+			},
+			"bin/win64/locales/gu.pak": {
+				"fixed": "bddf7d6b79c07d5dd8ba2693f5d1bc4e53faf3e709eaffad8e79334c9f95f884",
+				"original": "null",
+				"patch": "d0b887bee560e6ccec714002cf5ee9e0ac59f9783498eb100d2fbc2cca1081d1"
+			},
+			"bin/win64/locales/he.pak": {
+				"fixed": "945367203472723a213c47ca964eccf434640518c8c775d7c71bf3c3b8fc0cf7",
+				"original": "null",
+				"patch": "f17b79e3e5c72dcb21e8cd39e0b62183143419ef7cf88ff9556109cd0863ee52"
+			},
+			"bin/win64/locales/hi.pak": {
+				"fixed": "cb36aa06601161c9f3b04ea8c79e98e993d5f7840bae9f377eb57ae493b8f6e1",
+				"original": "null",
+				"patch": "0d8607a19e64ac5818007f41f011b570e34e80304abd1cac3452164c367ca6d8"
+			},
+			"bin/win64/locales/hr.pak": {
+				"fixed": "661cdeb029b3ea88c1937d596befe60dee9b99d5a18e96e3b26e81a4e6bf6aa7",
+				"original": "null",
+				"patch": "25fb254e429019973e93d176822b35d441efe52650e6dfa9fd020c602c3289cb"
+			},
+			"bin/win64/locales/hu.pak": {
+				"fixed": "150d2509f298b68a1bf5ed1519ede824d92324982dca64beb02bdeefe21294b5",
+				"original": "null",
+				"patch": "5eb7274e02d835e08424b2a806ea681c2cdec83a60807746726316aa7c91c502"
+			},
+			"bin/win64/locales/id.pak": {
+				"fixed": "f663a3cc1492b50cc7c39960f09b4d0d40cbe268fc9a460f37f134250f05ae41",
+				"original": "null",
+				"patch": "9fe88207f02615ffaefa575a7ebae869a15b92e8bd14ec25148c9aea337fe3c3"
+			},
+			"bin/win64/locales/it.pak": {
+				"fixed": "4c6c3534f074fa776a39ca0f9806f114fcd45d744969d48be22da606f6c3b32d",
+				"original": "null",
+				"patch": "c4e774e183f2cee0ecdbd2b8920d1e0f05f47b001bc4960764bb1cf36039151d"
+			},
+			"bin/win64/locales/ja.pak": {
+				"fixed": "3249a88f335c57b881597cb0139555ed4a577e51d9ac0bcd7f85155c75aa6f31",
+				"original": "null",
+				"patch": "f51abba626596e9e32d301a7865b80fb8e8ea7a6ba539ae24415fee1e42faeea"
+			},
+			"bin/win64/locales/kn.pak": {
+				"fixed": "1941dd491143b3b5800ca06d9c15538640e3351aa9211f00ba67c5ec08f5c6e6",
+				"original": "null",
+				"patch": "091a446b3ad23d17005cdabf5ab99d4b230642d6cafe55018bfc1fa325eab149"
+			},
+			"bin/win64/locales/ko.pak": {
+				"fixed": "7f2778a4cfba8766d19644afb023d91a025531914fed8939899d2a0c83b2b058",
+				"original": "null",
+				"patch": "c74d56d05a8b738502d57e8c334af98571f643b622a333ef320f395822e42660"
+			},
+			"bin/win64/locales/lt.pak": {
+				"fixed": "6b18b8712a1eef1f0d0432ee0bc34df94d77cea4d2480d9a2a56b6475947f0b4",
+				"original": "null",
+				"patch": "df26fe012a7a480e4b8f583ad702f2b3361c1a9e29ba8b59c5a163f260a12d68"
+			},
+			"bin/win64/locales/lv.pak": {
+				"fixed": "40e02edba8098670d0864d527db667ecb12f6acc1a13a3877d75588cfbbd96eb",
+				"original": "null",
+				"patch": "a66bdd6157abd0740b3f84d4e32316eeaa649ffad736029e0ed8ad502e00be35"
+			},
+			"bin/win64/locales/ml.pak": {
+				"fixed": "6db17d819e56c32712705d82592a0d07a1d56bffd6452b87576e4faa1df46314",
+				"original": "null",
+				"patch": "d50932824adb4c8dcc2a40de84abd680f9235bce074e242e2fb0fa48fdc228c6"
+			},
+			"bin/win64/locales/mr.pak": {
+				"fixed": "59cfca10a34a9b4ac770519d883cf4538209b88b8dcb3eed03b183a7b87fab5a",
+				"original": "null",
+				"patch": "92cb7ebe59308ee5cd193ebad1ff9ca72f75afe36e8e0f96cdaec35e03c91fe6"
+			},
+			"bin/win64/locales/ms.pak": {
+				"fixed": "14765ba433f9545a4f9c4fb8eb26401235db7d039d6889aacc450b8589ed9e35",
+				"original": "null",
+				"patch": "bda905f552ebcfe7d14fb2bab0154afb54d8381977864a6bd0d317406ca2dc17"
+			},
+			"bin/win64/locales/nb.pak": {
+				"fixed": "16e1f9a0606f256c56880dccfdf41dde7df19e732cb4e2d4b9250d5b60d27bb5",
+				"original": "null",
+				"patch": "94abe2f5b352707cc95f4f204292f996a3c2df7328fda96bb2dac7534918d192"
+			},
+			"bin/win64/locales/nl.pak": {
+				"fixed": "b10a234c7bff023d240f23883094f673845be6324141bb6cf6ae55beeac56614",
+				"original": "null",
+				"patch": "4890306ca7070b052db5e74473a1099a2bb3208fc563725e682985934ee82685"
+			},
+			"bin/win64/locales/pl.pak": {
+				"fixed": "d6bc7c0be98058387f07bc7d2af62b850c0b51e8aeb71e75be93d7f9cb854a06",
+				"original": "null",
+				"patch": "8704ea99e764ea6b82be550f06da1298a33a8c71be8a8d9a46a47154d124f562"
+			},
+			"bin/win64/locales/pt-BR.pak": {
+				"fixed": "30e0d50c7fba88d66c02915bce6bf5028cb4f2a969f2e7c023d198c0242ab58f",
+				"original": "null",
+				"patch": "1aceb748b4c0f330b0d53b18e7b4e59e9b8479873693db31ffdd8e29c40ce1b1"
+			},
+			"bin/win64/locales/pt-PT.pak": {
+				"fixed": "af76254ec54fb1b7ebffdd6bd8572b4649cb2c281ce5a489e78db1afb971736b",
+				"original": "null",
+				"patch": "61746a70587e4acccf656a0948601de67f7810fa7146975500af345ed59fad4c"
+			},
+			"bin/win64/locales/ro.pak": {
+				"fixed": "87dc0e6d66155e9218b50b8535083edee8ac3f002ae39550bf53b06aa074a997",
+				"original": "null",
+				"patch": "89f37d35b696254702638f0ffef6c49c948f4ff19e42449d6056f2599ba24c42"
+			},
+			"bin/win64/locales/ru.pak": {
+				"fixed": "c68f80b672bf51f88399e485003a1c8a597898fd4534e8a6b6f85d613381d1e5",
+				"original": "null",
+				"patch": "65dd76b9b21a8c4d2deb26d07b7ed9021e4a98be169480e34a0319694db68599"
+			},
+			"bin/win64/locales/sk.pak": {
+				"fixed": "96a3fbc23702ed318c6d80714acf7df00900b40b81fef68e04c6ef5e2b907f3c",
+				"original": "null",
+				"patch": "6f5a0a980ea771862d5906f15ed3108da063b14dda7d441a02c260e6a9cc9a44"
+			},
+			"bin/win64/locales/sl.pak": {
+				"fixed": "e3edbbf6221389523dfe4f9778aa20d7f0f12897d367cf4ce8725bd781290b73",
+				"original": "null",
+				"patch": "3a1c8643da22567011424e2a1414c30a43fd88b5446cd547f18bdeef4004aa43"
+			},
+			"bin/win64/locales/sr.pak": {
+				"fixed": "a88f31bbd88d197cbc3b61a84e9d50bcde1ba71798b0dbc887fb43bbcc5fe6a8",
+				"original": "null",
+				"patch": "17424c478c0fffd40dad35bca355b2b3b2b9e711c70b60465aed6adb919c1d2d"
+			},
+			"bin/win64/locales/sv.pak": {
+				"fixed": "653838ef90a5411f31e0bb021d9c2c181cd7e37917c0d6bb565bc4046c10f6c1",
+				"original": "null",
+				"patch": "435a401e1bef882d6d3b62de87a85bfa4faf0a93a5c4db931d7009ddc906feec"
+			},
+			"bin/win64/locales/sw.pak": {
+				"fixed": "813d509fbb323dc1ad8ed44651e72fdecc638e0c355064e37819025bc683eaf4",
+				"original": "null",
+				"patch": "ec4f92550e31b4c8cffd670c95d264cebe0c45906302c47fe6629f3371ac3b4f"
+			},
+			"bin/win64/locales/ta.pak": {
+				"fixed": "f359afc9a8a56fb6a6a75c57991f09b721466149ac3b90f6f91ed26fb436a813",
+				"original": "null",
+				"patch": "9d153e558551694fcca652f9d4557cf7744e0094ab14f661f8d2d9b4d2f2a7ce"
+			},
+			"bin/win64/locales/te.pak": {
+				"fixed": "374a91b3ae0cf84a5de141db02b25f5cda9301a1cda47d5a73fe8aefedfe6638",
+				"original": "null",
+				"patch": "4992441ca1ceb99aaf7160223cb0aa07e091d2141cb97ee33da22c44df54862f"
+			},
+			"bin/win64/locales/th.pak": {
+				"fixed": "a56a73f4321587f6733e97fc6921d2cd3052d83dbe6e4893f445aa723e7c21a2",
+				"original": "null",
+				"patch": "ef25ae480d91dd38fc72bf46061090c04dfb718fab5f252c39997b67ab196f22"
+			},
+			"bin/win64/locales/tr.pak": {
+				"fixed": "0e3258ca449c7d71c0e374f179c49d6161dbbedfb33f46a5efa2575bb129be5b",
+				"original": "null",
+				"patch": "d741159a257c4d9583f2f051c2fe2afa4f4bda5e3b1faaf996d87a50679aa268"
+			},
+			"bin/win64/locales/uk.pak": {
+				"fixed": "4e7e8de2d9b7a5fcc31fc20839516a5146d922fd3b951f9a855df323479f63d0",
+				"original": "null",
+				"patch": "acd7faff12af9deb068d4aba123d25fc70a42f350a6129e230e4787184b05aee"
+			},
+			"bin/win64/locales/ur.pak": {
+				"fixed": "457d63ac299922ae5bf18fb010e4a40420da529d33fa3f214a4d40cc1cfe96de",
+				"original": "null",
+				"patch": "d6f6b14cb65701e55be505317f127aa913cc25dbbec76d0009ff9a3b91e2a0f9"
+			},
+			"bin/win64/locales/vi.pak": {
+				"fixed": "1c690b9946496ac56138f79c29f7477773f59d36d00f452f32e597405dbbfb49",
+				"original": "null",
+				"patch": "8fa9e89a71364ba8120d43f061eefa9f6fb5583cf8d219268c3d8fb578558867"
+			},
+			"bin/win64/locales/zh-CN.pak": {
+				"fixed": "ade4fecce3f58c3c9e83dcfafd9234e90d8819c24022ce11a4c0ea3eec6165e5",
+				"original": "null",
+				"patch": "72542437563b14904c50adf608678c16917df97ba4441e11a5b3c7642c0ce1e4"
+			},
+			"bin/win64/locales/zh-TW.pak": {
+				"fixed": "43a0cc54ca2b8f2a1018633c0776c954c3012c4e2e27863585d291c8dbed31f1",
+				"original": "null",
+				"patch": "13ec4674dcb5ba45fb4224975c1a0d9daf77b541f6a0fdbd3560ef4f005cee1c"
+			},
+			"bin/win64/resources.pak": {
+				"fixed": "5d0a67272efc5724ea538b51f4b7347ebdd55e2618642c0919b223ebd1e1d61e",
+				"original": "null",
+				"patch": "171e6c61c3f3f3393a945c6bb21f9d038ec7738de42e13ced0f178156b06118a"
+			},
+			"bin/win64/snapshot_blob.bin": {
+				"fixed": "null",
+				"original": "6db5623caf79e4dd18a7f8df3e8491ad767988663fbb9f731062e86b9f2bbd47"
+			},
+			"bin/win64/v8_context_snapshot.bin": {
+				"fixed": "3878eb015114ff9b5e5236f148a3f1e7e0e34b2df3c2c730f6d77047311b2c69",
+				"original": "f75a9ec3589de470528cb82635f24c09023ee4c1fb140fc469ab5eaffda08f5b",
+				"patch": "86e66959d3b72453e9d70c61e9b93c470a2bf6400aedc81a8a4884d77ee559de"
+			},
+			"bin/win64/vk_swiftshader.dll": {
+				"executable": "true",
+				"fixed": "d8690982dcd75ad6d21820128355613319320a930286069ce795e4fd621f5c32",
+				"original": "null",
+				"patch": "9a126a67086c94986d89d93f830cb2bd57730613f0285225871504f93eb35ed3"
+			},
+			"bin/win64/vk_swiftshader_icd.json": {
+				"fixed": "22ae981d6be3750002fa1945e33990fbf64a0cdf87bb0d932d3e3f0785040d63",
+				"original": "null",
+				"patch": "fd36fe202cd7b8f2a2d844a2172481edfb6f4e3b54f2c0b42dfd18332f7dcfe6"
+			},
+			"bin/win64/vulkan-1.dll": {
+				"executable": "true",
+				"fixed": "c7097701ccec1a9060d4be84f363a226d58d1c6a7f29c4271e42b93c2e9a1179",
+				"original": "null",
+				"patch": "9943f08e6c8bfe04e9608abcc794ae521554d0a41ef6cd60d3218ca90f4e15ef"
+			},
 			"garrysmod/gamemodes/sandbox/gamemode/spawnmenu/creationmenu/content/contenttypes/dupes.lua": {
 				"fixed": "9f694c42e9e1b2346c3048e82cd29a761ca1cae4f67a30dbcb47eb6475bad490",
 				"original": "d31bdd237ca1b759d94909d5177955a4bb147bd927cc57e7574c47cf25eb7ae0",
@@ -2860,6 +3229,12 @@
 				"fixed": "85d065854b69728ea1e2340c7d4a54fb730315bd43c563f5d0b8ed44a5e096b9",
 				"original": "6f97af37d5643b0a41ee023883f8d291e9309eafdad4a84a9ed72d3c00524ed2",
 				"patch": "47f0af5c7fb1122789c3335c34f1186688decbe1de778f61769a179f244bb48f"
+			},
+			"gmod_win64.exe": {
+				"executable": "true",
+				"fixed": "2cac06d261fef689ba4e14547ca30098d983ed1c56c3b5c2fae658dae7be2731",
+				"original": "66ce9ea7858080265d4ff6f5123da6f043ac5774f209a8cc97eb6169a799f757",
+				"patch": "f8809ac503f084577e9fc80e4e21db7d34e908324155c91edaf7b717178b0221"
 			}
 		},
 		"x86-64": {
