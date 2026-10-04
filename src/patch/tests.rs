@@ -53,6 +53,51 @@ fn libraryfolders_tolerates_non_folder_entries() {
 	assert_eq!(folders, 1);
 }
 
+// Regression: a leftover appmanifest_4000.acf in an earlier library won over the real install
+#[test]
+fn libraryfolders_apps_lists_gmod() {
+	let libraryfolders = r#""libraryfolders"
+{
+	"0"
+	{
+		"path"		"Z:\\SteamLibrary"
+		"apps"
+		{
+			"220"		"1000"
+		}
+	}
+	"1"
+	{
+		"path"		"D:\\SteamLibrary"
+		"apps"
+		{
+			"228980"		"123"
+			"4000"		"7326127784"
+		}
+	}
+	"2"
+	{
+		"path"		"E:\\SteamLibrary"
+	}
+	"3"
+	{
+		"path"		"F:\\SteamLibrary"
+		"apps"
+		{
+			"4000"		""
+		}
+	}
+}
+"#;
+
+	let parsed: IndexMap<&str, SteamLibraryFolderEntry> = vdf::from_str(libraryfolders).unwrap();
+	let lists_gmod: Vec<Option<bool>> = parsed.values().map(|entry| match entry {
+		SteamLibraryFolderEntry::Folder(folder) => Some(folder.apps.as_ref().is_some_and(|apps| apps.gmod.is_some())),
+		SteamLibraryFolderEntry::Other(_) => None
+	}).collect();
+	assert_eq!(lists_gmod, vec![Some(false), Some(true), Some(false), Some(true)]);
+}
+
 // Regression: a Steam Client Beta dropped MostRecent (and maybe Timestamp) from loginusers.vdf entries (#258)
 #[test]
 fn loginusers_missing_mostrecent_and_timestamp() {
