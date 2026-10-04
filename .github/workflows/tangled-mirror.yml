@@ -37,7 +37,7 @@ jobs:
       - name: Setup SSH known_hosts
         run: |
           mkdir -p ~/.ssh
-          sudo ssh-keyscan -t rsa tangled.sh >> ~/.ssh/known_hosts
+          sudo ssh-keyscan tangled.sh >> ~/.ssh/known_hosts
           sudo chmod 700 ~/.ssh
           sudo chmod 644 ~/.ssh/known_hosts
           sudo chown -R runner:runner ~/.ssh
