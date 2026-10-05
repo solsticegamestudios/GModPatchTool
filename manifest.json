@@ -2199,14 +2199,14 @@
 			"gmod.exe": {
 				"executable": "true",
 				"fixed": "3f0a51defcaa3aa354ab35e8fb96b02198bc732e0bd785398fd0a2b2c6a85759",
-				"original": "cd02b8a990d3bbdeca42ead97c7f855cf8a173a8154ed426dc2f31686bafbc1b",
-				"patch": "e9d93add8316e3738bd828564eb762dcf7393446fd139add8d5497e07b4b060c"
+				"original": "5200ab9c559f2d12c545814ad9c1a20809562572e278916a01cdb9713945b99e",
+				"patch": "f7ed066bfe6bb929528a9c3f54efc15797a7c9e966f69b60c7d61052a3619fc8"
 			},
 			"gmod_win64.exe": {
 				"executable": "true",
 				"fixed": "2cac06d261fef689ba4e14547ca30098d983ed1c56c3b5c2fae658dae7be2731",
-				"original": "47f713aea8da61ab07f8f329b7fc6af47902e7a49f3415d6a45fa68181480b86",
-				"patch": "a835cf8c7a488220ef5cd4a61e527d7fd5b11a85042c9ad1446dcb3b564d7190"
+				"original": "d9147751008153c6bfd8c1f5242ce71165bac797fe4d24141fb5de2ed9145918",
+				"patch": "d7636a8350ceca0674a5ec1be9132f9369269e49133de61c87b99d302d6333bc"
 			}
 		},
 		"prerelease": {
