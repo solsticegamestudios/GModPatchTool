@@ -2173,8 +2173,8 @@
 			},
 			"garrysmod/lua/menu/mainmenu.lua": {
 				"fixed": "22749f8e1102f51277a79fbfb8e5df72719715b150bb0177187b2ce099cd87d6",
-				"original": "e071eb1b4d8c3d30c335ff8e9b98ceb4d56a8bfa5d73b4e45af6bec084aa8756",
-				"patch": "923064be08c76631168383906299018234187b53a8225125b4c6f57687408c9c"
+				"original": "d91006f5db5697eedd8867020a044b6ececf91414ffe3b2b7a5d9b31f6bd962b",
+				"patch": "8626f538b8c50f00714de842348aef1f56ef381ae17854d310f991156740d062"
 			},
 			"garrysmod/resource/ClientScheme.res": {
 				"fixed": "3c86d3fe1792923e06240b1fd7ec60dcc34391c660faeeedc5bf3033bf40bd82",
