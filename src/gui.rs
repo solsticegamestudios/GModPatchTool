@@ -2,10 +2,15 @@ use std::collections::HashMap;
 use std::sync::LazyLock;
 
 use iced::advanced::graphics::core::Element;
+use iced::font::{Family, Weight};
 use iced::widget::container;
 use iced::window::{icon, Position};
 use iced::{window, Color, Font, Length, Size, Subscription, Task, Theme};
 use iced_term::TerminalView;
+
+// JetBrains Mono, see fonts/JetBrainsMono-OFL.txt for its license
+const FONT_MEDIUM: &[u8] = include_bytes!("../fonts/JetBrainsMono-Medium.ttf");
+const FONT_BOLD: &[u8] = include_bytes!("../fonts/JetBrainsMono-Bold.ttf");
 
 static ICON: LazyLock<icon::Icon> = LazyLock::new(|| {
 	let logo = image::load_from_memory_with_format(
@@ -58,16 +63,21 @@ impl App {
 		let term_settings = iced_term::settings::Settings {
 			font: iced_term::settings::FontSettings {
 				size: 14.0,
-				font_type: Font::MONOSPACE,
-				..Default::default()
+				// Regular looks too thin in our terminal
+				font_type: Font {
+					family: Family::Name("JetBrains Mono"),
+					weight: Weight::Medium,
+					..Font::DEFAULT
+				},
+				scale_factor: 1.2,
 			},
 			theme: iced_term::settings::ThemeSettings::new(Box::new(iced_term::ColorPalette {
 				background: "#0c0c0c".to_owned(),
-				foreground: "#b4b4b4".to_owned(),
+				foreground: "#cccccc".to_owned(),
 				black: "#000000".to_owned(),
 				red: "#c23621".to_owned(),
 				green: "#25bc24".to_owned(),
-				yellow: "#999900".to_owned(),
+				yellow: "#f2d024".to_owned(),
 				blue: "#2387ed".to_owned(),
 				magenta: "#b200b2".to_owned(),
 				cyan: "#2387ed".to_owned(),
@@ -127,7 +137,8 @@ impl App {
 		container(TerminalView::show(&self.term).map(Event::Terminal))
 			.width(Length::Fill)
 			.height(Length::Fill)
-			.padding(4)
+			// 540 - 2 * 6 = 528 = 33 rows of 16, any leftover shows up as a gap under the last row
+			.padding([6, 10])
 			.style(|_| container::background(Color::from_rgb(12.0 / 255.0, 12.0 / 255.0, 12.0 / 255.0)))
 			.into()
 	}
@@ -135,6 +146,8 @@ impl App {
 
 pub fn main() -> iced::Result {
 	iced::application(App::default, App::update, App::view)
+		.font(FONT_MEDIUM)
+		.font(FONT_BOLD)
 		.antialiasing(true)
 		.title(App::title)
 		.window(iced::window::Settings {
