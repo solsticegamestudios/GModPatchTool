@@ -47,10 +47,11 @@ impl App {
 		let args = std::env::args().skip(1).collect::<Vec<String>>();
 
 		// NOTE: indicatif hides the progress bars on macOS/Linux if TERM isn't set, and it isn't when we're launched outside of a terminal
+		// Our terminal does 24-bit colors, and on macOS/Linux we only use them if COLORTERM says so
 		let env = if cfg!(target_os = "windows") {
 			HashMap::new()
 		} else {
-			HashMap::from([("TERM".to_owned(), "xterm-256color".to_owned())])
+			HashMap::from([("TERM".to_owned(), "xterm-256color".to_owned()), ("COLORTERM".to_owned(), "truecolor".to_owned())])
 		};
 
 		let term_id = 0;
@@ -67,17 +68,17 @@ impl App {
 				red: "#c23621".to_owned(),
 				green: "#25bc24".to_owned(),
 				yellow: "#999900".to_owned(),
-				blue: "#0000b2".to_owned(),
+				blue: "#2387ed".to_owned(),
 				magenta: "#b200b2".to_owned(),
-				cyan: "#00a6b2".to_owned(),
+				cyan: "#2387ed".to_owned(),
 				white: "#bfbfbf".to_owned(),
 				bright_black: "#666666".to_owned(),
 				bright_red: "#e60000".to_owned(),
 				bright_green: "#00d900".to_owned(),
 				bright_yellow: "#e6e600".to_owned(),
-				bright_blue: "#0000ff".to_owned(),
+				bright_blue: "#4f9ded".to_owned(),
 				bright_magenta: "#e600e6".to_owned(),
-				bright_cyan: "#00e6e6".to_owned(),
+				bright_cyan: "#4f9ded".to_owned(),
 				bright_white: "#e6e6e6".to_owned(),
 				..Default::default()
 			})),

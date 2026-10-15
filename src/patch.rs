@@ -22,6 +22,13 @@ const SPINNER_FRAMES: &[&str] = &[
 ];
 const SPINNER_TICK: time::Duration = time::Duration::from_millis(100);
 
+// GMod Blue, the most used blue in GMod's menu (garrysmod/html/css/menu)
+const GMOD_BLUE: (u8, u8, u8) = (0x23, 0x87, 0xED);
+const SKY_BLUE: (u8, u8, u8) = (0x00, 0xB4, 0xFF);
+
+// GMod Blue -> bright sky blue -> icy blue -> bright sky blue, then it repeats
+const BAR_GRADIENT: [(u8, u8, u8); 4] = [GMOD_BLUE, SKY_BLUE, (0xBF, 0xF0, 0xFF), SKY_BLUE];
+
 use crate::*;
 
 use serde::Deserialize;
@@ -42,16 +49,59 @@ use tokio::time::Instant;
 use tokio::task::JoinSet;
 use qbsdiff::Bspatch;
 use regex::Regex;
-use std::sync::OnceLock;
-use indicatif::{MultiProgress, ProgressBar, ProgressStyle, ProgressDrawTarget};
+use std::sync::{LazyLock, OnceLock};
+use std::fmt;
+use indicatif::{MultiProgress, ProgressBar, ProgressState, ProgressStyle, ProgressDrawTarget};
 
 use super::vdf;
 
 // Live progress UI; bars register here so terminal_write can suspend them while printing
 static UI: OnceLock<MultiProgress> = OnceLock::new();
 
-fn spinner_style(template: &str) -> ProgressStyle {
-	ProgressStyle::with_template(template).unwrap().tick_strings(SPINNER_FRAMES).progress_chars("#>-")
+// Terminals advertise 24-bit colors in COLORTERM (our GUI sets it), and Windows has had them since Windows 10
+static TRUECOLOR: LazyLock<bool> = LazyLock::new(|| cfg!(windows) || std::env::var("COLORTERM").is_ok_and(|value| value == "truecolor" || value == "24bit"));
+
+fn write_color(w: &mut dyn fmt::Write, (r, g, b): (u8, u8, u8)) -> fmt::Result {
+	if *TRUECOLOR {
+		write!(w, "\x1B[38;2;{r};{g};{b}m")
+	} else {
+		// Closest color in the 256-color cube
+		let level = |c: u8| (c as u16 * 5 + 127) / 255;
+		write!(w, "\x1B[38;5;{}m", 16 + 36 * level(r) + 6 * level(g) + level(b))
+	}
+}
+
+// The gradient slides left to right over time
+fn gradient_bar(state: &ProgressState, w: &mut dyn fmt::Write) {
+	const WIDTH: usize = 25;
+	let filled = (state.fraction() * WIDTH as f32) as usize;
+	let offset = state.elapsed().as_secs_f32() * 0.6;
+
+	for i in 0..WIDTH {
+		if i < filled {
+			let pos = (i as f32 / WIDTH as f32 - offset).rem_euclid(1.0) * BAR_GRADIENT.len() as f32;
+			let from = BAR_GRADIENT[pos as usize % BAR_GRADIENT.len()];
+			let to = BAR_GRADIENT[(pos as usize + 1) % BAR_GRADIENT.len()];
+			let mix = |a: u8, b: u8| (a as f32 + (b as f32 - a as f32) * pos.fract()) as u8;
+			let _ = write_color(w, (mix(from.0, to.0), mix(from.1, to.1), mix(from.2, to.2)));
+			let _ = w.write_char(if i + 1 == filled && filled < WIDTH { '>' } else { '#' });
+		} else {
+			let _ = write_color(w, (0x5A, 0x5A, 0x5A));
+			let _ = w.write_char('-');
+		}
+	}
+
+	let _ = w.write_str("\x1B[0m");
+}
+
+// An empty line, then the sky blue spinner, then the text
+fn spinner_style(text: &str) -> ProgressStyle {
+	let mut template = String::from("\n");
+	let _ = write_color(&mut template, SKY_BLUE);
+	template.push_str("{spinner}\x1B[0m ");
+	template.push_str(text);
+
+	ProgressStyle::with_template(&template).unwrap().tick_strings(SPINNER_FRAMES).with_key("gradient", gradient_bar)
 }
 
 #[cfg(windows)]
@@ -114,7 +164,9 @@ phf_map! {
 	"green" => "\x1B[1;32m",
 	"yellow" => "\x1B[1;33m",
 	"magenta" => "\x1B[1;35m",
-	"cyan" => "\x1B[1;36m"
+	"cyan" => "\x1B[1;36m",
+	// GMOD_BLUE, needs 24-bit colors
+	"blue" => "\x1B[1;38;2;35;135;237m"
 };
 
 use thiserror::Error;
@@ -1616,7 +1668,7 @@ where
 
 		// Length starts at 1 (0 renders as a full bar) and grows as each download's Content-Length arrives
 		let download_bar = UI.get().unwrap().add(ProgressBar::new(1));
-		download_bar.set_style(spinner_style("{spinner} Downloading {msg} file(s) [{bar:25}] {percent}% \u{B7} {bytes}/{total_bytes} ({binary_bytes_per_sec})"));
+		download_bar.set_style(spinner_style("Downloading {msg} file(s) [{gradient}] {percent}% \u{B7} {bytes}/{total_bytes} ({binary_bytes_per_sec})"));
 		download_bar.enable_steady_tick(SPINNER_TICK);
 
 		let mut download_futures = JoinSet::new();
@@ -1659,7 +1711,7 @@ where
 		terminal_write(writer, format!("\nPatching {pending_files_len} file(s)...").as_str(), true, None);
 
 		let patch_bar = UI.get().unwrap().add(ProgressBar::new(pending_files_len as u64));
-		patch_bar.set_style(spinner_style("{spinner} Patching {pos}/{len} file(s) [{bar:25}] {percent}%"));
+		patch_bar.set_style(spinner_style("Patching {pos}/{len} file(s) [{gradient}] {percent}%"));
 		patch_bar.enable_steady_tick(SPINNER_TICK);
 
 		// TODO: Early exit if any patches fail
@@ -2060,7 +2112,7 @@ pub fn main() {
 	let writer_is_interactive = is_terminal;
 
 	// Write about
-	terminal_write(writer, ABOUT, true, if writer_is_interactive { Some("cyan") } else { None });
+	terminal_write(writer, ABOUT, true, if writer_is_interactive { Some(if *TRUECOLOR { "blue" } else { "cyan" }) } else { None });
 
 	// Parse the args
 	let args = match Args::try_parse() {
