@@ -399,7 +399,15 @@ struct SteamUserLocalConfigApp {
 
 // Colors just the label, not the rest of its line
 fn color_label(label: &str, color: &str, writer_is_interactive: bool) -> String {
-	if writer_is_interactive { format!("{}{label}\x1B[0m", COLOR_LOOKUP[color]) } else { label.to_owned() }
+	if writer_is_interactive { format!("{}{label}\x1B[0m", color_code(color)) } else { label.to_owned() }
+}
+
+// Our GUI runs us with FORCE_GUI=0
+static IN_GUI: LazyLock<bool> = LazyLock::new(|| std::env::var("FORCE_GUI").is_ok_and(|value| value == "0"));
+
+// TODO: PR a fix to iced_term: Its DIM_BOLD check catches bold text and draws it at 70% alpha, so no bold in our GUI until then
+fn color_code(color: &str) -> String {
+	if *IN_GUI { COLOR_LOOKUP[color].replacen("1;", "", 1) } else { COLOR_LOOKUP[color].to_owned() }
 }
 
 // Yellow while there's another server or try left, red once there isn't
@@ -426,7 +434,7 @@ where
 {
 	let write_now = || {
 		if let Some(color) = color && COLOR_LOOKUP.contains_key(color) {
-			write!(writer(), "{}", COLOR_LOOKUP[color]).unwrap();
+			write!(writer(), "{}", color_code(color)).unwrap();
 		}
 
 		if newline {
