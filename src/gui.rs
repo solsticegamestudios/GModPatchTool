@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::sync::LazyLock;
 
 use iced::advanced::graphics::core::Element;
@@ -45,6 +46,13 @@ impl App {
 		};
 		let args = std::env::args().skip(1).collect::<Vec<String>>();
 
+		// NOTE: indicatif hides the progress bars on macOS/Linux if TERM isn't set, and it isn't when we're launched outside of a terminal
+		let env = if cfg!(target_os = "windows") {
+			HashMap::new()
+		} else {
+			HashMap::from([("TERM".to_owned(), "xterm-256color".to_owned())])
+		};
+
 		let term_id = 0;
 		let term_settings = iced_term::settings::Settings {
 			font: iced_term::settings::FontSettings {
@@ -76,6 +84,7 @@ impl App {
 			backend: iced_term::settings::BackendSettings {
 				program,
 				args,
+				env,
 				..Default::default()
 			},
 		};
