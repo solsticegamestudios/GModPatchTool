@@ -47,6 +47,7 @@ use bytes::Bytes;
 use reqwest::Response;
 use tokio::time::Instant;
 use tokio::task::JoinSet;
+use tokio::sync::Semaphore;
 use qbsdiff::Bspatch;
 use regex::Regex;
 use std::sync::{LazyLock, OnceLock};
@@ -57,6 +58,9 @@ use super::vdf;
 
 // Live progress UI; bars register here so terminal_write can suspend them while printing
 static UI: OnceLock<MultiProgress> = OnceLock::new();
+
+// Starting all ~100 requests at once can make dozens of them time out
+static REQUEST_SLOTS: Semaphore = Semaphore::const_new(8);
 
 // Terminals advertise 24-bit colors in COLORTERM (our GUI sets it), and Windows has had them since Windows 10
 static TRUECOLOR: LazyLock<bool> = LazyLock::new(|| cfg!(windows) || std::env::var("COLORTERM").is_ok_and(|value| value == "truecolor" || value == "24bit"));
@@ -444,7 +448,11 @@ where
 			.build();
 
 		let response_result = match client {
-			Ok(client) => client.get(url.clone()).send().await,
+			Ok(client) => {
+				// The slot frees up once the response headers arrive, before the body downloads
+				let _slot = REQUEST_SLOTS.acquire().await;
+				client.get(url.clone()).send().await
+			},
 			Err(error) => Err(error)
 		};
 
