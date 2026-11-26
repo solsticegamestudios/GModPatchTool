@@ -1435,8 +1435,8 @@
 			"bin/html_chromium.dll": {
 				"executable": "true",
 				"fixed": "787a54df76d46b73cf32a231aef42154612df7e5450df932002748f944c54252",
-				"original": "a4fb54569db75169803a33480e0781ef6477ab895242837ce75afbad0e0cddf6",
-				"patch": "083a7db8722327dff5e4ec7669fbc354c561ae0b484225c58243d8fa195db339"
+				"original": "4a998e38e7e9db49bd0faaa29166305e073247716eb14c8dcacfca15224ba669",
+				"patch": "aed7eb4491b196b0d2006291132216fe8628bf3bcead92cd4c91ae63569d186e"
 			},
 			"bin/icudtl.dat": {
 				"fixed": "7fc8f453677bb4624bb200e78080289e5ef5f4ca818e082980f98f60e8c83f32",
@@ -1804,8 +1804,8 @@
 			"bin/win64/html_chromium.dll": {
 				"executable": "true",
 				"fixed": "2c9706550d733f9045b2cb27067751c0230fd5d9532f081a9381fbb7853d70ea",
-				"original": "57c92fcb160925ad30cc9a48a6e4c3980f75286163d10cdf1f09c1071670bb94",
-				"patch": "2321c12901b211cb9ef6d03e7ef628d053cb1fd7c7fe148fe7f670f6fe371623"
+				"original": "df067ae8fd7a06eb3a6bf890b9613cab9d81f237c23299b33f0ae72a353f910e",
+				"patch": "467f654a608dfa575af55f083c1ddf62dc514a773329afe4195d6dab7a4608f9"
 			},
 			"bin/win64/icudtl.dat": {
 				"fixed": "7fc8f453677bb4624bb200e78080289e5ef5f4ca818e082980f98f60e8c83f32",
@@ -2199,14 +2199,14 @@
 			"gmod.exe": {
 				"executable": "true",
 				"fixed": "3f0a51defcaa3aa354ab35e8fb96b02198bc732e0bd785398fd0a2b2c6a85759",
-				"original": "1ed202c711ae119096108df2b1a6ac8d623ec4be92f735f1353e3e6ab050f4a2",
-				"patch": "c08d663782c7495e399b4d19b0cf479f351bd78a17b15a4f905cea7c8286ecf1"
+				"original": "9c789d5eedd525e5a4622622d31954ac2f032d5c541a24f04bc763cb73de7d66",
+				"patch": "705565b03c70e19ecd783cb22123e70d77f534e7039ed86c5dd7c254fbe69750"
 			},
 			"gmod_win64.exe": {
 				"executable": "true",
 				"fixed": "2cac06d261fef689ba4e14547ca30098d983ed1c56c3b5c2fae658dae7be2731",
-				"original": "87ff6dd6d4e40a843eb706383a44c52ceaef73e6127b84fb7947c5e4a7bffcdb",
-				"patch": "8144ae9491c08144ffb4841ecffe22411f9e463fcc8e32935707b1cda5498177"
+				"original": "9c7d656f3ce80820ec72bad05f3ac9e249ed48fc607afb0bcfe95d53812d32bd",
+				"patch": "af902de305c3f6bd0e38c72375ca2fe7b318bb0af70ba46fe2bad3b29deaf5a9"
 			}
 		},
 		"prerelease": {
